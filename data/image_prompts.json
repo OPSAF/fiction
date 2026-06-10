@@ -86,6 +86,33 @@
     }
   },
 
+  "chapter_01_scenes": {
+    "opening_ceremony": {
+      "name": "星導学園·入学式",
+      "quick_prompt": "grand magic academy auditorium, hundreds of students in navy uniforms seated, blue mana crystal chandelier, stage with professors, ceremonial atmosphere, wide shot, anime background, Taisho fantasy architecture"
+    },
+    "magic_measurement": {
+      "name": "魔力測定の儀式",
+      "quick_prompt": "circular magic circle on stone floor glowing, student standing in center, mana particles swirling, audience watching, crystal apparatus, dramatic lighting, anime illustration, tense atmosphere"
+    },
+    "akane_defends_rei": {
+      "name": "朱音、公然と零を擁護",
+      "quick_prompt": "crimson ponytail girl standing protectively in front of black-haired boy, glaring at nobles, school uniform, dramatic tension, anime illustration, fiery expression, strong heroine moment"
+    },
+    "eruna_first_encounter": {
+      "name": "エルナとの初対面",
+      "quick_prompt": "elf girl pale gold braided hair emerald eyes, long pointed ears, in library, looking at boy with curiosity, afternoon light, intellectual atmosphere, anime illustration, beautiful lighting"
+    },
+    "rei_library_terminal": {
+      "name": "零、図書館で端末を研究",
+      "quick_prompt": "1boy, black hair, dark gray eyes with faint golden code reflection, sitting alone in vast old library, floating holographic terminal window, mana crystal lamp, ancient books, secret atmosphere, anime illustration, blue and gold color scheme"
+    },
+    "rei_subtle_analysis": {
+      "name": "零、端末で密かに解析",
+      "quick_prompt": "1boy in classroom, eyes with subtle golden glow, holographic data overlay in pupils, other students unaware, anime illustration, split composition normal view vs terminal data view, clever protagonist"
+    }
+  },
+
   "negative_prompt_universal": "lowres, bad anatomy, bad hands, extra fingers, missing fingers, deformed, ugly, poorly drawn, blurry, watermark, signature, text, artist name, worst quality, low quality, normal quality, jpeg artifacts, mutation, extra limbs, disconnected limbs, long neck, bad proportions",
 
   "style_mixing_guide": {
