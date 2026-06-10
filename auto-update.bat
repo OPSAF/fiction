@@ -1,11 +1,13 @@
 @echo off
+chcp 65001 > nul
+
 git add -A
 git diff --cached --quiet
 if errorlevel 1 (
     git commit -m "update"
-    git push
-    echo 已提交并推送。
+    git push || git push --set-upstream origin master
+    echo Done: committed and pushed.
 ) else (
-    echo 没有需要提交的更改。
+    echo No changes to commit.
 )
 pause
