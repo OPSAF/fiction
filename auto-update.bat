@@ -8,3 +8,4 @@ if errorlevel 1 (
 ) else (
     echo 没有需要提交的更改。
 )
+pause
