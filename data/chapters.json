@@ -24,7 +24,7 @@
       "characters_appeared": ["P001", "H001", "H002", "A001"],
       "locations_featured": ["神代家", "星京", "星導学園"],
       "terminal_commands_introduced": ["analyze", "compile", "execute", "monitor", "help", "save", "exit"],
-      "file": "chapter_01/chapter_01.md"
+      "file": "PROLOGUE/chapter_01.md"
     },
     {
       "id": "CH02",

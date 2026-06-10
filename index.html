@@ -808,6 +808,86 @@
         .hamburger-lines span:nth-child(3) { top: 11px; }
 
         .hidden-el { display: none !important; }
+
+        /* Wiki 分类折叠 */
+        .wiki-category {
+            margin-bottom: 2px;
+        }
+        .wiki-category-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 11.5px;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+        .wiki-category-header:hover { background: rgba(124,58,237,0.06); color: var(--accent-purple); }
+        .wiki-category-header .wiki-arrow { transition: transform 0.2s ease; font-size: 9px; }
+        .wiki-category.open .wiki-arrow { transform: rotate(90deg); }
+
+        .wiki-category-items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.25s ease;
+            padding-left: 14px;
+        }
+        .wiki-category.open .wiki-category-items { max-height: 400px; }
+
+        .wiki-item {
+            padding: 4px 8px 4px 12px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            opacity: 0.7;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.12s ease;
+            position: relative;
+            padding-left: 18px;
+        }
+        .wiki-item::before { content: '·'; position: absolute; left: 6px; color: var(--accent-blue); opacity: 0.5; }
+        .wiki-item:hover { opacity: 1; color: var(--text-primary); background: rgba(0,212,255,0.04); }
+
+        /* Wiki 详情面板 */
+        .wiki-detail-panel {
+            display: none;
+            margin-top: 8px;
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            font-size: 11px;
+            line-height: 1.65;
+        }
+        [data-theme="light"] .wiki-detail-panel { background: rgba(0,0,0,0.03); }
+        .wiki-detail-panel.visible { display: block; }
+        .wiki-detail-title { font-weight: 600; color: var(--accent-blue); margin-bottom: 4px; font-size: 12px; }
+        .wiki-detail-text { color: var(--text-secondary); }
+
+        /* 增强角色卡片 */
+        .char-profile-tags {
+            display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;
+        }
+        .char-tag {
+            font-size: 9px; padding: 2px 7px; border-radius: 10px;
+            background: rgba(124,58,237,0.1); color: var(--accent-purple);
+            font-weight: 500;
+        }
+        .char-status-badge {
+            display: inline-block; font-size: 9px; padding: 1px 7px; border-radius: 8px;
+            margin-left: 6px; vertical-align: middle;
+        }
+        .char-status-active { background: rgba(16,185,129,0.15); color: #10b981; }
+        .char-status-locked { background: rgba(148,163,184,0.15); color: var(--text-secondary); opacity: 0.6; }
+        .char-card.locked { opacity: 0.55; }
+        .char-trait {
+            font-size: 10.5px; color: var(--text-secondary); line-height: 1.55;
+            padding: 6px 0; border-top: 1px solid var(--glass-border);
+            margin-top: 6px;
+        }
     </style>
 </head>
 <body>
@@ -1394,11 +1474,141 @@
         }
 
         // ================================================================
-        // 角色卡片渲染
+        // Wiki 手风琴渲染器（世界观索引）
+        // ================================================================
+        const WikiRenderer = (function() {
+            function render(worldData, termData, magicData) {
+                var container = document.getElementById('wiki-links');
+                if (!container) return;
+
+                var html = '';
+
+                // === 世界设定 ===
+                html += buildCategory('🌍', '世界设定', function() {
+                    var items = '';
+                    if (worldData.locations) {
+                        worldData.locations.forEach(function(loc) {
+                            items += buildWikiItem(loc.name_cn || loc.name_jp, loc.description, loc.type);
+                        });
+                    }
+                    if (worldData.items) {
+                        worldData.items.forEach(function(item) {
+                            items += buildWikiItem(item.name_cn || item.name_jp, item.description, item.type);
+                        });
+                    }
+                    return items;
+                }());
+
+                // === 魔法体系 ===
+                html += buildCategory('✨', '魔法体系', function() {
+                    var items = '';
+                    if (magicData.affinities) {
+                        magicData.affinities.forEach(function(aff) {
+                            items += buildWikiItem(aff.name_cn + '（' + aff.color + '）', aff.typical_uses.join(' / '), '属性');
+                        });
+                    }
+                    if (magicData.ranks) {
+                        items += '<div style="padding:4px 0;font-size:9.5px;color:var(--accent-purple);margin-top:4px;">─ 魔力等级 ─</div>';
+                        magicData.ranks.forEach(function(rk) {
+                            items += buildWikiItem(rk.rank, rk.description_cn + ' [' + rk.population_ratio + ']', '等级');
+                        });
+                    }
+                    if (magicData.energy_sources) {
+                        magicData.energy_sources.forEach(function(es) {
+                            items += buildWikiItem(es.name_cn + '（' + es.rarity + '）', es.usage, '能源');
+                        });
+                    }
+                    return items;
+                }());
+
+                // === 术语辞典 ===
+                html += buildCategory('📖', '术语辞典', function() {
+                    var items = '';
+                    if (termData.terms) {
+                        termData.terms.forEach(function(term) {
+                            items += buildWikiItem(term.term_cn, term.definition, term.category);
+                        });
+                    }
+                    return items;
+                }());
+
+                // === 关键场景 ===
+                html += buildCategory('🎭', '关键场景', function() {
+                    var items = '';
+                    if (worldData.key_scenes) {
+                        worldData.key_scenes.forEach(function(scene) {
+                            items += buildWikiItem(scene.name_cn, scene.description, scene.chapter);
+                        });
+                    }
+                    return items;
+                }());
+
+                container.innerHTML = html;
+
+                bindAccordion(container);
+                bindDetailToggle(container);
+            }
+
+            function buildCategory(icon, title, itemsHtml) {
+                return '<div class="wiki-category">' +
+                    '<div class="wiki-category-header"><span class="wiki-arrow">▸</span>' + icon + ' ' + title + '</div>' +
+                    '<div class="wiki-category-items">' + itemsHtml + '</div>' +
+                    '</div>';
+            }
+
+            function buildWikiItem(name, desc, tag) {
+                var safeName = escapeHTML(name);
+                var shortDesc = desc ? escapeHTML(desc.length > 60 ? desc.substring(0, 60) + '…' : desc) : '';
+                var safeTag = tag ? '<span style="font-size:8px;color:var(--accent-purple);opacity:0.5;margin-left:3px;">[' + escapeHTML(tag) + ']</span>' : '';
+                return '<div class="wiki-item" data-desc="' + (desc ? escapeHTML(desc).replace(/"/g, '&quot;') : '') + '" data-name="' + safeName + '">' +
+                    safeName + safeTag +
+                    '<div class="wiki-detail-panel"><div class="wiki-detail-title">' + safeName + '</div><div class="wiki-detail-text">' + shortDesc + '</div></div>' +
+                    '</div>';
+            }
+
+            function escapeHTML(s) {
+                var d = document.createElement('div');
+                d.textContent = s;
+                return d.innerHTML;
+            }
+
+            function bindAccordion(container) {
+                var headers = container.querySelectorAll('.wiki-category-header');
+                headers.forEach(function(h) {
+                    h.addEventListener('click', function() {
+                        this.parentElement.classList.toggle('open');
+                    });
+                });
+                if (headers[0]) headers[0].parentElement.classList.add('open');
+            }
+
+            function bindDetailToggle(container) {
+                var items = container.querySelectorAll('.wiki-item');
+                items.forEach(function(item) {
+                    item.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        var openPanels = container.querySelectorAll('.wiki-detail-panel.visible');
+                        openPanels.forEach(function(p) { if (p !== this.querySelector('.wiki-detail-panel')) p.classList.remove('visible'); });
+                        var panel = this.querySelector('.wiki-detail-panel');
+                        if (panel) panel.classList.toggle('visible');
+                    });
+                });
+            }
+
+            return { render };
+        })();
+
+        // ================================================================
+        // 角色卡片渲染（增强版 — 使用 characters.json 全部数据）
         // ================================================================
         const CharRenderer = (function() {
             var COLOR_MAP = {
-                '零': '#00d4ff', '朱音': '#f59e0b', '小雪': '#38bdf8', 'Eve': '#a855f7'
+                '神代': '#00d4ff',
+                '天宮': '#f59e0b',
+                '神代小': '#38bdf8',
+                'エルナ': '#10b981',
+                '黒鉄': '#8b5cf6',
+                'Eve': '#a855f7'
             };
 
             function getColor(name) {
@@ -1422,13 +1632,47 @@
 
                 chars.forEach(function(ch, idx) {
                     var color = getColor(ch.name_jp || ch.name || '');
+                    var isLocked = ch.status === '未登場';
+                    var profile = ch.profile || {};
+                    var personality = ch.personality || {};
+                    var archetype = ch.archetype || ch.role || '';
 
                     if (container) {
                         var card = document.createElement('div');
-                        card.className = 'character-card glass-panel';
+                        card.className = 'character-card glass-panel' + (isLocked ? ' locked' : '');
                         card.id = 'char-card-' + idx;
                         card.style.setProperty('--char-color', color);
 
+                        // 状态标签
+                        var statusBadge = '';
+                        if (isLocked) {
+                            statusBadge = '<span class="char-status-badge char-status-locked">🔒 未登場</span>';
+                        } else {
+                            statusBadge = '<span class="char-status-badge char-status-active">● 已登场</span>';
+                        }
+
+                        // 档案标签
+                        var tagsHtml = '';
+                        var tagItems = [];
+                        if (profile.age) tagItems.push(profile.age + '岁');
+                        if (profile.height_cm) tagItems.push(profile.height_cm + 'cm');
+                        if (profile.magic_rank) tagItems.push(profile.magic_rank);
+                        if (profile.occupation) tagItems.push(profile.occupation);
+                        if (tagItems.length > 0) {
+                            tagsHtml = '<div class="char-profile-tags">';
+                            tagItems.forEach(function(t) {
+                                tagsHtml += '<span class="char-tag">' + t + '</span>';
+                            });
+                            tagsHtml += '</div>';
+                        }
+
+                        // 性格特征（取第一条）
+                        var traitHtml = '';
+                        if (personality.traits && personality.traits.length > 0) {
+                            traitHtml = '<div class="char-trait">「' + escapeHTML(personality.traits[0]) + '」</div>';
+                        }
+
+                        // new_info_revealed 列表
                         var infoHtml = '';
                         if (ch.new_info_revealed && ch.new_info_revealed.length > 0) {
                             infoHtml = '<ul class="char-info-list">' +
@@ -1438,10 +1682,11 @@
                         }
 
                         card.innerHTML =
-                            '<div class="char-name-jp">' + (ch.name_jp || ch.name || '未知') + '</div>' +
+                            '<div class="char-name-jp">' + (ch.name_jp || ch.name || '未知') + statusBadge + '</div>' +
                             '<div class="char-name-cn">' + (ch.name_cn || '') + '</div>' +
-                            '<div class="char-role">' + (ch.role || '') + '</div>' +
-                            '<div class="char-description">' + (ch.description || '') + '</div>' +
+                            '<div class="char-role">' + escapeHTML(archetype) + '</div>' +
+                            tagsHtml +
+                            traitHtml +
                             infoHtml +
                             '<div class="emotion-indicator"><div class="emotion-label">情绪波动</div><div class="emotion-bar"><div class="emotion-fill" style="width:' + (Math.random() * 35 + 30) + '%"></div></div></div>';
 
@@ -1459,6 +1704,12 @@
                         quickNav.appendChild(link);
                     }
                 });
+            }
+
+            function escapeHTML(s) {
+                var d = document.createElement('div');
+                d.textContent = s;
+                return d.innerHTML;
             }
 
             return { render };
@@ -1898,9 +2149,33 @@
                 // 初始化左侧分集导航
                 EpisodeController.initSidebarNav();
 
-                // 渲染右侧角色卡片
-                if (jsonData.characters_appeared) {
-                    CharRenderer.render(jsonData.characters_appeared);
+                // 加载世界观数据（优先数据源）
+                try {
+                    var [worldRes, termRes, magicRes, charRes] = await Promise.all([
+                        fetch('data/world.json'),
+                        fetch('data/terminology.json'),
+                        fetch('data/magic_system.json'),
+                        fetch('data/characters.json')
+                    ]);
+
+                    var worldData = await worldRes.json();
+                    var termData = await termRes.json();
+                    var magicData = await magicRes.json();
+                    var allChars = await charRes.json();
+
+                    // 渲染世界观索引
+                    WikiRenderer.render(worldData, termData, magicData);
+
+                    // 渲染全部角色（覆盖原来的 characters_appeared）
+                    if (allChars.characters && allChars.characters.length > 0) {
+                        CharRenderer.render(allChars.characters);
+                    }
+                } catch(e) {
+                    console.warn('部分世界观数据加载失败:', e.message);
+                    // 回退到原始meta数据
+                    if (jsonData.characters_appeared) {
+                        CharRenderer.render(jsonData.characters_appeared);
+                    }
                 }
 
                 // 绑定事件
