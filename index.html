@@ -529,28 +529,36 @@
         .dialogue-text { color: var(--dialogue-color); }
 
         /* ========== 语言模式CSS ========== */
-        .translation.highlight-cn {
-            font-size: 1em !important;
-            color: var(--accent-blue) !important;
-            opacity: 1 !important;
-            font-weight: 600;
-            background: rgba(0, 212, 255, 0.08);
-            padding: 0 4px;
-            border-radius: 3px;
+        /* 翻译行默认样式（双语模式） */
+        .translation-line {
+            opacity: 0.72;
+            color: var(--accent-blue);
+            font-size: 0.9em;
+            border-left: 2px solid rgba(0, 212, 255, 0.2);
+            padding-left: 14px;
+            margin-top: -18px;
         }
 
-        .dim-jp {
+        /* JP模式：隐藏翻译行 */
+        [data-lang-mode="jp"] .translation-line { display: none; }
+        [data-lang-mode="jp"] .content-paragraph[data-lang="ja"] {
             color: var(--text-primary);
+            opacity: 1;
         }
 
-        [data-lang-mode="cn"] .content-paragraph {
+        /* CN模式：日文段落变淡，翻译行高亮 */
+        [data-lang-mode="cn"] .content-paragraph[data-lang="ja"] {
             color: var(--text-secondary);
-            opacity: 0.45;
+            opacity: 0.38;
+            font-size: 0.88em;
         }
-        [data-lang-mode="cn"] .content-paragraph .highlight-cn,
-        [data-lang-mode="cn"] .content-paragraph strong {
-            color: var(--accent-blue) !important;
-            opacity: 1 !important;
+        [data-lang-mode="cn"] .translation-line {
+            color: var(--text-primary);
+            opacity: 1;
+            font-size: 1em;
+            font-weight: 500;
+            border-left-color: var(--accent-blue);
+            background: rgba(0, 212, 255, 0.04);
         }
 
         /* 终端代码块 — 直接渲染，无逐行动画 */
@@ -934,8 +942,8 @@
                 <div class="chapter-nav-item active" data-chapter="01" data-anchor="ch-prologue">
                     <span class="chapter-number">PROLOGUE</span> 序章：零の目覚め
                 </div>
-                <div class="chapter-nav-item locked" data-chapter="02">
-                    <span class="chapter-number">CH.02</span> 星導学園
+                <div class="chapter-nav-item locked" data-chapter="01">
+                    <span class="chapter-number">CH.01</span> 星導学園
                     <span style="font-size:9px;color:var(--text-secondary);margin-left:4px;">[预告]</span>
                 </div>
             </nav>
@@ -1173,11 +1181,17 @@
                         continue;
                     }
 
-                    // 普通段落
+                    // 翻译行 ※
+                    if (trimmed.startsWith('※ ')) {
+                        result.push({ type: 'translation', content: trimmed.slice(2).trim() });
+                        i++; continue;
+                    }
+
+                    // 普通段落（不再合并 ※ 行）
                     let para = '';
                     while (i < lines.length) {
                         const tl = lines[i].trim();
-                        if (!tl || /^#{1,2} /.test(tl) || tl === '---' || tl === '***' || tl.startsWith('>') || tl.startsWith('```')) break;
+                        if (!tl || /^#{1,2} /.test(tl) || tl === '---' || tl === '***' || tl.startsWith('>') || tl.startsWith('```') || tl.startsWith('※ ')) break;
                         para += (para ? ' ' : '') + tl;
                         i++;
                     }
@@ -1216,21 +1230,11 @@
                 langMode = langMode || 'both';
                 // 加粗
                 text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-
+                // 对话标记
+                text = text.replace(/「([^」]+)」/g, '<span class="dialogue-text">「$1」</span>');
+                // 日文中残留的括号注音等，在jp模式下移除
                 if (langMode === 'jp') {
-                    // 仅日文：移除（）内的中文翻译
-                    text = text.replace(/（([^）]+)）/g, '');
-                    // 对话标记保留
-                    text = text.replace(/「([^」]+)」/g, '<span class="dialogue-text">「$1」</span>');
-                } else if (langMode === 'cn') {
-                    // 高亮中文：日文变淡，中文醒目
-                    text = text.replace(/（([^）]+)）/g, '<span class="translation highlight-cn">（$1）</span>');
-                    // 对话中日文部分也变淡
-                    text = text.replace(/「([^」]+)」/g, '<span class="dialogue-text dim-jp">「$1」</span>');
-                } else {
-                    // both: 默认行为
-                    text = text.replace(/（([^）]+)）/g, '<span class="translation">（$1）</span>');
-                    text = text.replace(/「([^」]+)」/g, '<span class="dialogue-text">「$1」</span>');
+                    text = text.replace(/（[^）]+）/g, '');
                 }
                 return text;
             }
@@ -1349,8 +1353,11 @@
                         return '<div class="terminal-block"><div class="terminal-header"><span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span><span class="terminal-title-bar">' + escapeHTML(item.lang || 'code') + '</span></div><div class="terminal-body">' + esc + '</div></div>';
                     }
 
+                    case 'translation':
+                        return '<p class="content-paragraph translation-line" data-lang="zh">※ ' + MDParser.inline(item.content, langMode) + '</p>';
+
                     case 'paragraph':
-                        return '<p class="content-paragraph">' + MDParser.inline(item.content, langMode) + '</p>';
+                        return '<p class="content-paragraph" data-lang="ja">' + MDParser.inline(item.content, langMode) + '</p>';
 
                     default:
                         return '';
@@ -1732,33 +1739,44 @@
 
             // 根据语言模式过滤文本
             function filterText(text, mode) {
+                // 新格式：※ 前缀的中文翻译行已在 parse 阶段分离
+                // paragraph 项是日文，translation 项是中文
+                // 此函数处理段落内的残留（）或对话标记
                 if (mode === 'jp') {
-                    return text.replace(/（[^）]+）/, '').trim();
-                } else if (mode === 'cn') {
-                    var m = text.match(/（([^）]+)）/);
-                    return m ? m[1] : text;
+                    return text.replace(/（[^）]+）/g, '').trim();
                 }
+                // both / cn: 原文保留，CN模式在extract阶段处理
                 return text;
             }
 
             function extractDialogs(parsedData) {
                 var queue = [];
-                parsedData.forEach(function(item) {
-                    if (item.type !== 'paragraph') return;
+                for (var idx = 0; idx < parsedData.length; idx++) {
+                    var item = parsedData[idx];
+                    // 跳过翻译行（单独处理）
+                    if (item.type === 'translation') continue;
+                    if (item.type !== 'paragraph') continue;
+
                     var text = item.content;
+                    // 查找下一个translation作为中文翻译
+                    var cnText = '';
+                    if (idx + 1 < parsedData.length && parsedData[idx + 1].type === 'translation') {
+                        cnText = parsedData[idx + 1].content;
+                    }
+
                     // 匹配对话：「...」
                     var dm = text.match(/^([^「]*?)「(.+)」/);
                     if (dm) {
                         queue.push({
                             speaker: dm[1] ? dm[1].trim() : '',
-                            text: dm[2]
+                            text: dm[2],
+                            cnText: cnText
                         });
                     } else {
-                        // 叙述文本截取前120字
                         var short = text.length > 120 ? text.substring(0, 120) + '…' : text;
-                        queue.push({ speaker: '', text: short });
+                        queue.push({ speaker: '', text: short, cnText: cnText });
                     }
-                });
+                }
                 return queue;
             }
 
@@ -1778,12 +1796,16 @@
 
                 updateCounter();
 
-                // 根据VN语言模式过滤文本
-                var displayText = filterText(d.text, State.vnLangMode);
+                // 根据VN语言模式选择文本
+                var rawText = d.text;
+                if (State.vnLangMode === 'cn' && d.cnText) {
+                    rawText = d.cnText;
+                }
+                var displayText = filterText(rawText, State.vnLangMode);
                 typewriter(displayText);
 
-                // 记录历史（使用原始文本）
-                State.vnHistory.push({ speaker: d.speaker || '旁白', text: d.text });
+                // 记录历史
+                State.vnHistory.push({ speaker: d.speaker || '旁白', text: rawText });
                 if (State.vnHistory.length > 100) State.vnHistory.shift();
             }
 
@@ -1814,8 +1836,11 @@
             function advance() {
                 // 如果正在打字，瞬间显示完
                 if (State.vnTyping) {
-                    var d = State.vnQueue[State.vnIndex];
-                    if (d) instantShow(filterText(d.text, State.vnLangMode));
+                    var dd = State.vnQueue[State.vnIndex];
+                    if (dd) {
+                        var raw = (State.vnLangMode === 'cn' && dd.cnText) ? dd.cnText : dd.text;
+                        instantShow(filterText(raw, State.vnLangMode));
+                    }
                     return;
                 }
                 State.vnIndex++;
@@ -1825,8 +1850,11 @@
             function skip() {
                 // 快速跳到下一段（瞬间显示当前，再推进）
                 if (State.vnTyping) {
-                    var d = State.vnQueue[State.vnIndex];
-                    if (d) instantShow(filterText(d.text, State.vnLangMode));
+                    var ds = State.vnQueue[State.vnIndex];
+                    if (ds) {
+                        var raws = (State.vnLangMode === 'cn' && ds.cnText) ? ds.cnText : ds.text;
+                        instantShow(filterText(raws, State.vnLangMode));
+                    }
                 }
                 State.vnIndex++;
                 if (State.vnIndex >= State.vnQueue.length) State.vnIndex = 0;
@@ -2120,11 +2148,11 @@
             setupKV();
 
             try {
-                var mdRes = await fetch('chapter_01/chapter_01.md');
-                var jsonRes = await fetch('chapter_01/chapter_01_meta.json');
+                var mdRes = await fetch('PROLOGUE/prologue.md');
+                var jsonRes = await fetch('PROLOGUE/prologue_meta.json');
 
-                if (!mdRes.ok) throw new Error('无法加载章节文件 chapter_01.md');
-                if (!jsonRes.ok) throw new Error('无法加载元数据 chapter_01_meta.json');
+                if (!mdRes.ok) throw new Error('无法加载章节文件 PROLOGUE/prologue.md');
+                if (!jsonRes.ok) throw new Error('无法加载元数据 PROLOGUE/prologue_meta.json');
 
                 var mdText = await mdRes.text();
                 var jsonData = await jsonRes.json();

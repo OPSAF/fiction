@@ -1,7 +1,8 @@
 {
   "chapter": {
-    "id": "CH00",
+    "id": "EP00",
     "type": "prologue",
+    "episode": 0,
     "title_jp": "零の目覚め",
     "title_cn": "零之觉醒",
     "title_en": "The Awakening of Zero",

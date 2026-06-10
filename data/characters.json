@@ -16,8 +16,8 @@
       "aliases": ["零", "Rei", "F級の劣等生（自嘲）"],
       "role": "主人公",
       "route": "全路線共通",
-      "first_appearance": "序章（Ch.01）",
-      "chapter_introduced": "CH00",
+      "first_appearance": "EP（序章）",
+      "chapter_introduced": "EP00",
       "status": "active",
 
       "profile": {
@@ -118,8 +118,8 @@
       "aliases": ["朱音", "天宮家の火鳳凰（ほのおのほうおう）", "アンタの幼なじみ（自称）"],
       "role": "ファーストヒロイン",
       "archetype": "ツンデレ幼なじみ",
-      "first_appearance": "序章（Ch.01）",
-      "chapter_introduced": "CH00",
+      "first_appearance": "EP（序章）",
+      "chapter_introduced": "EP00",
       "status": "active",
 
       "profile": {
@@ -227,8 +227,8 @@
       "aliases": ["小雪", "小雪ちゃん", "雪の子"],
       "role": "セカンドヒロイン",
       "archetype": "義妹·献身型",
-      "first_appearance": "序章（Ch.01）",
-      "chapter_introduced": "CH00",
+      "first_appearance": "EP（序章）",
+      "chapter_introduced": "EP00",
       "status": "active",
 
       "profile": {
@@ -333,7 +333,7 @@
       "aliases": ["エルナ", "学年首席", "エルフの姫（学園でのあだ名）"],
       "role": "サードヒロイン",
       "archetype": "エルフ貴族·知的美人",
-      "first_appearance": "Chapter 02（予定）",
+      "first_appearance": "Chapter 01（予定）",
       "chapter_introduced": "CH02",
       "status": "未登場",
 
@@ -428,7 +428,7 @@
       "aliases": ["真夜", "深夜の独行者"],
       "role": "フォースヒロイン",
       "archetype": "謎の転校生·寡黙な戦士",
-      "first_appearance": "Chapter 03（予定）",
+      "first_appearance": "Chapter 02（予定）",
       "chapter_introduced": "CH03",
       "status": "未登場",
 
@@ -523,8 +523,8 @@
       "name_meaning": "Evolutional Virtual Entity",
       "aliases": ["イヴ", "システム", "相棒（零が後に呼ぶようになる）"],
       "role": "AIアシスタント",
-      "first_appearance": "序章（Ch.01·端末起動時）",
-      "chapter_introduced": "CH00",
+      "first_appearance": "EP（序章·端末起動時）",
+      "chapter_introduced": "EP00",
       "status": "active",
 
       "profile": {
@@ -597,9 +597,9 @@
   ],
 
   "character_appearance_schedule": {
-    "CH00": ["P001", "H001", "H002", "A001"],
-    "CH02": ["P001", "H001", "H002", "H003", "A001"],
-    "CH03": ["P001", "H001", "H002", "H003", "H004", "A001"],
-    "CH06": ["H005 (？？？)"]
+    "EP00": ["P001", "H001", "H002", "A001"],
+    "CH01": ["P001", "H001", "H002", "H003", "A001"],
+    "CH02": ["P001", "H001", "H002", "H003", "H004", "A001"],
+    "CH05": ["H005 (？？？)"]
   }
 }

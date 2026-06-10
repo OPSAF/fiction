@@ -4,12 +4,13 @@
     "title_cn": "终端之梦",
     "title_en": "Terminal Phantasm",
     "last_updated": "2026-06-10",
-    "public_chapters_released": 1
+    "public_chapters_released": 1,
+    "note": "EP = 序章（Prologue）。Chapter 01 以降为正式章节。"
   },
 
   "chapters": [
     {
-      "id": "CH00",
+      "id": "EP00",
       "type": "prologue",
       "number": 0,
       "title_jp": "零の目覚め",
@@ -20,37 +21,73 @@
       "word_count": 21000,
       "pov": "神代零（一人称）",
       "timeline": "星暦318年 春の月·入学試験当日",
-      "summary_short": "F級の少年·神代零は、星導学園の入学試験で絶体絶命の中、意識の奥底に眠る「端末（ターミナル）」の力を覚醒させる。",
+      "summary_short": "F級の少年·神代零は、星導学園の入学試験で絶体絶命の中、意識の奥底に眠る「端末（ターミナル）」の力を覚醒させる。義妹·小雪との日常、幼なじみ·朱音との絆、そしてAI·Eveとの出会い。",
       "characters_appeared": ["P001", "H001", "H002", "A001"],
-      "locations_featured": ["神代家", "星京", "星導学園"],
+      "locations_featured": ["神代家", "星京", "魔力鉄道", "星導学園", "桜の裏庭"],
       "terminal_commands_introduced": ["analyze", "compile", "execute", "monitor", "help", "save", "exit"],
-      "file": "PROLOGUE/chapter_01.md"
+      "file": "PROLOGUE/prologue.md"
     },
     {
-      "id": "CH02",
+      "id": "CH01",
       "type": "chapter",
-      "number": 2,
+      "number": 1,
       "title_jp": "星導学園",
       "title_cn": "星导学园",
       "title_en": "Seidou Gakuen",
       "arc": "共通ルート",
       "status": "planned",
-      "summary_short": "入学した零を待ち受ける新たな出会い——エルフの留学生、エルナ・ヴィンデル。学年首席の彼女は、零の「異常」にいち早く気づく。",
+      "summary_short": "入学初日。分班発表、魔力測定、そしてエルフの留学生エルナ・ヴィンデルとの出会い。学园生活の幕開け。",
       "characters_to_appear": ["P001", "H001", "H002", "H003", "A001"],
+      "file": "chapter_01/chapter_01.md"
+    },
+    {
+      "id": "CH02",
+      "type": "chapter",
+      "number": 2,
+      "title_jp": "魔族の転校生",
+      "title_cn": "魔族的转校生",
+      "title_en": "The Demon Transfer Student",
+      "arc": "共通ルート",
+      "status": "planned",
+      "summary_short": "学期途中に現れた転校生·黒鉄真夜。魔族への偏見の中、もう一人の「異質な存在」として零は彼女に近づく。Eveがv1.5へ進化。",
+      "characters_to_appear": ["P001", "H001", "H002", "H003", "H004", "A001"],
       "file": "chapter_02/chapter_02.md"
     },
     {
       "id": "CH03",
       "type": "chapter",
       "number": 3,
-      "title_jp": "魔族の転校生",
-      "title_cn": "魔族的转校生",
-      "title_en": "The Demon Transfer Student",
+      "title_jp": "魔法演習",
+      "title_cn": "魔法演习",
+      "title_en": "Magic Training Exercise",
       "arc": "共通ルート",
       "status": "planned",
-      "summary_short": "学期途中に現れた転校生·黒鉄真夜。魔族への偏見が渦巻く中、もう一人の「異質な存在」として零は彼女に近づいていく。",
-      "characters_to_appear": ["P001", "H001", "H002", "H003", "H004", "A001"],
+      "summary_short": "学園恒例の魔法演習。朱音とのコンビ、観測者効果による端末不安定、暴走魔兽との遭遇——制約の中で戦う零の智略。",
       "file": "chapter_03/chapter_03.md"
+    },
+    {
+      "id": "CH04",
+      "type": "chapter",
+      "number": 4,
+      "title_jp": "妹の秘密",
+      "title_cn": "妹妹的秘密",
+      "title_en": "The Sister's Secret",
+      "arc": "共通ルート",
+      "status": "planned",
+      "summary_short": "小雪を中心に展開。彼女の出自、魔力管理局の影、零が書く初めての「誰かのための魔法スクリプト」。",
+      "file": "chapter_04/chapter_04.md"
+    },
+    {
+      "id": "CH05",
+      "type": "chapter",
+      "number": 5,
+      "title_jp": "祭りの夜",
+      "title_cn": "祭典之夜",
+      "title_en": "Night of the Festival",
+      "arc": "共通ルート",
+      "status": "planned",
+      "summary_short": "星祭り。五人のヒロインが一堂に会する。白羽栞、初めての言葉——「あなた……この世界の人じゃないでしょう？」——共通ルートEND。",
+      "file": "chapter_05/chapter_05.md"
     }
   ],
 
@@ -58,8 +95,32 @@
     "common": {
       "name_jp": "共通ルート",
       "name_cn": "共通路线",
-      "chapters": ["CH00", "CH02", "CH03", "CH04", "CH05", "CH06"],
+      "episodes": ["EP00", "CH01", "CH02", "CH03", "CH04", "CH05"],
       "description": "全女主角登場·学園生活·端末能力の覚醒と成長"
+    },
+    "akane": {
+      "name_jp": "朱音ルート「炎の誓い」",
+      "chapters": ["CH06", "CH07", "CH08"]
+    },
+    "koyuki": {
+      "name_jp": "小雪ルート「雪の結晶」",
+      "chapters": ["CH07", "CH08", "CH09"]
+    },
+    "eruna": {
+      "name_jp": "エルナルート「風の詩」",
+      "chapters": ["CH08", "CH09", "CH10"]
+    },
+    "maya": {
+      "name_jp": "真夜ルート「闇の共鳴」",
+      "chapters": ["CH11", "CH12", "CH13"]
+    },
+    "shiori": {
+      "name_jp": "栞ルート「境界の栞」",
+      "chapters": ["CH12", "CH13", "CH14"]
+    },
+    "true": {
+      "name_jp": "TRUEルート",
+      "chapters": ["CH15", "CH16", "CH17", "CH18", "CH19"]
     }
   }
 }
