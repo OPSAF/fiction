@@ -530,12 +530,13 @@
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             z-index: 200;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            will-change: opacity;
+            transition: opacity 0.25s ease;
         }
         .spatial-overlay.active { opacity: 1; pointer-events: auto; }
 
@@ -550,10 +551,12 @@
             z-index: 201;
             display: flex;
             flex-direction: column;
-            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: -10px 0 60px rgba(0,0,0,0.3);
+            will-change: transform;
+            contain: layout style;
+            transition: right 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+            box-shadow: -12px 0 48px rgba(0,0,0,0.25);
         }
-        [data-theme="light"] .spatial-panel { box-shadow: -10px 0 60px rgba(0,0,0,0.08); }
+        [data-theme="light"] .spatial-panel { box-shadow: -8px 0 32px rgba(0,0,0,0.06); }
         .spatial-panel.open { right: 0; }
 
         .spatial-header {
@@ -816,11 +819,15 @@
         /* ========== 视觉小说模式覆盖层（保留完整功能） ========== */
         #vn-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            z-index: 1000; display: none;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
             background: var(--bg-primary);
             flex-direction: column;
+            transition: opacity 0.3s ease, visibility 0.3s;
+            will-change: opacity;
         }
-        #vn-overlay.active { display: flex; }
+        #vn-overlay.active { visibility: visible; opacity: 1; }
 
         .vn-toolbar {
             display: flex; align-items: center; gap: 8px;
@@ -1642,7 +1649,7 @@
                 });
             }
 
-            return { navigateEpisode, goToEpisode, updateEpisodeSelect, updateSpatialEpisodeList };
+            return { navigateEpisode, goToEpisode, updateEpisodeSelect, updateSpatialEpisodeList, initSidebarNav: updateSpatialEpisodeList };
         })();
 
         function navigateEpisode(dir) { EpisodeController.navigateEpisode(dir); }
@@ -1906,7 +1913,7 @@
                 overlay.classList.add('active');
                 panel.classList.add('open');
                 document.body.style.overflow = 'hidden';
-                renderNavigation();
+                // 内容已在 init 时预渲染，无需每次 open 重新渲染
             }
 
             function close() {
