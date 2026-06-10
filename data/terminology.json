@@ -1,0 +1,172 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "spoiler_level": "public",
+    "description": "用語辞典。作中に登場する専門用語·組織·概念の定義。HTML Wiki 用。"
+  },
+
+  "categories": {
+    "magic_fundamentals": "魔法基礎",
+    "magic_engineering": "魔法工学",
+    "society": "社会·制度",
+    "terminal": "端末関連",
+    "mysteries": "未解決の謎"
+  },
+
+  "terms": [
+    {
+      "id": "TRM001",
+      "term_jp": "マナ粒子",
+      "term_kana": "マナりゅうし",
+      "term_cn": "魔力粒子",
+      "term_en": "Mana Particle",
+      "category": "magic_fundamentals",
+      "definition": "エルデ世界の基本粒子の一つ。波粒二象性を持ち、世界中に遍在する。魔法現象の物理的基盤。",
+      "first_appearance": "序章",
+      "related_terms": ["魔力等級", "魔力粒子不親和体質", "魔法属性"]
+    },
+    {
+      "id": "TRM002",
+      "term_jp": "魔力等級",
+      "term_kana": "まりょくとうきゅう",
+      "term_cn": "魔力等级",
+      "term_en": "Magic Rank",
+      "category": "magic_fundamentals",
+      "definition": "魔力粒子親和度と操作精度に基づく7段階評価（S·A·B·C·D·E·F）。遺伝に強く依存する。",
+      "first_appearance": "序章",
+      "related_terms": ["F級", "魔力粒子不親和体質"]
+    },
+    {
+      "id": "TRM003",
+      "term_jp": "F級",
+      "term_kana": "エフきゅう",
+      "term_cn": "F级",
+      "term_en": "F-Rank",
+      "category": "magic_fundamentals",
+      "definition": "魔力等級の最下位。魔力粒子親和度が極めて低く、ほぼすべての魔法が使用不能。人口の約3%。社会的には「魔法障害」と呼ばれる。",
+      "first_appearance": "序章",
+      "related_terms": ["魔力粒子不親和体質", "神代零"]
+    },
+    {
+      "id": "TRM004",
+      "term_jp": "魔力粒子不親和体質",
+      "term_kana": "マナりゅうしふしんわたいしつ",
+      "term_cn": "魔力粒子不亲和体质",
+      "term_en": "Mana Particle Incompatibility",
+      "category": "magic_fundamentals",
+      "definition": "魔力粒子が体内で安定して存在できない先天性の体質。神代零が該当。原因は不明。治療法も存在しない。",
+      "first_appearance": "序章",
+      "related_terms": ["F級", "神代零"]
+    },
+    {
+      "id": "TRM005",
+      "term_jp": "四大公爵家",
+      "term_kana": "よんだいこうしゃくけ",
+      "term_cn": "四大公爵家",
+      "term_en": "Four Grand Ducal Houses",
+      "category": "society",
+      "definition": "帝国最高位の貴族家系。天宮家を含む四家。政治的·軍事的に絶大な影響力を持つ。",
+      "first_appearance": "序章",
+      "related_terms": ["天宮家", "天宮朱音"]
+    },
+    {
+      "id": "TRM006",
+      "term_jp": "魔力鉄道",
+      "term_kana": "まりょくてつどう",
+      "term_cn": "魔力铁道",
+      "term_en": "Mana Railway",
+      "category": "magic_engineering",
+      "definition": "魔鉱エンジンで駆動する鉄道網。帝国の都市間·都市内交通の大動脈。魔法工業革命の象徴。",
+      "first_appearance": "序章",
+      "related_terms": ["魔鉱", "魔晶灯", "魔法工業革命"]
+    },
+    {
+      "id": "TRM007",
+      "term_jp": "魔晶灯",
+      "term_kana": "ましょうとう",
+      "term_cn": "魔晶灯",
+      "term_en": "Mana Crystal Lamp",
+      "category": "magic_engineering",
+      "definition": "魔晶を使用した照明。日中に自然の魔力粒子を吸収し、夜間に淡い青色の光を放つ。街灯から家庭用まで広く普及。",
+      "first_appearance": "序章",
+      "related_terms": ["魔晶"]
+    },
+    {
+      "id": "TRM008",
+      "term_jp": "魔法工業革命",
+      "term_kana": "まほうこうぎょうかくめい",
+      "term_cn": "魔法工业革命",
+      "term_en": "Magical Industrial Revolution",
+      "category": "society",
+      "definition": "約五十年前から帝国で進行中の技術·社会変革。魔力エネルギーを利用した工業化により、社会構造が大きく変化しつつある。",
+      "first_appearance": "序章",
+      "related_terms": ["魔力鉄道", "魔油", "魔鉱"]
+    },
+    {
+      "id": "TRM009",
+      "term_jp": "星導学園",
+      "term_kana": "せいどうがくえん",
+      "term_cn": "星导学园",
+      "term_en": "Seidou Gakuen",
+      "category": "society",
+      "definition": "帝国最古·最高峰の魔法学院。高等部の入学倍率は帝国一。貴族·平民を問わず優秀な者が集まる。",
+      "first_appearance": "序章",
+      "related_terms": ["神代零", "天宮朱音"]
+    },
+    {
+      "id": "TRM010",
+      "term_jp": "端末",
+      "term_kana": "ターミナル",
+      "term_cn": "终端",
+      "term_en": "Terminal",
+      "category": "terminal",
+      "definition": "神代零の意識内に存在するコマンドラインインターフェース。魔法の「底層コード」にアクセス可能。Eveが搭載されている。",
+      "first_appearance": "序章（実技試験中に覚醒）",
+      "related_terms": ["Eve", "Observer #7", "Token"]
+    },
+    {
+      "id": "TRM011",
+      "term_jp": "Eve（イヴ）",
+      "term_kana": "イヴ",
+      "term_cn": "Eve",
+      "term_en": "Eve",
+      "category": "terminal",
+      "definition": "端末システムに搭載されたAIアシスタント。零を「Observer #7」と呼ぶ。自動応答メッセージによれば、零の最初のコマンド実行をトリガーに起動した。詳細は不明。",
+      "first_appearance": "序章",
+      "related_terms": ["端末", "Observer #7"]
+    },
+    {
+      "id": "TRM012",
+      "term_jp": "Observer #7",
+      "term_kana": "オブザーバー·ナンバーセブン",
+      "term_cn": "第七号观察者",
+      "term_en": "Observer #7",
+      "category": "mysteries",
+      "definition": "Eveが神代零を呼ぶ識別名。#7は少なくとも6人の先行者が存在したことを示唆する——が、その意味は現時点で不明。",
+      "first_appearance": "序章",
+      "related_terms": ["Eve", "端末", "神代零"]
+    },
+    {
+      "id": "TRM013",
+      "term_jp": "氷晶変異",
+      "term_kana": "ひょうしょうへんい",
+      "term_cn": "冰晶变异",
+      "term_en": "Glacial Crystal Mutation",
+      "category": "magic_fundamentals",
+      "definition": "極めて稀な魔力変異。氷属性魔力が異常に増幅されるが、制御が極めて困難。感情の高ぶりで無差別に周囲を凍結させる危険性がある。神代小雪が該当。",
+      "first_appearance": "序章（monitorコマンドで異常検出）",
+      "related_terms": ["神代小雪"]
+    },
+    {
+      "id": "TRM014",
+      "term_jp": "Token",
+      "term_kana": "トークン",
+      "term_cn": "Token",
+      "term_en": "Token",
+      "category": "terminal",
+      "definition": "端末使用時に消費されるリソース単位。毎日一定量回復。複雑な操作やEveの深度対話はより多くのTokenを消費する。零の初期値は1000。",
+      "first_appearance": "序章",
+      "related_terms": ["端末", "Eve"]
+    }
+  ]
+}

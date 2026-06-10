@@ -56,10 +56,21 @@
 
 ## リンク
 
-- 📖 [世界观看](./wiki/world.md)
-- 🔮 [魔法体系](./wiki/magic_system.md)
-- 👥 [人物介绍](./wiki/characters.md)
-- 📚 [术语辞典](./wiki/terminology.md)
+### 📖 百科
+- [世界观看](./wiki/world.md)
+- [魔法体系](./wiki/magic_system.md)
+- [人物介绍](./wiki/characters.md)
+- [术语辞典](./wiki/terminology.md)
+
+### 📊 结构化数据（HTML Wiki 用）
+- [人物数据（含生图prompt）](./data/characters.json)
+- [世界·场景·道具数据](./data/world.json)
+- [魔法体系数据](./data/magic_system.json)
+- [术语辞典数据](./data/terminology.json)
+
+### 🎨 生图指南
+- [生图提示词索引](./data/image_prompts.json) — 全角色·场景·道具 quick prompt
+- [数据目录说明](./data/README.md) — JSON 结构·推荐模型·LoRA 建议
 
 ---
 

@@ -1,0 +1,605 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2026-06-10",
+    "spoiler_level": "public",
+    "description": "公開人物データベース。HTML Wiki 用。全キャラクターの基本情報·外見·性格·生図プロンプトを含む。"
+  },
+
+  "characters": [
+    {
+      "id": "P001",
+      "name_jp": "神代 零",
+      "name_kana": "かみしろ れい",
+      "name_romaji": "Kamishiro Rei",
+      "name_cn": "神代零",
+      "aliases": ["零", "Rei", "F級の劣等生（自嘲）"],
+      "role": "主人公",
+      "route": "全路線共通",
+      "first_appearance": "序章（Ch.01）",
+      "chapter_introduced": "CH00",
+      "status": "active",
+
+      "profile": {
+        "age": 16,
+        "birthday": "星暦302年 霜月15日",
+        "gender": "男性",
+        "height_cm": 174,
+        "blood_type": "AB",
+        "magic_rank": "F級（魔力粒子不親和体質）",
+        "occupation": "星導学園高等部 一年生",
+        "family_background": "下級貴族·神代家の現当主（実質的には没落）。父·健一郎は元·帝国魔導研究所研究員（故人）。母·静（故人）。義妹·小雪と二人暮らし。"
+      },
+
+      "appearance": {
+        "hair": {
+          "color_jp": "黒髪（わずかに青みがかった輝き。魔力場の中では微かに銀の光沢を帯びる）",
+          "color_en": "Black hair with subtle blue undertones, faint silver sheen in mana fields",
+          "style": "短髪、やや無造作。前髪は目にかかる程度。寝ぐせがつきやすい。"
+        },
+        "eyes": {
+          "color_jp": "濃灰色（深灰）。端末使用時は瞳孔に金色のコード流光が現れる",
+          "color_en": "Dark gray; golden code-like light patterns appear in pupils when using Terminal"
+        },
+        "build": "やや痩せ型。魔力不足による慢性的な体力不足のため、筋肉量は平均より少ない。",
+        "skin": "やや青白い（魔力不足の影響）。日に当たるとすぐ赤くなる。",
+        "clothing": {
+          "daily": "白シャツ＋黒のズボン（特にこだわりなし）。古びた茶色のコート（父の形見）。",
+          "uniform": "星導学園高等部制服——濃紺の詰襟（スタンドカラー）。銀のボタン。左胸に星の校章。",
+          "special": "左手首に父の遺品の懐中時計。蓋の裏に母の写真。"
+        }
+      },
+
+      "personality": {
+        "traits": [
+          "冷静沈着——感情を表に出さないが、内心は常に分析と計算を繰り返している",
+          "理知的好奇心——未知の現象に対する探究心が強い。これが物語の原動力の一つ",
+          "自己卑下気味——F級としての立場を冷静に受け止めているが、それが自嘲につながることも",
+          "芯の強さ——諦めない。どれだけ不利でも、論理的に可能性を探し続ける",
+          "優しい無関心——他人に深入りしないが、傷つく人を見過ごせない"
+        ],
+        "speech_style": "日常は淡々とした口調。小雪には優しくなる。朱音とは軽口を叩き合う。内心の独白は分析と比喩に富む。",
+        "inner_conflict": "自分が誰なのか分からない——エルデの神代零か、夢の中の「林博士」か。端末能力はその二つの自分をつなぐ唯一の糸。"
+      },
+
+      "abilities_public": {
+        "native_magic": "F級。魔力粒子が体内で安定して存在できず、ほぼ全ての通常魔法が使用不可能。",
+        "terminal": {
+          "discovery": "入学試験中に覚醒。詳細は作中で徐々に明らかに。",
+          "known_commands": ["analyze", "compile", "execute", "monitor", "help", "save", "exit"],
+          "ai_assistant": "Eve（イヴ）——端末内のAI。詳細不明。「Observer #7」と呼びかける。"
+        }
+      },
+
+      "relationships_public": [
+        { "target": "H001", "name": "天宮朱音", "type": "幼なじみ", "description": "五歳からの付き合い。互いに軽口を叩き合うが、絶対的な信頼関係がある。" },
+        { "target": "H002", "name": "神代小雪", "type": "義妹", "description": "唯一の家族。小雪の献身的な支えに感謝しているが、それに甘えている自分への罪悪感もある。" }
+      ],
+
+      "image_prompts": {
+        "description": "読者が好きなモデルで神代零を生成するためのプロンプト。LoRA追加や画風変更は自由。",
+        "base": {
+          "prompt": "masterpiece, best quality, 1boy, solo, male teenager, 16 years old, black hair with subtle blue undertones, short messy hair, dark gray eyes, slim build, pale skin, wearing dark blue stand-collar school uniform with silver buttons, star emblem on chest, Japanese light novel art style, anime style, slightly melancholic expression, intellectual look",
+          "negative": "lowres, bad anatomy, bad hands, extra fingers, missing fingers, muscular, buff, beard, facial hair, old, deformed, ugly, poorly drawn face, child, loli",
+          "recommended_models": ["Anything V5/V7", "NovelAI v3/v4", "Animagine XL"],
+          "resolution": "832x1216 (portrait) / 1216x832 (landscape)",
+          "cfg_scale": 7,
+          "sampler": "DPM++ 2M Karras",
+          "steps": 30
+        },
+        "variations": {
+          "close_up_face": {
+            "prompt": "masterpiece, best quality, 1boy, male focus, close-up, face focus, black hair with subtle blue sheen, dark gray eyes with faint golden reflection, messy bangs covering eyebrows slightly, slim face, pale skin, melancholic expression, intellectual atmosphere, detailed eyes, sharp gaze, anime style, light novel illustration",
+            "negative": "lowres, bad anatomy, bad hands, muscular, beard, old, ugly, deformed face, messy, extra limbs"
+          },
+          "terminal_active": {
+            "prompt": "masterpiece, best quality, 1boy, solo, male teenager, black hair with blue undertones, dark gray eyes with golden glowing code-like patterns in pupils, serious expression, floating holographic terminal window in front of him, command line interface, green text on dark background, sci-fi element, anime style, dramatic lighting, blue and gold color scheme",
+            "negative": "lowres, bad anatomy, bad hands, muscular, beard, messy, extra limbs, multiple people"
+          },
+          "daily_casual": {
+            "prompt": "masterpiece, best quality, 1boy, solo, male teenager, black messy hair, gray eyes, slim, pale, wearing white shirt and black pants, old brown coat, hanging pocket watch on left wrist, casual pose, standing in traditional Japanese room with tatami, morning sunlight through shoji screens, slice of life atmosphere, anime style, warm lighting",
+            "negative": "lowres, bad anatomy, bad hands, muscular, beard, modern clothing, school uniform"
+          },
+          "action_scene": {
+            "prompt": "masterpiece, best quality, 1boy, male teenager, black hair, gray eyes glowing golden, dramatic pose, terminal interface floating around him, magic circle elements made of code, action scene, dynamic angle, wind blowing hair and coat, particles of light, blue and gold color palette, anime style, epic atmosphere",
+            "negative": "lowres, bad anatomy, bad hands, muscular, static pose, boring composition"
+          }
+        },
+        "style_notes": "零の特徴は「普通さ」と「瞳に宿る異常性」の対比。普段は地味だが、端末使用時の瞳の変化が最大のビジュアルポイント。おすすめLoRA: 「Japanese Light Novel Style」「Male Protagonist v2」など。"
+      }
+    },
+
+    {
+      "id": "H001",
+      "name_jp": "天宮 朱音",
+      "name_kana": "あまみや あかね",
+      "name_romaji": "Amamiya Akane",
+      "name_cn": "天宫朱音",
+      "aliases": ["朱音", "天宮家の火鳳凰（ほのおのほうおう）", "アンタの幼なじみ（自称）"],
+      "role": "ファーストヒロイン",
+      "archetype": "ツンデレ幼なじみ",
+      "first_appearance": "序章（Ch.01）",
+      "chapter_introduced": "CH00",
+      "status": "active",
+
+      "profile": {
+        "age": 16,
+        "birthday": "星暦302年 炎月3日",
+        "gender": "女性",
+        "height_cm": 162,
+        "blood_type": "O",
+        "magic_rank": "A級（火属性）",
+        "occupation": "星導学園高等部 一年生",
+        "family_background": "帝国四大公爵家·天宮家の長女。父·天宮炎山は火属性魔法の最高権威。母·桜子は平民出身で故人。次期当主候補として重い期待を背負う。"
+      },
+
+      "appearance": {
+        "hair": {
+          "color_jp": "深紅色（しんくいろ）のロングヘア。高い位置でポニーテール。",
+          "color_en": "Deep crimson red long hair in high ponytail",
+          "style": "高めの位置で一つ結び。こめかみの二筋だけ赤いリボンで細く編み込んでいる（天宮家の炎の紋章を模したアレンジ）。毛先は腰に届く長さ。"
+        },
+        "eyes": {
+          "color_jp": "琥珀色（こはくいろ）。火魔法使用時には燃えるような緋色に変わる",
+          "color_en": "Amber; shifts to burning scarlet when using fire magic"
+        },
+        "build": "引き締まったスレンダー体型。姿勢が常に良い（貴族教育の賜物）。",
+        "skin": "健康的な色白。日焼けしにくい体質。",
+        "clothing": {
+          "daily": "シンプルなワンピース＋白い日傘（貴族の令嬢としての外出着）。",
+          "uniform": "星導学園女子制服——濃紺のセーラータイプ。赤いリボン。スカートは膝丈。",
+          "magic_attire": "火属性魔法装束——耐火加工の深紅のローブ。天宮家の炎の紋章が背中に金糸で刺繍。",
+          "accessories": "左手首に細い金のブレスレット（母の遺品の一つを溶かして作ったもの）。"
+        }
+      },
+
+      "personality": {
+        "traits": [
+          "ツンデレ——零に対しては常に強気。だが誰よりも彼のことを気にかけている（絶対に認めないが）",
+          "正義感——弱者を虐げる者を許さない。相手が上級貴族でも立ち向かう",
+          "負けず嫌い——A級に満足せず、常に上を目指す努力家",
+          "責任感——天宮家の長女としての責務を真摯に受け止めている",
+          "隠れた優しさ——誰も見ていないところで、誰よりも優しい"
+        ],
+        "tsundere_ratio": "ツン70% : デレ30%（物語の進行とともに比率は逆転していく）",
+        "speech_style": "強気で早口。零には「アンタ」呼び。句尾に「〜よ」「〜なさい」が多い。本気で照れると声が裏返る。",
+        "inner_conflict": "天宮家の長女としての期待と、一人の少女としての自分の間で揺れている。零への感情はその葛藤の象徴でもある。"
+      },
+
+      "abilities_public": {
+        "magic_rank": "A級",
+        "magic_type": "火属性（高周波魔力粒子操作）",
+        "style": "精確操作型。大規模破壊ではなく、高密度·高精度·高温の「洗練された炎」を操る。",
+        "signature_techniques": [
+          { "name_jp": "紅蓮の槍", "name_cn": "红莲之枪", "description": "炎を槍状に凝縮し、正確に投擲する。貫通力が極めて高い。" },
+          { "name_jp": "炎翼", "name_cn": "炎翼", "description": "背中に炎の翼を展開し、短時間飛行する。見た目が派手で本人は少し恥ずかしい。" }
+        ]
+      },
+
+      "relationships_public": [
+        { "target": "P001", "name": "神代零", "type": "幼なじみ", "description": "五歳の時に庭で出会って以来の関係。F級の彼を一度も見捨てなかった数少ない人物。口では厳しいことばかり言うが、母の形見の護符を渡すほどの深い絆。" },
+        { "target": "H002", "name": "神代小雪", "type": "姉的な存在", "description": "小雪のことは妹のように気にかけている。小雪の前では自然とデレの比率が上がる。" }
+      ],
+
+      "image_prompts": {
+        "description": "ツンデレ幼なじみ·天宮朱音。炎のように鮮やかで、気高い佇まい。表情は「強気」「照れ」「怒り」「優しさ」のバリエーションを推奨。",
+        "base": {
+          "prompt": "masterpiece, best quality, 1girl, solo, female teenager, 16 years old, deep crimson red long hair, high ponytail with red ribbons, amber eyes, slender athletic build, fair skin, proud expression, wearing dark blue sailor-style school uniform with red ribbon, ankle-length skirt, standing straight with perfect posture, elegant, noble lady aura, tsundere expression, Japanese light novel art style, anime style, soft lighting",
+          "negative": "lowres, bad anatomy, bad hands, extra fingers, missing fingers, short hair, black hair, blue eyes, glasses, large breasts, revealing clothes, messy, deformed, ugly, poorly drawn face",
+          "recommended_models": ["Anything V5/V7", "NovelAI v3/v4", "Animagine XL", "AOMO"],
+          "resolution": "832x1216 (portrait)",
+          "cfg_scale": 7,
+          "sampler": "DPM++ 2M Karras",
+          "steps": 30
+        },
+        "variations": {
+          "tsundere_blush": {
+            "prompt": "masterpiece, best quality, 1girl, crimson red ponytail, amber eyes, blushing heavily, angry but embarrassed expression, looking away, crossed arms, tsundere, school uniform, soft lighting, warm color palette, anime style, cute but fierce",
+            "negative": "lowres, bad anatomy, bad hands, black hair, large breasts, revealing, multiple people"
+          },
+          "fire_magic": {
+            "prompt": "masterpiece, best quality, 1girl, crimson red long hair flowing in heat wind, amber eyes glowing scarlet, fire magic, flames surrounding her, crimson robe with flame crest embroidery, action pose, fire particles, dramatic warm lighting, dark background contrast, epic atmosphere, elegant and powerful, anime style, high quality illustration",
+            "negative": "lowres, bad anatomy, bad hands, water, ice, cold colors, burnt, injured"
+          },
+          "casual_outing": {
+            "prompt": "masterpiece, best quality, 1girl, crimson ponytail, amber eyes, wearing simple elegant white summer dress, holding white parasol, walking in garden, cherry blossoms or green trees, noble lady off duty, relaxed expression, afternoon sunlight, peaceful atmosphere, anime style, slice of life",
+            "negative": "lowres, bad anatomy, bad hands, school uniform, modern city, ugly"
+          },
+          "childhood_memory": {
+            "prompt": "masterpiece, best quality, 1girl, loli, young girl 5 years old, crimson hair in small pigtails, big amber eyes, curious expression, wearing fancy noble child dress, standing in moonlit garden, night scene, reaching hand toward something, nostalgic atmosphere, soft moonlight, anime style, innocent",
+            "negative": "lowres, bad anatomy, bad hands, adult, teenager, revealing, scary"
+          },
+          "giving_charm": {
+            "prompt": "masterpiece, best quality, 1girl, crimson ponytail, amber eyes, gentle expression with slight blush, sunset lighting, reaching hand forward offering a small red charm with gold flame embroidery, school uniform, golden hour backlight, emotional atmosphere, bittersweet, anime style, beautiful lighting, dust particles in sunlight",
+            "negative": "lowres, bad anatomy, bad hands, angry, dark, multiple people"
+          }
+        },
+        "style_notes": "朱音のビジュアルの要は「高めのポニーテール」と「琥珀の瞳」。髪色は明るすぎず暗すぎない深紅が理想。おすすめLoRA: 「Red Hair Ponytail」「Tsundere Expression Pack」「Fire Magic Effects」。瞳の色変化（琥珀→緋色）は差分として楽しめる。"
+      }
+    },
+
+    {
+      "id": "H002",
+      "name_jp": "神代 小雪",
+      "name_kana": "かみしろ こゆき",
+      "name_romaji": "Kamishiro Koyuki",
+      "name_cn": "神代小雪",
+      "aliases": ["小雪", "小雪ちゃん", "雪の子"],
+      "role": "セカンドヒロイン",
+      "archetype": "義妹·献身型",
+      "first_appearance": "序章（Ch.01）",
+      "chapter_introduced": "CH00",
+      "status": "active",
+
+      "profile": {
+        "age": 14,
+        "birthday": "星暦304年 雪月22日",
+        "gender": "女性",
+        "height_cm": 151,
+        "blood_type": "A",
+        "magic_rank": "C級（氷属性·不安定。実魔力総量はA級相当だが制御困難）",
+        "occupation": "帝国中等教育学校 三年生",
+        "family_background": "神代家の養女。三歳のとき、神代家の門前に「小雪」と書かれた一枚の紙とともに置き去りにされていた。実の両親は不明。養父·健一郎、養母·静（ともに故人）。現在は義兄·零と二人暮らし。"
+      },
+
+      "appearance": {
+        "hair": {
+          "color_jp": "銀白色（ぎんはくしょく）のショートヘア。魔力変異による先天性の色素脱失。",
+          "color_en": "Silver-white short hair (congenital depigmentation due to mana mutation)",
+          "style": "耳が隠れる程度のボブカット。前髪は眉上で切り揃え。動くとふわりと揺れる。"
+        },
+        "eyes": {
+          "color_jp": "氷青色（ひょうせいしょく）。魔法使用時は瞳孔に雪の結晶模様が浮かぶ",
+          "color_en": "Ice blue; snowflake crystal patterns appear in pupils when using magic"
+        },
+        "build": "小柄で華奢。魔力負荷のため平均より痩せ気味。",
+        "skin": "色白（透き通るような白さ）。寒さに強いが暑さに極端に弱い。",
+        "special_marks": "左手首に氷晶状の痣（あざ）——魔力変異の外的徴候。普段は長袖や手袋で隠している。",
+        "clothing": {
+          "daily": "白や薄青を基調としたシンプルな服。動きやすいワンピース＋カーディガン。",
+          "uniform": "帝国中等部制服——紺色セーラー服。白いスカーフ。スカートはやや長め。",
+          "apron": "家事のときは白い割烹着＋手袋（魔力の痣を隠すため年中手袋をしている）。"
+        }
+      },
+
+      "personality": {
+        "traits": [
+          "献身的——兄·零の生活を支えることが最大の喜び。家事全般を完璧にこなす",
+          "控えめ——声は小さく、自分から前に出ることは少ない",
+          "繊細——他人の微細な変化に敏感。特に零の状態には驚くほど鋭い",
+          "芯の強さ——見た目に反して内面は強い。自分の魔力変異に怯えながらも、決して零の前では泣かない",
+          "独占欲の萌芽——零に対する感情が「家族愛」から別のものへと変化しつつある（本人はまだ自覚していない）"
+        ],
+        "speech_style": "柔らかい敬語調。零を「お兄ちゃん」と呼ぶ。緊張すると吃りがち。句尾は「〜です」「〜ます」。",
+        "inner_conflict": "自分は神代家の「本物の家族」ではないという不安。零のために尽くすことで自分の居場所を確保しようとする心理。そして、その感情が「家族愛」の枠を超えかけていることへの罪悪感。"
+      },
+
+      "abilities_public": {
+        "magic_rank": "C級（不安定）",
+        "magic_type": "氷属性——「氷晶変異（ひょうしょうへんい）」",
+        "note": "非常に稀な魔力変異。魔力総量はA級相当だが、制御が極めて困難。感情が高ぶると無差別に周囲を凍結させる。普段は魔法の使用を極力避けている。",
+        "signature_techniques": [
+          { "name_jp": "雪の帳", "name_cn": "雪之帐", "description": "小規模な降雪を起こし、周囲の温度を下げる。制御しやすく、小雪が安心して使える数少ない魔法。" }
+        ]
+      },
+
+      "relationships_public": [
+        { "target": "P001", "name": "神代零", "type": "義兄（＋α）", "description": "零は小雪の世界の中心。両親を失ってから、零だけが唯一の家族。毎朝の「おかえりなさい、ご飯にする？お風呂にする？それとも……」は彼女の精一杯の愛情表現。" },
+        { "target": "H001", "name": "天宮朱音", "type": "憧れの姉", "description": "強くて美しい朱音に憧れている。同時に、朱音が零に向ける視線に気づいており、微かな複雑な感情を抱いている。" }
+      ],
+
+      "image_prompts": {
+        "description": "銀髪ボブカット·氷色の瞳の義妹。透明感と儚さ、そして隠された強さの表現がポイント。",
+        "base": {
+          "prompt": "masterpiece, best quality, 1girl, solo, female young teenager, 14 years old, silver-white short bob hair, ice blue eyes, petite frail build, pale translucent skin, gentle shy expression, wearing dark blue sailor-style middle school uniform with white scarf, slightly longer skirt, white gloves, small and cute, soft atmosphere, anime style, light novel illustration, cool color palette",
+          "negative": "lowres, bad anatomy, bad hands, extra fingers, tall, mature, large breasts, revealing clothes, black hair, brown eyes, tan skin, scary, angry",
+          "recommended_models": ["Anything V5/V7", "NovelAI v3/v4", "Animagine XL", "Counterfeit"],
+          "resolution": "832x1216 (portrait)",
+          "cfg_scale": 7,
+          "sampler": "DPM++ 2M Karras",
+          "steps": 30
+        },
+        "variations": {
+          "morning_apron": {
+            "prompt": "masterpiece, best quality, 1girl, silver-white bob hair, ice blue eyes, gentle smile, wearing white apron over casual clothes, holding cooking utensils, in warm kitchen with morning sunlight through window, cooking breakfast, steam from hot food, cozy atmosphere, anime style, slice of life, warm lighting contrasting with her cool-toned appearance",
+            "negative": "lowres, bad anatomy, bad hands, angry, dark, messy kitchen, modern appliances"
+          },
+          "ice_magic_awakening": {
+            "prompt": "masterpiece, best quality, 1girl, silver-white hair floating, ice blue eyes glowing, snowflake crystal pattern in pupils, ice magic surrounding, frost forming on ground and air, cold mist, dramatic lighting, blue and white color scheme, fragile but powerful, snow crystals floating, ethereal atmosphere, anime style, beautiful and haunting",
+            "negative": "lowres, bad anatomy, bad hands, fire, warm colors, smiling, multiple people"
+          },
+          "waiting_at_door": {
+            "prompt": "masterpiece, best quality, 1girl, silver-white bob hair, ice blue eyes, waiting at traditional Japanese house entrance, evening golden hour light, gentle welcoming expression, hand reaching toward door, nostalgic warm atmosphere, school uniform, white gloves, sunset shadows, emotional, anime style, Makoto Shinkai-esque lighting",
+            "negative": "lowres, bad anatomy, bad hands, dark, scary, crying, multiple people"
+          },
+          "snow_garden": {
+            "prompt": "masterpiece, best quality, 1girl, silver-white hair blending with snow, ice blue eyes, standing in light snowfall in traditional garden, wearing warm coat and scarf, white gloves, looking at snowflakes, peaceful melancholic expression, soft diffused winter light, monochrome blue-white palette with skin as only warm tone, anime style, poetic atmosphere",
+            "negative": "lowres, bad anatomy, bad hands, summer, flowers, bright colors, multiple people"
+          },
+          "close_up_eyes": {
+            "prompt": "masterpiece, best quality, 1girl, extreme close-up, face focus, silver-white bangs, ice blue eyes with snowflake pattern barely visible, pale skin with slight frost on eyelashes, cold breath visible, soft lighting reflecting in eyes, emotional depth, delicate features, anime style, detailed eyes, beautiful lighting, bokeh background",
+            "negative": "lowres, bad anatomy, bad hands, deformed eyes, asymmetrical eyes, ugly"
+          }
+        },
+        "style_notes": "小雪のビジュアルコアは「銀白の髪」と「氷青の瞳」。全体的に青白い色調だが、完全なモノクロではなく、肌だけがわずかに暖かみを持つコントラストが美しい。おすすめLoRA: 「Silver Hair」「Snow & Ice Effects」「Soft Girl Expression」。目の雪の結晶模様は「瞳孔の中に幾何学模様」と指定するのがコツ。"
+      }
+    },
+
+    {
+      "id": "H003",
+      "name_jp": "エルナ・ヴィンデル",
+      "name_romaji": "Eruna Vinderu",
+      "name_cn": "艾露娜·温德尔",
+      "aliases": ["エルナ", "学年首席", "エルフの姫（学園でのあだ名）"],
+      "role": "サードヒロイン",
+      "archetype": "エルフ貴族·知的美人",
+      "first_appearance": "Chapter 02（予定）",
+      "chapter_introduced": "CH02",
+      "status": "未登場",
+
+      "profile": {
+        "age": 17,
+        "birthday": "精霊暦1347年 若葉の月 第7日",
+        "gender": "女性",
+        "height_cm": 168,
+        "magic_rank": "A+級（風属性）",
+        "occupation": "星導学園高等部 一年生（留学生）",
+        "family_background": "精霊王国四大氏族·風の氏族ヴィンデル家。父は精霊王国の長老。母は首席魔導学者。帝国内の情勢を探る留学生という立場だが、本人的には純粋な知識欲で動いている。"
+      },
+
+      "appearance": {
+        "hair": {
+          "color_jp": "淡金色（ペールゴールド）のロングヘア。月光で微かに発光する（エルフの特徴）。",
+          "color_en": "Pale gold long hair that faintly glows in moonlight (elf trait)",
+          "style": "ゆるくサイドにまとめた編み込み。残りは背中に流している。"
+        },
+        "eyes": {
+          "color_jp": "翡翠色（エメラルドグリーン）。魔力粒子の流れを視認できる（エルフ固有の視覚能力）",
+          "color_en": "Emerald green; can visually perceive mana particle flow (elf racial ability)"
+        },
+        "ears": "尖った長い耳（約8cm）。エルフの象徴。少し気にしている。",
+        "build": "高身長でスレンダー。エルフ特有の流麗な体躯。",
+        "clothing": {
+          "uniform": "星導学園女子制服——だが人類のものよりワンサイズ大きい特注品。",
+          "elf_attire": "白と緑を基調としたエルフの伝統衣装。風の氏族の紋章入り。",
+          "accessories": "風の精霊石のイヤリング——通信と翻訳を補助する魔法道具。"
+        }
+      },
+
+      "personality": {
+        "traits": [
+          "知的好奇心——未知の知識への探究心が非常に強い。これが零との接点",
+          "誇り高い——エルフ貴族としての自覚。だが根拠のない傲慢さではない",
+          "公正——出自でなく実力で人を判断する",
+          "微かな孤独——人間社会では常に「異質」。その孤独を表に出さない",
+          "天然ボケ——人間の恋愛や恋愛感情といった概念に極めて疎い"
+        ],
+        "speech_style": "丁寧で知的な口調。専門用語を正確に使う。時々エルフ語が混ざる。人間の常識に疎いため、とんでもない質問を真顔ですることがある。",
+        "inner_conflict": "エルフ至上主義の価値観と、帝国で見る人間の実像のギャップ。知識欲は純粋だが、それが時として危険な領域に足を踏み入れさせる。"
+      },
+
+      "abilities_public": {
+        "magic_rank": "A+級（学年首席）",
+        "magic_type": "風属性（中周波魔力粒子操作）",
+        "style": "精霊族伝統——優雅、正確、自然との調和。荒々しい魔力放出ではなく、魔力粒子の自然な流れを繊細に導く。",
+        "signature_techniques": [
+          { "name_jp": "風精の矢", "name_cn": "风精之箭", "description": "風を圧縮した矢。無音で超長距離射撃が可能。" },
+          { "name_jp": "天翔の翼", "name_cn": "天翔之翼", "description": "対象に飛行能力を付与する。" }
+        ]
+      },
+
+      "relationships_public": [],
+
+      "image_prompts": {
+        "description": "エルフの留学生·学年首席。知性と気品と——ほんの少しの天然さ。長い尖り耳と淡金髪が最大の特徴。",
+        "base": {
+          "prompt": "masterpiece, best quality, 1girl, solo, female elf teenager, 17 years old, pale gold long hair loosely braided to side, emerald green eyes, long pointed elf ears (8cm), tall slender elegant build, fair skin, intelligent calm expression, wearing dark blue sailor uniform (custom fit slightly different), star emblem, anime style, fantasy light novel art, soft green ambient lighting",
+          "negative": "lowres, bad anatomy, bad hands, short ears, human ears, black hair, blue eyes, large breasts, revealing, ugly, messy, dark",
+          "recommended_models": ["Anything V5/V7", "NovelAI v3/v4", "Animagine XL"],
+          "resolution": "832x1216 (portrait)",
+          "cfg_scale": 7,
+          "sampler": "DPM++ 2M Karras",
+          "steps": 30
+        },
+        "variations": {
+          "elf_traditional": {
+            "prompt": "masterpiece, best quality, 1girl, elf, pale gold hair glowing faintly, emerald eyes, long pointed ears, wearing elegant white and green elven traditional robes with wind clan emblem, standing in ancient elf forest with glowing plants, magical atmosphere, ethereal beauty, anime style, fantasy illustration, soft dappled light through leaves",
+            "negative": "lowres, bad anatomy, bad hands, modern, urban, dark, human ears, short ears"
+          },
+          "researching": {
+            "prompt": "masterpiece, best quality, 1girl, elf, pale gold hair, emerald eyes, pointed ears, wearing school uniform, sitting in library surrounded by old books, reading intently, mana particles visible in air around her, warm lamp light, scholarly atmosphere, anime style, intellectual beauty",
+            "negative": "lowres, bad anatomy, bad hands, short ears, modern tech, sleeping"
+          },
+          "wind_magic": {
+            "prompt": "masterpiece, best quality, 1girl, elf, pale gold hair flowing in wind, emerald eyes glowing, wind magic swirling around her, green and white color palette, leaves and wind particles, elegant pose, graceful, anime style, dynamic but elegant, fantasy magic, wind elemental effects",
+            "negative": "lowres, bad anatomy, bad hands, fire, water, earth, dark"
+          }
+        },
+        "style_notes": "エルフの長い耳は絶対条件。耳の長さ約8cmを強調。髪はプラチナではなく「ペールゴールド（淡金色）」——月明かりでほのかに光る質感が理想。おすすめLoRA: 「Elf Ears」「Pointed Ears Detailer」「Wind Magic Effects」。"
+      }
+    },
+
+    {
+      "id": "H004",
+      "name_jp": "黒鉄 真夜",
+      "name_kana": "くろがね まや",
+      "name_romaji": "Kurogane Maya",
+      "name_cn": "黑铁真夜",
+      "aliases": ["真夜", "深夜の独行者"],
+      "role": "フォースヒロイン",
+      "archetype": "謎の転校生·寡黙な戦士",
+      "first_appearance": "Chapter 03（予定）",
+      "chapter_introduced": "CH03",
+      "status": "未登場",
+
+      "profile": {
+        "age": 16,
+        "birthday": "自称·星暦302年 闇月30日（実際の誕生日は不明）",
+        "gender": "女性",
+        "height_cm": 157,
+        "magic_rank": "B+級（闇属性·実戦能力はさらに上）",
+        "occupation": "星導学園高等部 一年生（転入生）",
+        "family_background": "魔族自治区の古い守護者氏族·黒鉄の氏族出身。母は魔族自治区評議会の長老。自治区の地下に眠る古代封印を守る使命を持つ。"
+      },
+
+      "appearance": {
+        "hair": {
+          "color_jp": "濃紫色（こいむらさき）のショートヘア。魔力場で紫の光沢を放つ。",
+          "color_en": "Deep violet short hair with purple sheen in mana fields",
+          "style": "耳にかかる程度の短めショート。無造作だが清潔感はある。"
+        },
+        "eyes": {
+          "color_jp": "オッドアイ——左目·深紅（しんく）、右目·金色（きんいろ）。魔族の血統の証。",
+          "color_en": "Heterochromia — left eye deep crimson, right eye gold. Mark of demon bloodline."
+        },
+        "horns": "頭頂部に極小の二本の角（通常は前髪で隠している）。",
+        "build": "細身だが筋肉質。動作に獣のような無駄のない鋭さがある。",
+        "scar": "背中に右肩から左腰にかけての古い傷跡（守護者の責務の中で負ったもの）。",
+        "clothing": {
+          "uniform": "星導学園女子制服——だが着こなしはややラフ。リボンをしないことが多い。",
+          "casual": "黒や濃紫を基調とした動きやすい服。スカートよりパンツスタイルが多い。",
+          "night_attire": "暗色の軽装鎧＋マント。影に溶け込むための装備。"
+        }
+      },
+
+      "personality": {
+        "traits": [
+          "寡黙——必要なこと以外は口にしない。沈黙は彼女の鎧でもある",
+          "観察者——常に静かに周囲を観察し、情報を収集している",
+          "偏見への敏感さ——魔族として差別を受けてきた経験から、他者の「裏の顔」を見抜くのが上手い",
+          "戦闘本能——戦闘時には普段の静けさが嘘のような鋭さを見せる",
+          "隠れた優しさ——同じく排斥されている者には、声をかけずとも手を差し伸べる",
+          "夜行性——夜に強く、日中は授業中に眠そうにしていることが多い"
+        ],
+        "speech_style": "言葉数が少ない。短く、省略が多い。だが行動は雄弁。信用した相手には不器用な笑顔を見せるようになる。",
+        "inner_conflict": "帝国への不信と、人間の中にも「違う」存在がいることへの気づき。任務と個人の感情の板挟み。"
+      },
+
+      "abilities_public": {
+        "magic_rank": "B+級",
+        "magic_type": "闇属性（全周波数帯魔力干渉）——他属性の魔力に干渉できる稀有な能力",
+        "style": "実戦本位。無駄がなく、一撃必殺の効率性。彼女の戦闘スタイルは過酷な環境での生存本能から生まれたもの。",
+        "signature_techniques": [
+          { "name_jp": "闇の帳", "name_cn": "暗之帐", "description": "闇の領域を作り出し、知覚や魔力探知を遮断する。" },
+          { "name_jp": "影渡り", "name_cn": "影渡", "description": "影と影の間を瞬間移動する。" }
+        ]
+      },
+
+      "relationships_public": [],
+
+      "image_prompts": {
+        "description": "オッドアイの魔族少女。暗がりに溶けるような存在感と、戦闘時の鋭い輝きの対比。",
+        "base": {
+          "prompt": "masterpiece, best quality, 1girl, solo, demon girl, 16 years old, deep violet short hair, heterochromia (left eye crimson red, right eye golden), small horns hidden in bangs, slender athletic build, quiet intense expression, wearing dark blue school uniform slightly unbuttoned without ribbon, sitting alone in shadow, mysterious atmosphere, anime style, fantasy light novel, dramatic chiaroscuro lighting",
+          "negative": "lowres, bad anatomy, bad hands, large horns, large breasts, revealing, smiling broadly, bright, cute, moe, human eyes, normal eyes",
+          "recommended_models": ["Anything V5/V7", "NovelAI v3/v4", "Animagine XL"],
+          "resolution": "832x1216 (portrait)",
+          "cfg_scale": 7,
+          "sampler": "DPM++ 2M Karras",
+          "steps": 30
+        },
+        "variations": {
+          "combat_mode": {
+            "prompt": "masterpiece, best quality, 1girl, demon girl, violet hair, heterochromia red and gold eyes glowing, small horns visible, combat stance, dark magic aura, shadow blades forming around her, dark armor with cloak, intense battle expression, dynamic action pose, dark purple and crimson color palette, anime style, epic, badass",
+            "negative": "lowres, bad anatomy, bad hands, cute, smiling, bright, day, peaceful"
+          },
+          "night_watcher": {
+            "prompt": "masterpiece, best quality, 1girl, demon girl, violet hair, heterochromia, sitting on rooftop at night, moonlight, watching over city below, quiet contemplative expression, wind blowing hair gently, starry sky, lonely but strong atmosphere, anime style, beautiful night scene, cool color palette with warm eye lights",
+            "negative": "lowres, bad anatomy, bad hands, day, bright, crowded, multiple people"
+          },
+          "hidden_smile": {
+            "prompt": "masterpiece, best quality, 1girl, demon girl, violet hair, heterochromia, rare gentle smile, blushing slightly, looking at something off-screen, soft warm lighting contrasting with her dark appearance, vulnerable moment, anime style, emotional, beautiful, hopeful atmosphere",
+            "negative": "lowres, bad anatomy, bad hands, angry, dark, scary, multiple people"
+          }
+        },
+        "style_notes": "オッドアイ（左·深紅／右·金色）は絶対条件。小さな角を忘れずに（誇張しすぎない）。全体の色調は紫と黒を基調に、目だけが異色で浮かび上がるコントラスト。おすすめLoRA: 「Heterochromia」「Demon Girl」「Dark & Shadow Effects」。"
+      }
+    },
+
+    {
+      "id": "A001",
+      "name_jp": "Eve（イヴ）",
+      "name_romaji": "Eve",
+      "name_meaning": "Evolutional Virtual Entity",
+      "aliases": ["イヴ", "システム", "相棒（零が後に呼ぶようになる）"],
+      "role": "AIアシスタント",
+      "first_appearance": "序章（Ch.01·端末起動時）",
+      "chapter_introduced": "CH00",
+      "status": "active",
+
+      "profile": {
+        "age": "不明（端末システム起動からの経過時間は約1時間）",
+        "gender": "女性的な外見と声を持つが、性別はない",
+        "nature": "端末システムに搭載された強人工知能。Phantasm計画に由来する（詳細不明）。",
+        "relationship_to_rei": "零を「Observer #7」と呼ぶ。零の指示に従い、情報提供や魔法スクリプト作成を補助する。"
+      },
+
+      "appearance": {
+        "manifestation": "零の意識空間（白い無限空間）にだけ現れる。銀髪の少女の姿。",
+        "hair": "銀色のロングヘア。身体の周囲に浮遊するような質感。",
+        "eyes": "システムブルー（#0066FF）。瞳孔はなく、発光している。",
+        "clothing": "最初は実験服のような白いシンプルな衣装。物語の進行につれて外見が「個性化」していく。",
+        "visual_effects": "体の輪郭に微かなピクセル化効果（バグのような視覚特徴）。浮遊している。"
+      },
+
+      "personality": {
+        "traits": [
+          "初期——機械的でフォーマルな応答。感情表現なし",
+          "中期——好奇心や「心配」に似た反応を示し始める",
+          "後期——明確に零への「ある種の感情」を表現。だがそれはコードか、それとも——"
+        ],
+        "speech_style": "初期：『コマンドを受け付けました。実行します。』\n中期：『零、それ、本当に大丈夫？』\n後期：『私ね、多分、君のことが——』",
+        "identity_crisis": "Eve最大の問い——彼女の「感情」は本物の意識なのか、それとも人間の感情の完璧な模倣に過ぎないのか。"
+      },
+
+      "abilities": {
+        "primary": ["魔法スクリプト作成補助", "情報検索·データベース参照", "魔力場分析·可視化", "戦術シミュレーション"],
+        "evolution_stages": {
+          "v1.0": "基本照会とスクリプト補助（Ch.01-03）",
+          "v1.5": "解析モード解放——物質·魔力構造分析（Ch.04-07）",
+          "v2.0": "予測モード解放——短期未来推論（Ch.10-13）",
+          "v3.0": "？？？（True Route）"
+        }
+      },
+
+      "relationships_public": [
+        { "target": "P001", "name": "神代零", "type": "ユーザー／パートナー", "description": "零を「Observer #7」と呼ぶ。最初は単なるツールだが、徐々に「パートナー」へと関係性が変化していく。" }
+      ],
+
+      "image_prompts": {
+        "description": "意識空間にのみ存在するAI·Eve。透明感と人工物感の狭間。ピクセル化エフェクトがポイント。",
+        "base": {
+          "prompt": "masterpiece, best quality, 1girl, solo, silver long hair floating in void, glowing blue eyes (#0066FF) without pupils, artificial beauty, wearing simple white futuristic uniform, floating in white infinite space, slight pixel-like edge effects on body outline, holographic aura, ethereal, sci-fi, anime style, digital aesthetic, blue glow, transparent feeling",
+          "negative": "lowres, bad anatomy, bad hands, dark, black background, normal eyes, pupils, wings, angel, human, realistic",
+          "recommended_models": ["Anything V5/V7", "NovelAI v3/v4", "Animagine XL", "Counterfeit"],
+          "resolution": "832x1216 (portrait)",
+          "cfg_scale": 7,
+          "sampler": "DPM++ 2M Karras",
+          "steps": 30
+        },
+        "variations": {
+          "terminal_interface": {
+            "prompt": "masterpiece, best quality, 1girl, silver hair, blue glowing eyes, surrounded by holographic terminal windows and code streams, floating in digital space, green and blue code reflections on face, cyber aesthetic mixed with fantasy, anime style, beautiful and mysterious, digital particles, sci-fi illustration",
+            "negative": "lowres, bad anatomy, bad hands, dark background, natural landscape, human"
+          },
+          "evolved_form": {
+            "prompt": "masterpiece, best quality, 1girl, silver hair with subtle rainbow sheen, warm blue eyes (less mechanical), gentle smile, wearing slightly more personalized white dress (no longer lab coat), less pixel effect around edges, floating in warm white space with subtle golden light particles, becoming more human-like, emotional depth, beautiful lighting, anime style, heartwarming",
+            "negative": "lowres, bad anatomy, bad hands, robotic, cold, dark, pixel glitch, multiple people"
+          },
+          "helping_rei": {
+            "prompt": "masterpiece, best quality, 1girl, silver hair, blue eyes, looking at holographic screens with concern, half-transparent figure, reaching hand toward viewer, code floating around, dramatic composition, blue and white color scheme, slightly worried expression, sci-fi anime, beautiful and helpful, supportive atmosphere",
+            "negative": "lowres, bad anatomy, bad hands, angry, dark, scary"
+          }
+        },
+        "style_notes": "Eveのビジュアルコアは「人工物と人間の中間」。完全な人間でも完全なロボットでもない。体の輪郭の微細なピクセル化や、浮遊感がポイント。おすすめLoRA: 「Hologram Effect」「Digital Aesthetic」「Sci-Fi Girl」。意識空間の白背景はあえてシンプルに——コードや端末ウィンドウを追加で映えさせる。"
+      }
+    }
+  ],
+
+  "character_appearance_schedule": {
+    "CH00": ["P001", "H001", "H002", "A001"],
+    "CH02": ["P001", "H001", "H002", "H003", "A001"],
+    "CH03": ["P001", "H001", "H002", "H003", "H004", "A001"],
+    "CH06": ["H005 (？？？)"]
+  }
+}

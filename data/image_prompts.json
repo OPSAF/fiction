@@ -1,0 +1,98 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "description": "全生図プロンプトの統合インデックス。読者が好きなモデル（NovelAI / Anything / Niji / SDXL 等）で自由に生成できるよう、英文プロンプトを提供。LoRA追加·画風変更·解像度調整は自由。",
+    "disclaimer": "本作には「公式立ち絵」は存在しません。すべての読者が自分だけのキャラクター像を自由に生成し、楽しんでいただけます。",
+    "recommended_base_models": [
+      { "name": "NovelAI v3/v4", "strength": "日式轻小说插图风格。最适合本作画风。", "note": "付费模型" },
+      { "name": "Anything V5/V7", "strength": "通用动漫风格。社区最主流。", "note": "免费，HuggingFace可下载" },
+      { "name": "Animagine XL", "strength": "SDXL高分辨率。角色细节丰富。", "note": "免费，需要SDXL环境" },
+      { "name": "Niji Journey", "strength": "Midjourney动漫模式。在线使用。", "note": "付费，出图质量极高" },
+      { "name": "AOMO / Counterfeit", "strength": "日系轻小说/插画风。偏galgame。", "note": "免费" },
+      { "name": "MeinaMix / Hassaku", "strength": "亚洲面孔优化。适合角色特写。", "note": "免费" }
+    ],
+    "recommended_lora": [
+      "Japanese Light Novel Style",
+      "Male Protagonist v2（男性角色）",
+      "Red Hair Ponytail（朱音）",
+      "Silver Hair / White Hair（小雪·Eve）",
+      "Tsundere Expression Pack",
+      "Elf Ears Detailer（エルナ）",
+      "Heterochromia（真夜）",
+      "Fire Magic / Ice Magic / Wind Magic Effects",
+      "Hologram Effect（Eve·端末）",
+      "Taisho Romance Style（世界観·背景）"
+    ]
+  },
+
+  "quick_reference": {
+    "characters": {
+      "P001_Rei": {
+        "name": "神代零",
+        "quick_prompt": "1boy, black hair blue undertones, dark gray eyes, slim, dark blue stand-collar uniform, anime style",
+        "key_visual": "使用终端时瞳孔中出现金色代码流光",
+        "detail_in": "data/characters.json → characters[0].image_prompts"
+      },
+      "H001_Akane": {
+        "name": "天宮朱音",
+        "quick_prompt": "1girl, deep crimson red long hair, high ponytail red ribbons, amber eyes, sailor uniform red ribbon, tsundere, anime style",
+        "key_visual": "高马尾+琥珀眼+天宫家火焰纹章",
+        "detail_in": "data/characters.json → characters[1].image_prompts"
+      },
+      "H002_Koyuki": {
+        "name": "神代小雪",
+        "quick_prompt": "1girl, silver-white short bob hair, ice blue eyes, petite frail, middle school sailor uniform, white gloves, gentle shy, anime style",
+        "key_visual": "银白波波头+冰蓝眼+白手套（遮胎记）",
+        "detail_in": "data/characters.json → characters[2].image_prompts"
+      },
+      "H003_Eruna": {
+        "name": "エルナ・ヴィンデル",
+        "quick_prompt": "1girl, elf, pale gold long hair braided, emerald green eyes, long pointed ears, tall slender, intelligent, anime style",
+        "key_visual": "精灵长耳（约8cm）+淡金发+翡翠绿眼",
+        "detail_in": "data/characters.json → characters[3].image_prompts"
+      },
+      "H004_Maya": {
+        "name": "黒鉄真夜",
+        "quick_prompt": "1girl, demon girl, deep violet short hair, heterochromia (left red, right gold), small horns, athletic, quiet, anime style",
+        "key_visual": "异色瞳（左深红右金）+小角+深紫短发",
+        "detail_in": "data/characters.json → characters[4].image_prompts"
+      },
+      "A001_Eve": {
+        "name": "Eve",
+        "quick_prompt": "1girl, silver long hair floating, glowing blue eyes no pupils, white futuristic uniform, pixel edge effect, floating in white void, sci-fi anime",
+        "key_visual": "无瞳孔的发光蓝眼+身体边缘像素化效果",
+        "detail_in": "data/characters.json → characters[5].image_prompts"
+      }
+    },
+
+    "locations": {
+      "Seikyo_Day": "fantasy city, Taisho Japanese + Western architecture, mana lamps, elevated railway, steam, anime background",
+      "Seikyo_Night": "night cityscape, mana crystal lamps blue purple glow, magical aurora sky, romantic, anime background",
+      "Kamishiro_House": "small old Japanese wooden house, tile roof moss, cherry tree, cozy nostalgic, anime background",
+      "Seidou_Campus": "grand magic academy, Japanese-Western fusion, blue dome, cherry blossoms, clock tower, anime background",
+      "Hidden_Garden": "hidden garden behind school, old cherry tree, golden hour sunset, peaceful secluded, petals falling"
+    },
+
+    "scenes": {
+      "Rei_Terminal_First": "1boy, black hair, gray eyes with golden code reflection, floating terminal hologram, command line, dramatic lighting, anime illustration",
+      "Akane_Giving_Charm": "sunset, crimson ponytail girl offering red charm to boy, golden hour backlight, cherry tree, emotional, romantic subtle, anime illustration",
+      "Koyuki_Morning_Kitchen": "silver hair girl in apron cooking in traditional kitchen, morning sunlight, steaming pot, warm cozy, Ghibli-style, anime illustration"
+    },
+
+    "items": {
+      "Mana_Crystal_Lamp": "fantasy street lamp, brass and glass, blue glowing crystal, Victorian-Japanese hybrid, anime prop",
+      "Akane_Charm": "small red omamori with gold flame embroidery, precious heirloom, anime prop",
+      "Pocket_Watch": "antique silver pocket watch, tarnished, small photo inside, sentimental, anime prop"
+    }
+  },
+
+  "negative_prompt_universal": "lowres, bad anatomy, bad hands, extra fingers, missing fingers, deformed, ugly, poorly drawn, blurry, watermark, signature, text, artist name, worst quality, low quality, normal quality, jpeg artifacts, mutation, extra limbs, disconnected limbs, long neck, bad proportions",
+
+  "style_mixing_guide": {
+    "light_novel_default": "Japanese light novel art style, anime style, soft lighting, detailed",
+    "galgame_style": "visual novel art style, galgame CG, soft shading, romantic lighting, beautiful detailed eyes",
+    "movie_style": "Makoto Shinkai style lighting, cinematic composition, atmospheric, beautiful sky, detailed background",
+    "manga_style": "manga art style, black and white, screentone, dynamic panel composition, ink lines",
+    "realistic_anime": "semi-realistic anime, detailed skin texture, cinematic lighting, photorealistic background with anime character"
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "spoiler_level": "public",
+    "description": "魔法体系の構造化データ。ランク·属性·エネルギー·術式。HTML Wiki 用。"
+  },
+
+  "fundamentals": {
+    "mana_particle": {
+      "name_jp": "マナ粒子",
+      "name_cn": "魔力粒子",
+      "properties": {
+        "wave_particle_duality": "物質粒子と同様に粒子性と波動性を併せ持つ",
+        "particle_aspect": "集積·貯蔵·放出が可能。測定可能なエネルギーとして振る舞う",
+        "wave_aspect": "周波数の異なる波動として空間を伝播。周波数が魔法属性を決定する",
+        "quantum_behavior": "重ね合わせ状態·量子もつれ·観測による収縮——すべての量子力学的性質を示す"
+      },
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, science fantasy visualization, floating glowing particles of light, wave-particle duality represented as both dots and ripples, blue-white-gold color spectrum, clean scientific aesthetic, abstract but beautiful, anime-style magic particles, fantasy science, detailed particle effects",
+        "negative": "lowres, muddy, dark, solid objects, cartoon, ugly",
+        "resolution": "1216x832 (landscape)",
+        "style_notes": "魔法粒子を「ファンタジー」すぎず「SF」すぎないバランスで。"
+      }
+    }
+  },
+
+  "affinities": [
+    {
+      "id": "AFF001",
+      "frequency_band": "超低周波",
+      "name_jp": "地（アース）",
+      "name_cn": "地（Earth）",
+      "color": "琥珀色",
+      "typical_uses": ["錬金術", "物質強化", "建築", "結晶化"],
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, earth magic effect, brown and amber glowing particles, stone and crystal formations, ground cracking with golden light, geometric crystal patterns, anime magic circle with earth runes, stable and solid feeling, fantasy magic effects",
+        "negative": "lowres, fire, water, messy, dark",
+        "resolution": "832x832 (square effect)"
+      }
+    },
+    {
+      "id": "AFF002",
+      "frequency_band": "低周波",
+      "name_jp": "水（ウォーター）",
+      "name_cn": "水（Water）",
+      "color": "青色",
+      "typical_uses": ["治癒", "流体制御", "変化", "浄化"],
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, water magic effect, flowing water and blue glowing particles, healing aura, fluid dynamics visualization, gentle waves of light, cyan and azure color palette, anime magic effect, calming and pure feeling",
+        "negative": "lowres, fire, ice, dark, violent, muddy",
+        "resolution": "832x832 (square effect)"
+      }
+    },
+    {
+      "id": "AFF003",
+      "frequency_band": "中周波",
+      "name_jp": "風（ウィンド）",
+      "name_cn": "风（Wind）",
+      "color": "翠緑色",
+      "typical_uses": ["通信", "加速", "飛行", "探知"],
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, wind magic effect, swirling green and white wind currents, leaves floating, wind runes visible, transparent air blades, emerald green glow, anime magic effect, graceful and swift feeling, feather motifs",
+        "negative": "lowres, fire, earth, dark, violent, still",
+        "resolution": "832x832 (square effect)"
+      }
+    },
+    {
+      "id": "AFF004",
+      "frequency_band": "高周波",
+      "name_jp": "火（ファイア）",
+      "name_cn": "火（Fire）",
+      "color": "緋紅色",
+      "typical_uses": ["戦闘", "エネルギー", "破壊", "鍛冶"],
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, fire magic effect, intense crimson and orange flames, concentrated fire in controlled shapes, fire runes and circles, bright warm glow, anime magic effect, powerful and passionate feeling, phoenix feather motifs",
+        "negative": "lowres, water, ice, dark, explosion, uncontrolled fire, burn marks",
+        "resolution": "832x832 (square effect)"
+      }
+    },
+    {
+      "id": "AFF005",
+      "frequency_band": "超低周波",
+      "name_jp": "光（ライト）",
+      "name_cn": "光（Light）",
+      "color": "金色",
+      "typical_uses": ["結界", "浄化", "幻術", "強化"],
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, light magic effect, golden bright particles and rays, geometric barrier patterns, divine light beams, purification aura, warm white-gold glow, anime magic effect, holy and pure feeling",
+        "negative": "lowres, dark, shadow, fire, violent",
+        "resolution": "832x832 (square effect)"
+      }
+    },
+    {
+      "id": "AFF006",
+      "frequency_band": "全周波数帯",
+      "name_jp": "闇（ダーク）",
+      "name_cn": "暗（Dark）",
+      "color": "深紫色",
+      "typical_uses": ["干渉", "吸収", "反魔法", "封印"],
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, dark magic effect, deep purple and black energy, shadow tendrils, void-like absorption effect, purple crystal motifs, interference patterns, anime magic effect, mysterious and powerful feeling, not evil but natural darkness",
+        "negative": "lowres, bright, fire, holy, evil skull, gore, horror",
+        "resolution": "832x832 (square effect)"
+      }
+    }
+  ],
+
+  "ranks": [
+    { "rank": "S級", "description_jp": "伝説級。複数周波数帯を同時操作可能。", "description_cn": "传说级。可同时操作多个频率带。", "population_ratio": "<0.01%", "color_code": "#FFD700" },
+    { "rank": "A級", "description_jp": "大貴族·大魔導士級。一国に数十人。", "description_cn": "大贵族·大魔导士级别。一国仅有数十人。", "population_ratio": "~0.1%", "color_code": "#FF4444" },
+    { "rank": "B級", "description_jp": "優秀な貴族·専門魔導士。", "description_cn": "优秀贵族·专业魔导士。", "population_ratio": "~2%", "color_code": "#FF8844" },
+    { "rank": "C級", "description_jp": "一般魔導士·学生の主流。", "description_cn": "普通魔导士·学生主流。", "population_ratio": "~15%", "color_code": "#FFCC00" },
+    { "rank": "D級", "description_jp": "基礎魔法使用者。一般市民。", "description_cn": "基础魔法使用者。一般市民。", "population_ratio": "~50%", "color_code": "#88CC44" },
+    { "rank": "E級", "description_jp": "魔力微弱。生活魔法のみ。", "description_cn": "魔力微弱。仅能使用生活魔法。", "population_ratio": "~30%", "color_code": "#4488CC" },
+    { "rank": "F級", "description_jp": "魔法障害。ほぼ魔法使用不可。", "description_cn": "魔法残疾。几乎无法使用魔法。", "population_ratio": "~3%", "color_code": "#888888" }
+  ],
+
+  "energy_sources": [
+    {
+      "name_jp": "魔晶",
+      "name_cn": "魔晶",
+      "form": "固形魔力結晶",
+      "usage": "家庭用·街灯",
+      "rarity": "一般",
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, glowing blue crystal, raw mana crystal formation, jagged geometric shape, soft blue-white internal glow, fantasy mineral, resting on dark surface, anime prop style, magic energy source, clean and beautiful",
+        "negative": "lowres, diamond, green, red, dark, dull, fake, plastic",
+        "resolution": "832x832"
+      }
+    },
+    {
+      "name_jp": "魔鉱",
+      "name_cn": "魔矿",
+      "form": "魔力含有鉱物",
+      "usage": "工業·大型機械",
+      "rarity": "やや稀少",
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, rough ore with glowing blue veins, mana ore, industrial fantasy mineral, metallic with magical glow, raw unprocessed stone, heavy and dense looking, anime prop style, industrial magic resource",
+        "negative": "lowres, gold, diamond, processed, polished, plastic",
+        "resolution": "832x832"
+      }
+    },
+    {
+      "name_jp": "魔油",
+      "name_cn": "魔油",
+      "form": "液態魔力濃縮物",
+      "usage": "交通機関·エンジン",
+      "rarity": "稀少",
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, glowing viscous liquid in glass container, purple-blue luminescent oil, mana oil, swirling with internal light, fantasy fuel, steam rising slightly, anime prop style, magical industrial liquid",
+        "negative": "lowres, water, transparent, dark, dirty oil, petroleum black",
+        "resolution": "832x832"
+      }
+    }
+  ],
+
+  "terminal_public": {
+    "description": "神代零が試験中に発現させた謎のインターフェース。魔法の「底層コード」に直接アクセスできると推測されるが、全容は不明。",
+    "known_commands": [
+      { "command": "analyze", "description_jp": "対象の情報構造を解析する", "description_cn": "解析対象的信息结构" },
+      { "command": "compile", "description_jp": "魔法スクリプトをコンパイルする", "description_cn": "编译魔法脚本" },
+      { "command": "execute", "description_jp": "コンパイル済みスクリプトを実行する", "description_cn": "执行预编译脚本" },
+      { "command": "monitor", "description_jp": "周辺の魔力場を観測する", "description_cn": "监测周边魔力场" },
+      { "command": "help", "description_jp": "ヘルプを表示する", "description_cn": "显示帮助" },
+      { "command": "save", "description_jp": "現在の状態を保存する", "description_cn": "保存当前状态" },
+      { "command": "exit", "description_jp": "端末を終了する（零は N を選択）", "description_cn": "退出终端（零选择N）" }
+    ],
+    "known_limitations": [
+      "Tokenシステム——使用ごとにTokenを消費。上限あり。",
+      "事前コンパイルの必要性——複雑な魔法は事前準備が必要。",
+      "誰もこのインターフェースを見ることができない——零の意識内にのみ存在。"
+    ],
+    "image_prompts": {
+      "terminal_interface": {
+        "prompt": "masterpiece, best quality, holographic command line interface, dark background with glowing green and blue text, retro-futuristic terminal window, code scrolling, cursor blinking, semi-transparent floating screen, sci-fi UI design, minimal but beautiful, anime-style hologram effect, magic-meets-technology aesthetic",
+        "negative": "lowres, modern GUI, Windows, Mac, smartphone, ugly font, cluttered",
+        "resolution": "1216x832 (landscape)"
+      }
+    }
+  }
+}

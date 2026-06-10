@@ -1,1774 +1,1465 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>终端之梦 Terminal Phantasm - Narrative Operating System</title>
-
-    <!-- Google Fonts 预连接 -->
+    <title>终端之梦 Terminal Phantasm</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Serif+JP:wght@400;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- TailwindCSS Play CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Serif+JP:wght@400;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-
     <style>
-        /* ==================== 基础重置与变量 ==================== */
-        /* ==================== 主题变量 ==================== */
+        /* ========== 基础变量与重置 ========== */
         :root {
-            --bg-primary: #0a0e17;
-            --bg-secondary: #111827;
-            --bg-tertiary: #1a2035;
+            --bg-primary: #0B0B0C;
+            --bg-secondary: #111118;
+            --bg-tertiary: #18181f;
             --accent-blue: #00d4ff;
             --accent-purple: #7c3aed;
             --text-primary: #e2e8f0;
             --text-secondary: #94a3b8;
             --terminal-green: #00ff88;
-            --character-akane: #f59e0b;
-            --character-koyuki: #38bdf8;
-            --character-zero: #00d4ff;
-            --character-eve: #a855f7;
-            --glass-bg: rgba(15, 20, 35, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-bg: rgba(15, 18, 25, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
             --quote-color: rgba(245, 158, 11, 0.85);
             --quote-bg: rgba(245, 158, 11, 0.03);
-            --quote-border: rgba(245, 158, 11, 0.4);
+            --quote-border: rgba(245, 158, 11, 0.35);
             --dialogue-color: #f0e6d3;
-            --particle-colors: 'rgba(0,212,255,', 'rgba(124,58,237,', 'rgba(255,255,255,';
-            --particle-line: 0, 212, 255;
+            --char-akane: #f59e0b;
+            --char-koyuki: #38bdf8;
+            --char-zero: #00d4ff;
+            --char-eve: #a855f7;
         }
 
-        /* 白色主色调 + 红色副色调 */
         [data-theme="light"] {
-            --bg-primary: #fafafa;
-            --bg-secondary: #f0f0f2;
-            --bg-tertiary: #e8e8ec;
-            --accent-blue: #dc2626;
-            --accent-purple: #b91c1c;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #f5f5f7;
+            --bg-tertiary: #ececee;
+            --accent-blue: #FF2A55;
+            --accent-purple: #cc1144;
             --text-primary: #1a1a2e;
-            --text-secondary: #555570;
+            --text-secondary: #666680;
             --terminal-green: #16a34a;
-            --character-akane: #dc2626;
-            --character-koyuki: #2563eb;
-            --character-zero: #dc2626;
-            --character-eve: #9333ea;
-            --glass-bg: rgba(255, 255, 255, 0.72);
+            --glass-bg: rgba(250, 250, 252, 0.82);
             --glass-border: rgba(0, 0, 0, 0.08);
-            --quote-color: rgba(185, 28, 28, 0.85);
-            --quote-bg: rgba(220, 38, 38, 0.04);
-            --quote-border: rgba(220, 38, 38, 0.35);
+            --quote-color: rgba(220, 38, 38, 0.85);
+            --quote-bg: rgba(220, 38, 38, 0.03);
+            --quote-border: rgba(220, 38, 38, 0.3);
             --dialogue-color: #2d1810;
-            --particle-colors: 'rgba(220,38,38,', 'rgba(185,28,28,', 'rgba(100,100,100,';
-            --particle-line: 220, 38, 38;
+            --char-akane: #dc2626;
+            --char-koyuki: #2563eb;
+            --char-zero: #dc2626;
+            --char-eve: #9333ea;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html {
-            overflow-y: scroll;
-        }
+        html { scroll-behavior: smooth; overflow-y: scroll; }
 
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* ==================== Liquid Glass 面板（性能优化版） ==================== */
+        /* ========== Liquid Glass 面板（性能友好版） ========== */
         .glass-panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-            contain: layout style; /* 隔离重排/重绘 */
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+            contain: layout style;
         }
 
-        /* ==================== 粒子画布层 ==================== */
-        #particle-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* ==================== Loading 屏幕 ==================== */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        /* ========== KV 主视觉区 ========== */
+        #kv-section {
+            position: relative;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+            overflow: hidden;
+            z-index: 10;
         }
 
-        .loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
+        #kv-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .loading-logo {
+        .kv-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .kv-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
+            font-size: clamp(28px, 6vw, 56px);
             font-weight: 900;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 2rem;
+            transition: filter 0.4s ease, text-shadow 0.4s ease;
+            cursor: default;
+        }
+
+        .kv-title:hover {
+            filter: brightness(1.3);
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.3), 0 0 60px rgba(124, 58, 237, 0.15);
+        }
+
+        .kv-subtitle {
+            font-family: 'Noto Serif JP', serif;
+            font-size: clamp(18px, 3vw, 28px);
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-top: 12px;
             letter-spacing: 4px;
         }
 
-        .loading-text {
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--terminal-green);
-            font-size: 14px;
+        .kv-quote {
+            font-family: 'Noto Serif JP', serif;
+            font-size: clamp(14px, 2vw, 18px);
+            font-style: italic;
+            color: var(--text-secondary);
+            opacity: 0.7;
+            margin-top: 40px;
+            line-height: 1.8;
+        }
+
+        .kv-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 48px;
+            padding: 16px 40px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
             letter-spacing: 2px;
+            color: var(--bg-primary);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
         }
 
-        .loading-cursor {
-            display: inline-block;
-            animation: blink 1s step-end infinite;
+        .kv-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3), 0 0 60px rgba(124, 58, 237, 0.15);
+            filter: brightness(1.1);
         }
 
-        @keyframes blink {
-            50% { opacity: 0; }
+        .kv-btn:active { transform: translateY(0); }
+
+        .kv-meta {
+            margin-top: 36px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            opacity: 0.5;
+            letter-spacing: 1px;
         }
 
-        /* ==================== 主布局容器 ==================== */
-        .main-container {
-            position: relative;
-            z-index: 1;
+        .kv-theme-toggle {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            z-index: 20;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--text-primary);
+            font-size: 18px;
+            cursor: pointer;
             display: flex;
-            min-height: 100vh;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease;
         }
 
-        /* ==================== 左侧导航栏 (280px) ==================== */
+        .kv-theme-toggle:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 16px rgba(0, 212, 255, 0.15);
+        }
+
+        /* ========== 三栏主布局 ========== */
+        #main-layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* 左侧导航 260px */
         .sidebar-left {
-            width: 280px;
-            min-width: 280px;
-            height: 100vh;
+            width: 260px;
+            min-width: 260px;
+            padding: 28px 16px;
             position: sticky;
             top: 0;
-            padding: 24px 16px;
-            display: flex;
-            flex-direction: column;
+            height: 100vh;
             overflow-y: auto;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            contain: layout style; /* 隔离重排 */
+            contain: layout style;
         }
 
-        .sidebar-left::-webkit-scrollbar {
-            width: 4px;
-        }
+        .sidebar-left::-webkit-scrollbar { width: 3px; }
+        .sidebar-left::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-left::-webkit-scrollbar-thumb { background: rgba(0, 212, 255, 0.2); border-radius: 2px; }
 
-        .sidebar-left::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .sidebar-left::-webkit-scrollbar-thumb {
-            background: rgba(0, 212, 255, 0.2);
-            border-radius: 2px;
-        }
-
-        /* Logo 区域 */
-        .logo-area {
-            margin-bottom: 32px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
+        .logo-area { margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--glass-border); }
         .logo-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 800;
             letter-spacing: 2px;
             background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.3;
+            line-height: 1.4;
         }
+        .logo-subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 4px; letter-spacing: 1px; }
 
-        .logo-subtitle {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 6px;
-            letter-spacing: 1px;
-        }
-
-        /* 导航区块标题 */
         .nav-section-title {
-            font-size: 11px;
-            font-weight: 600;
+            font-size: 10px;
+            font-weight: 700;
             color: var(--accent-blue);
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 12px;
-            margin-top: 24px;
+            margin-bottom: 10px;
+            margin-top: 20px;
         }
+        .nav-section-title:first-of-type { margin-top: 0; }
 
-        .nav-section-title:first-of-type {
-            margin-top: 0;
-        }
-
-        /* 章节导航项 */
         .chapter-nav-item {
-            position: relative;
-            padding: 10px 12px 10px 16px;
-            margin-bottom: 4px;
+            padding: 9px 12px 9px 14px;
+            margin-bottom: 3px;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
             color: var(--text-secondary);
-            font-size: 13px;
+            font-size: 12.5px;
             border-left: 3px solid transparent;
         }
-
-        .chapter-nav-item:hover {
-            background: rgba(0, 212, 255, 0.08);
-            color: var(--text-primary);
-        }
-
+        .chapter-nav-item:hover { background: rgba(0, 212, 255, 0.06); color: var(--text-primary); }
         .chapter-nav-item.active {
-            background: rgba(0, 212, 255, 0.12);
+            background: rgba(0, 212, 255, 0.1);
             color: var(--accent-blue);
             border-left-color: var(--accent-blue);
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
         }
+        .chapter-nav-item.locked { opacity: 0.35; cursor: not-allowed; }
+        .chapter-nav-item.locked:hover { background: transparent; color: var(--text-secondary); }
+        .chapter-number { font-size: 9px; color: var(--accent-purple); font-weight: 700; margin-right: 5px; }
 
-        .chapter-nav-item.locked {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .chapter-nav-item.locked:hover {
-            background: transparent;
-            color: var(--text-secondary);
-        }
-
-        .chapter-number {
-            font-size: 10px;
-            color: var(--accent-purple);
-            font-weight: 600;
-            margin-right: 6px;
-        }
-
-        /* 世界观索引链接 */
         .wiki-link {
             display: block;
-            padding: 8px 12px;
-            margin-bottom: 4px;
+            padding: 7px 12px;
+            margin-bottom: 3px;
             border-radius: 8px;
             color: var(--text-secondary);
-            font-size: 13px;
+            font-size: 12.5px;
             text-decoration: none;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
         }
+        .wiki-link:hover { background: rgba(124, 58, 237, 0.06); color: var(--accent-purple); }
 
-        .wiki-link:hover {
-            background: rgba(124, 58, 237, 0.08);
-            color: var(--accent-purple);
-        }
-
-        /* 角色速览列表 */
         .character-quick-link {
             display: block;
-            padding: 8px 12px;
-            margin-bottom: 4px;
+            padding: 7px 12px;
+            margin-bottom: 3px;
             border-radius: 8px;
             color: var(--text-secondary);
-            font-size: 13px;
+            font-size: 12.5px;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
         }
+        .character-quick-link:hover { background: rgba(245, 158, 11, 0.06); color: var(--char-akane); }
 
-        .character-quick-link:hover {
-            background: rgba(245, 158, 11, 0.08);
-            color: var(--character-akane);
-        }
-
-        /* 模式切换按钮组 */
-        .mode-switcher {
-            margin-top: auto;
-            padding-top: 24px;
-            border-top: 1px solid var(--glass-border);
-        }
-
+        .mode-switcher { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--glass-border); }
         .mode-btn {
-            width: 100%;
-            padding: 10px 16px;
-            margin-bottom: 8px;
-            border-radius: 10px;
-            border: 1px solid var(--glass-border);
-            background: transparent;
-            color: var(--text-secondary);
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            letter-spacing: 1px;
+            width: 100%; padding: 9px 14px; margin-bottom: 6px;
+            border-radius: 10px; border: 1px solid var(--glass-border);
+            background: transparent; color: var(--text-secondary);
+            font-family: 'Space Grotesk', sans-serif; font-size: 11.5px;
+            font-weight: 500; cursor: pointer; transition: all 0.2s ease; letter-spacing: 1px;
         }
-
-        .mode-btn:last-child {
-            margin-bottom: 0;
-        }
-
-        .mode-btn:hover {
-            background: rgba(0, 212, 255, 0.1);
-            border-color: rgba(0, 212, 255, 0.3);
-            color: var(--accent-blue);
-            transform: translateY(-1px);
-        }
-
+        .mode-btn:last-child { margin-bottom: 0; }
+        .mode-btn:hover { background: rgba(0, 212, 255, 0.08); border-color: rgba(0, 212, 255, 0.25); color: var(--accent-blue); }
         .mode-btn.active {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.15));
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.12));
+            border-color: var(--accent-blue); color: var(--accent-blue);
         }
 
-        /* 主题切换按钮组 */
-        .theme-switcher {
-            margin-top: 12px;
-            display: flex;
-            gap: 6px;
-        }
-
-        .theme-btn {
-            flex: 1;
-            padding: 8px 10px;
-            border-radius: 8px;
-            border: 1px solid var(--glass-border);
-            background: transparent;
-            color: var(--text-secondary);
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 11px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .theme-btn:hover {
-            background: rgba(0, 212, 255, 0.08);
-            color: var(--text-primary);
-        }
-
-        .theme-btn.active {
-            background: rgba(220, 38, 38, 0.12);
-            border-color: rgba(220, 38, 38, 0.3);
-            color: #dc2626;
-        }
-
-        /* ==================== 中央阅读舞台 ==================== */
+        /* 中央阅读舞台 max-width: 700px */
         .reading-stage {
-            flex: 1;
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 40px 48px;
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            contain: content; /* 隔离内容重绘 */
+            flex: 1; max-width: 700px; margin: 0 auto;
+            padding: 48px 36px; contain: content;
         }
 
-        /* 章节艺术大标题 */
+        /* 章节大标题 */
         .chapter-art-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 28px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 60px;
-            position: relative;
+            font-size: 26px; font-weight: 700; text-align: center;
+            margin-bottom: 52px; position: relative;
             background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-
         .chapter-art-title::after {
-            content: '';
-            position: absolute;
-            bottom: -16px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 2px;
+            content: ''; position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%);
+            width: 100px; height: 2px;
             background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
         }
 
         /* 节标题 */
         .section-heading {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 22px;
-            font-weight: 600;
-            color: var(--accent-blue);
-            margin: 56px 0 32px 0;
-            padding-left: 16px;
+            font-size: 20px; font-weight: 600; color: var(--accent-blue);
+            margin: 48px 0 28px 0; padding-left: 14px;
             border-left: 4px solid var(--accent-purple);
-            position: relative;
-        }
-
-        .section-heading::before {
-            content: attr(data-number);
-            position: absolute;
-            right: 0;
-            top: 0;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 64px;
-            font-weight: 900;
-            color: rgba(124, 58, 237, 0.06);
-            line-height: 1;
         }
 
         /* 场景分隔符 */
         .scene-separator {
-            width: 80px;
-            height: 2px;
-            margin: 48px auto;
+            width: 70px; height: 2px; margin: 44px auto;
             background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
-            opacity: 0.4;
+            opacity: 0.35;
         }
 
-        /* 艺术格言/引用块 */
+        /* 引用块 */
         .art-quote {
-            text-align: center;
-            padding: 32px 40px;
-            margin: 40px 0;
+            text-align: center; padding: 28px 36px; margin: 36px 0;
             border-left: 3px solid var(--quote-border);
             border-right: 3px solid var(--quote-border);
-            background: var(--quote-bg);
-            border-radius: 4px;
+            background: var(--quote-bg); border-radius: 4px;
         }
-
         .art-quote p {
-            font-style: italic;
-            color: var(--quote-color) !important;
-            font-size: 17px !important;
-            line-height: 1.9 !important;
-            margin-bottom: 8px !important;
+            font-style: italic; color: var(--quote-color) !important;
+            font-size: 16px !important; line-height: 1.85 !important;
+            margin-bottom: 6px !important;
         }
 
-        /* 正文段落 */
+        /* 正文段落 — 直接可见，无动画 */
         .content-paragraph {
             font-family: 'Noto Serif JP', 'Source Han Serif SC', serif;
-            font-size: 18px;
-            line-height: 2.0;
-            color: var(--text-primary);
-            margin-bottom: 40px;
-            opacity: 0;
-            transition: opacity 0.4s ease;
+            font-size: 17px; line-height: 2.0; color: var(--text-primary);
+            margin-bottom: 36px;
         }
+        .content-paragraph strong { color: var(--text-primary); font-weight: 600; }
+        [data-theme="light"] .content-paragraph strong { color: #0f172a; }
 
-        .content-paragraph.visible {
-            opacity: 1;
-        }
+        /* 翻译文本 */
+        .translation { font-size: 0.85em; color: var(--text-secondary); opacity: 0.65; }
 
-        .content-paragraph strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
+        /* 对话颜色 */
+        .dialogue-text { color: var(--dialogue-color); }
 
-        [data-theme="light"] .content-paragraph strong {
-            color: #0f172a;
-        }
-
-        /* 中文翻译样式 */
-        .translation {
-            font-size: 0.85em;
-            color: rgba(148, 163, 184, 0.6);
-        }
-
-        /* 对话符号微调 */
-        .dialogue-text {
-            color: var(--dialogue-color);
-        }
-
-        /* 首段缩进效果（仅首段微微不同，不放大首字） */
-        .content-paragraph:first-of-type {
-            text-indent: 0;
-        }
-
-        /* 终端代码块 */
+        /* 终端代码块 — 直接渲染，无逐行动画 */
         .terminal-block {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            margin: 36px 0;
-            overflow: hidden;
-            border: 1px solid rgba(0, 255, 136, 0.15);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            background: var(--bg-tertiary); border-radius: 12px;
+            margin: 32px 0; overflow: hidden;
+            border: 1px solid rgba(0, 255, 136, 0.12);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            contain: layout style;
         }
-
-        [data-theme="light"] .terminal-block {
-            background: #1e1e2e;
-            border-color: rgba(255, 255, 255, 0.08);
-        }
+        [data-theme="light"] .terminal-block { background: #1a1a24; border-color: rgba(255, 255, 255, 0.06); }
 
         .terminal-header {
-            background: rgba(30, 35, 45, 0.95);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(25, 30, 42, 0.95);
+            padding: 10px 14px; display: flex; align-items: center; gap: 7px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-
-        .terminal-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
+        .terminal-dot { width: 11px; height: 11px; border-radius: 50%; }
         .terminal-dot.red { background: #ff5f57; }
         .terminal-dot.yellow { background: #febc2e; }
         .terminal-dot.green { background: #28c840; }
-
         .terminal-title-bar {
-            flex: 1;
-            text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: rgba(148, 163, 184, 0.6);
-            margin-left: -52px;
+            flex: 1; text-align: center;
+            font-family: 'JetBrains Mono', monospace; font-size: 11px;
+            color: rgba(148, 163, 184, 0.5); margin-left: -46px;
         }
-
         .terminal-body {
-            padding: 20px 24px;
+            padding: 18px 22px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            line-height: 1.8;
-            color: var(--terminal-green);
-            white-space: pre-wrap;
-            word-break: break-word;
+            font-size: 12.5px; line-height: 1.75; color: var(--terminal-green);
+            white-space: pre-wrap; word-break: break-word;
         }
-
         .terminal-cursor {
-            display: inline-block;
-            width: 8px;
-            height: 16px;
+            display: inline-block; width: 7px; height: 15px;
             background: var(--terminal-green);
             animation: cursor-blink 1s step-end infinite;
-            vertical-align: middle;
-            margin-left: 2px;
+            vertical-align: middle; margin-left: 2px;
         }
+        @keyframes cursor-blink { 50% { opacity: 0; } }
 
-        @keyframes cursor-blink {
-            50% { opacity: 0; }
-        }
-
-        /* ==================== 右侧角色空间 (300px) ==================== */
+        /* 右侧角色栏 280px */
         .sidebar-right {
-            width: 300px;
-            min-width: 300px;
-            height: 100vh;
-            position: sticky;
-            top: 0;
-            padding: 24px 16px;
-            overflow-y: auto;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            contain: layout style; /* 隔离重排 */
+            width: 280px; min-width: 280px; padding: 28px 14px;
+            position: sticky; top: 0; height: 100vh; overflow-y: auto;
+            contain: layout style;
         }
-
-        .sidebar-right::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .sidebar-right::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .sidebar-right::-webkit-scrollbar-thumb {
-            background: rgba(124, 58, 237, 0.2);
-            border-radius: 2px;
-        }
+        .sidebar-right::-webkit-scrollbar { width: 3px; }
+        .sidebar-right::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-right::-webkit-scrollbar-thumb { background: rgba(124, 58, 237, 0.2); border-radius: 2px; }
 
         .right-panel-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--accent-purple);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--glass-border);
+            font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
+            color: var(--accent-purple); text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--glass-border);
         }
 
-        /* 角色卡片 */
         .character-card {
-            margin-bottom: 20px;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            cursor: pointer;
+            margin-bottom: 16px; padding: 16px; position: relative;
+            overflow: hidden; transition: transform 0.2s ease; cursor: pointer;
         }
-
-        .character-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--char-glow);
-        }
-
+        .character-card:hover { transform: translateY(-3px); }
         .character-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--char-color);
-            opacity: 0.8;
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 3px; height: 100%; background: var(--char-color); opacity: 0.8;
         }
-
-        .character-card::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, var(--char-glow) 0%, transparent 70%);
-            opacity: 0.06;
-            pointer-events: none;
-        }
-
         .char-name-jp {
-            font-family: 'Noto Serif JP', serif;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--char-color);
-            margin-bottom: 4px;
+            font-family: 'Noto Serif JP', serif; font-size: 16px; font-weight: 700;
+            color: var(--char-color); margin-bottom: 2px;
         }
-
-        .char-name-cn {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-
+        .char-name-cn { font-size: 11px; color: var(--text-secondary); margin-bottom: 6px; }
         .char-role {
-            display: inline-block;
-            font-size: 11px;
-            padding: 3px 10px;
-            border-radius: 20px;
-            background: rgba(124, 58, 237, 0.15);
-            color: var(--accent-purple);
-            margin-bottom: 12px;
-            font-weight: 500;
+            display: inline-block; font-size: 10px; padding: 2px 9px; border-radius: 20px;
+            background: rgba(124, 58, 237, 0.12); color: var(--accent-purple);
+            margin-bottom: 10px; font-weight: 500;
         }
-
-        [data-theme="light"] .char-role {
-            background: rgba(220, 38, 38, 0.08);
-        }
-
-        .char-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 12px;
-        }
-
-        .char-tag {
-            font-size: 10px;
-            padding: 3px 8px;
-            border-radius: 6px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: var(--text-secondary);
-        }
-
-        .char-description {
-            font-size: 12px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 12px;
-        }
-
-        .char-info-list {
-            list-style: none;
-            padding: 0;
-        }
-
+        [data-theme="light"] .char-role { background: rgba(220, 38, 38, 0.07); }
+        .char-description { font-size: 11.5px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 10px; }
+        .char-info-list { list-style: none; padding: 0; }
         .char-info-item {
-            font-size: 11px;
-            color: rgba(148, 163, 184, 0.8);
-            padding: 4px 0;
-            padding-left: 14px;
-            position: relative;
-            line-height: 1.5;
+            font-size: 10.5px; color: var(--text-secondary); opacity: 0.75;
+            padding: 3px 0; padding-left: 12px; position: relative; line-height: 1.5;
         }
+        .char-info-item::before { content: '▸'; position: absolute; left: 0; color: var(--accent-blue); font-size: 9px; }
 
-        .char-info-item::before {
-            content: '▸';
-            position: absolute;
-            left: 0;
-            color: var(--accent-blue);
-            font-size: 10px;
+        .emotion-indicator { margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--glass-border); }
+        .emotion-label { font-size: 9px; color: var(--text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+        .emotion-bar { height: 3px; background: rgba(255, 255, 255, 0.05); border-radius: 2px; overflow: hidden; }
+        .emotion-fill { height: 100%; background: var(--char-color); border-radius: 2px; }
+
+        /* ========== 视觉小说模式覆盖层 ========== */
+        #vn-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 1000; display: none;
+            background: var(--bg-primary);
+            flex-direction: column;
         }
+        #vn-overlay.active { display: flex; }
 
-        /* 情绪指示器 */
-        .emotion-indicator {
-            margin-top: 8px;
-            padding-top: 12px;
-            border-top: 1px solid var(--glass-border);
+        /* VN 工具栏 */
+        .vn-toolbar {
+            display: flex; align-items: center; gap: 8px;
+            padding: 14px 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            contain: layout style;
         }
-
-        .emotion-label {
-            font-size: 10px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .vn-toolbar-btn {
+            padding: 7px 14px; border-radius: 8px; border: 1px solid var(--glass-border);
+            background: transparent; color: var(--text-secondary);
+            font-family: 'Space Grotesk', sans-serif; font-size: 11.5px;
+            font-weight: 500; cursor: pointer; transition: all 0.2s ease;
+            white-space: nowrap;
         }
+        .vn-toolbar-btn:hover { background: rgba(0, 212, 255, 0.1); border-color: var(--accent-blue); color: var(--accent-blue); }
+        .vn-toolbar-btn.active-state { background: rgba(0, 212, 255, 0.12); border-color: var(--accent-blue); color: var(--accent-blue); }
 
-        .emotion-bar {
-            height: 3px;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 2px;
+        .vn-spacer { flex: 1; }
+
+        /* VN 角色立绘占位区 */
+        .vn-character-area {
+            flex: 1; display: flex; align-items: flex-end; justify-content: center;
+            padding: 20px 60px 0; position: relative;
             overflow: hidden;
         }
-
-        .emotion-fill {
-            height: 100%;
-            background: var(--char-color);
-            border-radius: 2px;
-            transition: width 0.5s ease;
+        .vn-placeholder-line {
+            width: 200px; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            opacity: 0.15;
         }
 
-        /* ==================== 视觉小说模式 ==================== */
-        .vn-mode .sidebar-left,
-        .vn-mode .sidebar-right {
-            width: 0;
-            min-width: 0;
-            padding: 0;
-            overflow: hidden;
-            opacity: 0;
+        /* VN 对话框 */
+        .vn-dialog-container {
+            padding: 0 32px 28px; display: flex; flex-direction: column; align-items: stretch;
         }
-
-        .vn-mode .reading-stage {
-            max-width: 100%;
-            padding: 20px;
+        .vn-name-tag {
+            display: inline-block; align-self: flex-start;
+            padding: 7px 18px; margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.65);
+            border: 1px solid var(--glass-border); border-radius: 8px;
+            font-family: 'Noto Serif JP', serif; font-size: 14px;
+            color: var(--accent-blue); font-weight: 600;
         }
+        [data-theme="light"] .vn-name-tag { background: rgba(255, 255, 255, 0.9); }
 
         .vn-dialog-box {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 140px;
-            background: rgba(10, 14, 23, 0.95);
-            border-top: 1px solid var(--glass-border);
-            padding: 20px 40px;
-            display: none;
-            align-items: center;
-            z-index: 100;
-        }
-
-        [data-theme="light"] .vn-dialog-box {
-            background: rgba(255, 255, 255, 0.96);
-            border-top-color: rgba(220, 38, 38, 0.15);
-        }
-
-        .vn-mode .vn-dialog-box {
-            display: flex;
-        }
-
-        .vn-name-tag {
-            position: absolute;
-            bottom: 120px;
-            left: 40px;
-            padding: 8px 20px;
-            background: rgba(0, 0, 0, 0.7);
+            padding: 22px 28px;
+            background: rgba(10, 12, 20, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            font-family: 'Noto Serif JP', serif;
-            font-size: 14px;
-            color: var(--accent-blue);
-            font-weight: 600;
+            border-radius: 14px;
+            cursor: pointer;
+            position: relative;
+            min-height: 80px;
+            display: flex; align-items: center;
+            contain: layout style;
         }
-
-        [data-theme="light"] .vn-name-tag {
-            background: rgba(255, 255, 255, 0.9);
-        }
+        [data-theme="light"] .vn-dialog-box { background: rgba(255, 255, 255, 0.95); }
 
         .vn-dialog-text {
             font-family: 'Noto Serif JP', serif;
-            font-size: 18px;
-            line-height: 1.8;
-            color: var(--text-primary);
-            max-width: 900px;
+            font-size: 17px; line-height: 1.85; color: var(--text-primary);
+            flex: 1;
         }
 
-        .vn-back-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            padding: 10px 20px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 12px;
-            cursor: pointer;
-            z-index: 101;
-            display: none;
-            transition: all 0.25s ease;
+        .vn-advance-btn {
+            position: absolute; right: 20px; bottom: 16px;
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 1px solid var(--glass-border); background: transparent;
+            color: var(--text-secondary); font-size: 14px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
         }
+        .vn-advance-btn:hover { background: rgba(0, 212, 255, 0.12); border-color: var(--accent-blue); color: var(--accent-blue); }
 
-        .vn-mode .vn-back-btn {
-            display: block;
+        /* VN 历史侧栏 */
+        #vn-history-sidebar {
+            position: fixed; top: 0; right: -380px; width: 360px; height: 100vh;
+            background: var(--glass-bg); backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-left: 1px solid var(--glass-border);
+            z-index: 1010; transition: right 0.3s ease;
+            display: flex; flex-direction: column; contain: layout style;
         }
-
-        .vn-back-btn:hover {
-            background: rgba(0, 212, 255, 0.12);
-            border-color: var(--accent-blue);
+        #vn-history-sidebar.open { right: 0; }
+        .vn-history-header {
+            padding: 16px 20px; border-bottom: 1px solid var(--glass-border);
+            font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700;
+            color: var(--accent-blue); display: flex; justify-content: space-between; align-items: center;
         }
-
-        [data-theme="light"] .vn-back-btn {
-            background: rgba(255, 255, 255, 0.85);
-            color: var(--text-primary);
-            border-color: var(--glass-border);
+        .vn-history-close {
+            width: 28px; height: 28px; border-radius: 6px; border: none;
+            background: transparent; color: var(--text-secondary); cursor: pointer;
+            font-size: 16px; display: flex; align-items: center; justify-content: center;
         }
+        .vn-history-close:hover { background: rgba(255, 100, 100, 0.1); color: #ff6b6b; }
+        .vn-history-list { flex: 1; overflow-y: auto; padding: 12px 16px; }
+        .vn-history-item {
+            padding: 10px 12px; margin-bottom: 6px; border-radius: 8px;
+            font-size: 13px; line-height: 1.6; color: var(--text-secondary);
+            border-left: 3px solid var(--accent-purple); opacity: 0.7;
+        }
+        .vn-history-speaker { font-size: 10px; color: var(--accent-blue); font-weight: 600; margin-bottom: 2px; }
 
-        /* ==================== 响应式设计 ==================== */
-        /* 平板：隐藏右侧栏 */
+        /* ========== 响应式 ========== */
         @media (max-width: 1279px) and (min-width: 768px) {
-            .sidebar-right {
-                display: none;
-            }
-            .reading-stage {
-                padding: 40px 32px;
-            }
+            .sidebar-right { display: none; }
+            .reading-stage { padding: 40px 28px; }
         }
 
-        /* 手机：纯中央阅读区 + 汉堡菜单 */
         @media (max-width: 767px) {
             .sidebar-left {
-                position: fixed;
-                left: -300px;
-                top: 0;
-                z-index: 1000;
+                position: fixed; left: -280px; top: 0; z-index: 999;
                 box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+                height: 100vh;
             }
-
-            .sidebar-left.mobile-open {
-                left: 0;
-            }
-
+            .sidebar-left.mobile-open { left: 0; }
             .mobile-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.6);
-                z-index: 999;
-                display: none;
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.55); z-index: 998; display: none;
             }
-
-            .mobile-overlay.active {
-                display: block;
-            }
-
-            .hamburger-btn {
-                display: flex;
-            }
-
-            .reading-stage {
-                padding: 24px 20px;
-            }
-
-            .chapter-art-title {
-                font-size: 22px;
-            }
-
-            .section-heading {
-                font-size: 18px;
-            }
-
-            .content-paragraph {
-                font-size: 16px;
-            }
+            .mobile-overlay.active { display: block; }
+            .hamburger-btn { display: flex !important; }
+            .reading-stage { padding: 24px 18px; }
+            .chapter-art-title { font-size: 20px; }
+            .section-heading { font-size: 17px; }
+            .content-paragraph { font-size: 15.5px; }
         }
 
-        /* 桌面端汉堡按钮默认隐藏 */
         .hamburger-btn {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 998;
-            width: 44px;
-            height: 44px;
-            background: var(--glass-bg);
+            display: none; position: fixed; top: 16px; left: 16px; z-index: 997;
+            width: 42px; height: 42px; border-radius: 10px;
+            background: var(--glass-bg); backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            align-items: center; justify-content: center; cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .hamburger-btn:hover { background: rgba(0, 212, 255, 0.1); border-color: rgba(0, 212, 255, 0.3); }
+        .hamburger-lines { width: 18px; height: 13px; position: relative; }
+        .hamburger-lines span {
+            display: block; width: 100%; height: 2px;
+            background: var(--text-primary); position: absolute; border-radius: 1px;
             transition: all 0.25s ease;
         }
-
-        .hamburger-btn:hover {
-            background: rgba(0, 212, 255, 0.1);
-            border-color: rgba(0, 212, 255, 0.3);
-        }
-
-        .hamburger-lines {
-            width: 20px;
-            height: 14px;
-            position: relative;
-        }
-
-        .hamburger-lines span {
-            display: block;
-            width: 100%;
-            height: 2px;
-            background: var(--text-primary);
-            position: absolute;
-            border-radius: 1px;
-            transition: all 0.3s ease;
-        }
-
         .hamburger-lines span:nth-child(1) { top: 0; }
-        .hamburger-lines span:nth-child(2) { top: 6px; }
-        .hamburger-lines span:nth-child(3) { top: 12px; }
+        .hamburger-lines span:nth-child(2) { top: 5.5px; }
+        .hamburger-lines span:nth-child(3) { top: 11px; }
 
-        /* ==================== 内容过渡动画 ==================== */
-        .content-fade-out {
-            opacity: 0 !important;
-            filter: blur(8px);
-            transform: translateY(-20px);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .content-fade-in {
-            opacity: 0;
-            filter: blur(12px);
-            transform: translateY(40px);
-            animation: content-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes content-enter {
-            to {
-                opacity: 1;
-                filter: blur(0);
-                transform: translateY(0);
-            }
-        }
-
-        /* ==================== 工具类 ==================== */
-        .hidden { display: none !important; }
+        .hidden-el { display: none !important; }
     </style>
 </head>
 <body>
-    <!-- 粒子背景层 -->
-    <canvas id="particle-canvas"></canvas>
-
-    <!-- Loading 屏幕 -->
-    <div class="loading-screen" id="loading-screen">
-        <div class="loading-logo">TERMINAL PHANTASM</div>
-        <div class="loading-text">
-            <span id="typing-text"></span><span class="loading-cursor">_</span>
+    <!-- ==================== KV 主视觉区 ==================== -->
+    <section id="kv-section">
+        <canvas id="kv-canvas"></canvas>
+        <button class="kv-theme-toggle" id="kv-theme-btn" title="切换主题">🌙</button>
+        <div class="kv-content">
+            <div class="kv-title">TERMINAL PHANTASM</div>
+            <div class="kv-subtitle">終端之夢</div>
+            <p class="kv-quote">"世界はコードでできている。"<br><span style="font-size:0.85em">"世界是由代码构成的。"</span></p>
+            <button class="kv-btn" id="kv-start-btn">📖 开始阅读</button>
+            <p class="kv-meta">序章：零の目覚め &nbsp;|&nbsp; 角色: 4 &nbsp;|&nbsp; 字数: ~21K</p>
         </div>
-    </div>
+    </section>
 
-    <!-- 移动端遮罩 -->
+    <!-- 移动端遮罩 + 汉堡按钮 -->
     <div class="mobile-overlay" id="mobile-overlay"></div>
-
-    <!-- 移动端汉堡菜单按钮 -->
     <button class="hamburger-btn" id="hamburger-btn">
-        <div class="hamburger-lines">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
+        <div class="hamburger-lines"><span></span><span></span><span></span></div>
     </button>
 
-    <!-- VN模式返回按钮 -->
-    <button class="vn-back-btn" id="vn-back-btn">← 返回小说模式</button>
-
-    <!-- 主容器 -->
-    <div class="main-container" id="main-container">
-        <!-- 左侧导航面板 -->
+    <!-- ==================== 三栏阅读布局 ==================== -->
+    <div id="main-layout">
+        <!-- 左侧导航 260px -->
         <aside class="sidebar-left glass-panel" id="sidebar-left">
-            <!-- Logo区域 -->
             <div class="logo-area">
                 <div class="logo-title">TERMINAL<br>PHANTASM</div>
-                <div class="logo-subtitle">终端之梦 — 叙事操作系统</div>
+                <div class="logo-subtitle">终端之梦 — NOS v2.0</div>
             </div>
 
-            <!-- 章节导航 -->
             <div class="nav-section-title">章节导航</div>
             <nav id="chapter-nav">
-                <div class="chapter-nav-item active" data-chapter="01">
-                    <span class="chapter-number">PROLOGUE</span>
-                    序章：零の目覚め
+                <div class="chapter-nav-item active" data-chapter="01" data-anchor="ch-prologue">
+                    <span class="chapter-number">PROLOGUE</span> 序章：零の目覚め
                 </div>
                 <div class="chapter-nav-item locked" data-chapter="02">
-                    <span class="chapter-number">CH.02</span>
-                    星導学園
-                    <span style="font-size:10px;color:var(--text-secondary);margin-left:4px;">[预告]</span>
+                    <span class="chapter-number">CH.02</span> 星導学園
+                    <span style="font-size:9px;color:var(--text-secondary);margin-left:4px;">[预告]</span>
                 </div>
             </nav>
 
-            <!-- 世界观索引 -->
             <div class="nav-section-title">世界观索引</div>
             <div id="wiki-links">
-                <a class="wiki-link" href="wiki/world-setting.html">世界设定</a>
-                <a class="wiki-link" href="wiki/magic-system.html">魔法体系</a>
+                <a class="wiki-link" href="wiki/world.html">世界设定</a>
+                <a class="wiki-link" href="wiki/magic_system.html">魔法体系</a>
                 <a class="wiki-link" href="wiki/characters.html">人物介绍</a>
-                <a class="wiki-link" href="wiki/glossary.html">术语辞典</a>
+                <a class="wiki-link" href="wiki/terminology.html">术语辞典</a>
             </div>
 
-            <!-- 当前章节角色速览 -->
             <div class="nav-section-title">登场角色</div>
             <div id="character-quick-nav"></div>
 
-            <!-- 模式切换 -->
             <div class="mode-switcher">
                 <button class="mode-btn active" id="btn-fiction-mode">📖 小说模式</button>
                 <button class="mode-btn" id="btn-vn-mode">🎭 视觉小说模式</button>
             </div>
-
-            <!-- 主题切换 -->
-            <div class="theme-switcher">
-                <button class="theme-btn active" id="btn-theme-dark" title="深色主题（量子幻想）">🌙 深色</button>
-                <button class="theme-btn" id="btn-theme-light" title="浅色主题（白底红调）">☀️ 浅色</button>
-            </div>
         </aside>
 
-        <!-- 中央阅读舞台 -->
-        <main class="reading-stage" id="reading-stage">
-            <!-- 内容将通过 JavaScript 动态渲染 -->
-        </main>
+        <!-- 中央阅读舞台 max-width: 700px -->
+        <main class="reading-stage" id="reading-stage"></main>
 
-        <!-- 右侧角色空间 -->
+        <!-- 右侧角色栏 280px -->
         <aside class="sidebar-right glass-panel" id="sidebar-right">
             <div class="right-panel-title">角色档案</div>
-            <div id="character-cards">
-                <!-- 角色卡片将通过 JavaScript 动态渲染 -->
-            </div>
+            <div id="character-cards"></div>
         </aside>
     </div>
 
-    <!-- VN对话框 -->
-    <div class="vn-dialog-box glass-panel" id="vn-dialog-box">
-        <div class="vn-name-tag" id="vn-name-tag"></div>
-        <div class="vn-dialog-text" id="vn-dialog-text"></div>
+    <!-- ==================== 视觉小说模式覆盖层 ==================== -->
+    <div id="vn-overlay">
+        <div class="vn-toolbar">
+            <button class="vn-toolbar-btn" id="vn-btn-back">← 返回小说模式</button>
+            <button class="vn-toolbar-btn" id="vn-btn-history">📜 历史</button>
+            <button class="vn-toolbar-btn" id="vn-btn-skip">⏭ 跳过</button>
+            <button class="vn-toolbar-btn" id="vn-btn-auto">▶ 自动</button>
+            <button class="vn-toolbar-btn" id="vn-btn-reset">🔄 重置</button>
+            <span class="vn-spacer"></span>
+            <span id="vn-counter" style="font-size:11px;color:var(--text-secondary);opacity:0.5;">0 / 0</span>
+        </div>
+
+        <div class="vn-character-area">
+            <div class="vn-placeholder-line"></div>
+        </div>
+
+        <div class="vn-dialog-container">
+            <div class="vn-name-tag" id="vn-name-tag"></div>
+            <div class="vn-dialog-box" id="vn-dialog-box">
+                <div class="vn-dialog-text" id="vn-dialog-text"></div>
+                <button class="vn-advance-btn" id="vn-advance-btn">▶</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VN 历史记录侧栏 -->
+    <div id="vn-history-sidebar">
+        <div class="vn-history-header">
+            <span>对话历史</span>
+            <button class="vn-history-close" id="vn-history-close">✕</button>
+        </div>
+        <div class="vn-history-list" id="vn-history-list"></div>
     </div>
 
     <script>
+    (function() {
+        'use strict';
+
         // ================================================================
-        // 全局状态管理
+        // 全局状态
         // ================================================================
-        const AppState = {
-            currentMode: 'fiction',
+        const State = {
+            theme: 'dark',
             isVnMode: false,
-            chapterData: null,
+            parsedData: null,
             metaData: null,
-            vnDialogQueue: [],
-            vnCurrentIndex: 0
+            vnQueue: [],
+            vnIndex: 0,
+            vnAutoTimer: null,
+            vnAutoOn: false,
+            vnSpeed: 3000,
+            vnTyping: false,
+            vnHistory: [],
+            kvVisible: true
         };
 
         // ================================================================
-        // 粒子系统（极简版 — 零DOM读取）
+        // KV 粒子系统（≤8粒子，无交互，无连线）
         // ================================================================
-        class ParticleSystem {
-            constructor(canvasId) {
-                this.canvas = document.getElementById(canvasId);
-                if (!this.canvas) return;
-                this.ctx = this.canvas.getContext('2d');
-                this.particles = [];
-                this.cachedColors = [
-                    [0, 212, 255],
-                    [124, 58, 237],
-                    [255, 255, 255]
-                ];
-                this.resize();
-                this.init();
-                window.addEventListener('resize', () => this.resize());
-                this.animate();
+        const KVParticles = (function() {
+            let canvas, ctx, particles, rafId;
+            const COLORS = [
+                [0, 212, 255],
+                [124, 58, 237],
+                [255, 255, 255]
+            ];
+
+            function init() {
+                canvas = document.getElementById('kv-canvas');
+                if (!canvas) return;
+                ctx = canvas.getContext('2d');
+                resize();
+                createParticles();
+                animate();
+                window.addEventListener('resize', resize);
             }
 
-            resize() {
-                this.canvas.width = window.innerWidth;
-                this.canvas.height = window.innerHeight;
+            function resize() {
+                if (!canvas) return;
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
             }
 
-            init() {
-                const count = window.innerWidth < 768 ? 6 : 10;
+            function createParticles() {
+                particles = [];
+                const count = Math.min(8, Math.floor(window.innerWidth / 180));
                 for (let i = 0; i < count; i++) {
-                    const colorIdx = i % this.cachedColors.length;
-                    this.particles.push({
-                        x: Math.random() * this.canvas.width,
-                        y: Math.random() * this.canvas.height,
-                        vx: (Math.random() - 0.5) * 0.15,
-                        vy: (Math.random() - 0.5) * 0.15,
-                        radius: Math.random() * 1.2 + 0.4,
-                        alpha: Math.random() * 0.3 + 0.06,
-                        color: this.cachedColors[colorIdx]
+                    const c = COLORS[i % COLORS.length];
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 0.18,
+                        vy: (Math.random() - 0.5) * 0.18,
+                        r: Math.random() * 1.5 + 0.5,
+                        a: Math.random() * 0.25 + 0.05,
+                        c: c
                     });
                 }
             }
 
-            animate() {
-                if (!this.ctx) return;
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-                for (let i = 0; i < this.particles.length; i++) {
-                    const p = this.particles[i];
+            function animate() {
+                if (!ctx || !particles) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
                     p.x += p.vx;
                     p.y += p.vy;
-
-                    if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
-                    if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
-
-                    this.ctx.beginPath();
-                    this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    this.ctx.fillStyle = 'rgba(' + p.color[0] + ',' + p.color[1] + ',' + p.color[2] + ',' + p.alpha + ')';
-                    this.ctx.fill();
+                    if (p.x < -10) p.x = canvas.width + 10;
+                    if (p.x > canvas.width + 10) p.x = -10;
+                    if (p.y < -10) p.y = canvas.height + 10;
+                    if (p.y > canvas.height + 10) p.y = -10;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(' + p.c[0] + ',' + p.c[1] + ',' + p.c[2] + ',' + p.a + ')';
+                    ctx.fill();
                 }
-
-                requestAnimationFrame(() => this.animate());
+                rafId = requestAnimationFrame(animate);
             }
-        }
+
+            function stop() {
+                if (rafId) cancelAnimationFrame(rafId);
+                if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+
+            return { init, stop };
+        })();
 
         // ================================================================
         // Markdown 解析引擎
         // ================================================================
-        class MarkdownParser {
-            constructor() {
-                this.result = [];
-            }
-
-            parse(markdownText) {
-                const lines = markdownText.split('\n');
+        const MDParser = (function() {
+            function parse(text) {
+                const lines = text.split('\n');
+                const result = [];
                 let i = 0;
 
                 while (i < lines.length) {
-                    const line = lines[i].trim();
+                    const raw = lines[i];
+                    const trimmed = raw.trim();
 
-                    // 跳过空行
-                    if (!line) {
+                    if (!trimmed) { i++; continue; }
+
+                    // HIDE 标记跳过
+                    if (trimmed.startsWith('<!--HIDE') || trimmed.startsWith('HIDE')) {
+                        while (i < lines.length && !lines[i].trim().includes('-->')) i++;
                         i++;
                         continue;
                     }
 
-                    // 大章标题 #
-                    if (line.startsWith('# ') && !line.startsWith('## ')) {
-                        this.result.push({
-                            type: 'chapter-title',
-                            content: line.slice(2).trim()
-                        });
-                        i++;
-                        continue;
+                    // 大标题 #
+                    if (/^# /.test(trimmed) && !/^##/.test(trimmed)) {
+                        result.push({ type: 'chapter-title', content: trimmed.slice(2).trim() });
+                        i++; continue;
                     }
 
                     // 节标题 ##
-                    if (line.startsWith('## ')) {
-                        this.result.push({
-                            type: 'section-heading',
-                            content: line.slice(3).trim()
-                        });
-                        i++;
-                        continue;
+                    if (/^## /.test(trimmed)) {
+                        result.push({ type: 'section-heading', content: trimmed.slice(3).trim() });
+                        i++; continue;
                     }
 
-                    // 分隔线 ---
-                    if (line === '---') {
-                        this.result.push({ type: 'separator' });
-                        i++;
-                        continue;
+                    // 分隔线 --- 或 ***
+                    if (trimmed === '---' || trimmed === '***' || trimmed === '****') {
+                        result.push({ type: 'separator' });
+                        i++; continue;
                     }
 
                     // 引用块 >
-                    if (line.startsWith('>')) {
-                        let quoteContent = '';
+                    if (trimmed.startsWith('>')) {
+                        let q = '';
                         while (i < lines.length && lines[i].trim().startsWith('>')) {
-                            quoteContent += lines[i].trim().slice(1).trim() + '\n';
+                            q += lines[i].trim().slice(1).trim() + '\n';
                             i++;
                         }
-                        this.result.push({
-                            type: 'quote',
-                            content: quoteContent.trim()
-                        });
+                        result.push({ type: 'quote', content: q.trim() });
                         continue;
                     }
 
                     // 代码块 ```
-                    if (line.startsWith('```')) {
-                        const codeLang = line.slice(3).trim().toLowerCase();
-                        let codeContent = '';
+                    if (trimmed.startsWith('```')) {
+                        const lang = trimmed.slice(3).trim().toLowerCase();
+                        let code = '';
                         i++;
                         while (i < lines.length && !lines[i].trim().startsWith('```')) {
-                            codeContent += lines[i] + '\n';
+                            code += lines[i] + '\n';
                             i++;
                         }
-                        i++; // 跳过结束的 ```
-
-                        // 判断是否为终端代码块（引用内的代码块或特定语言标记）
-                        const isTerminal = codeLang === '' || codeLang === 'bash' || codeLang === 'shell' || codeLang === 'terminal' || codeLang === 'console';
-
-                        this.result.push({
-                            type: isTerminal ? 'terminal' : 'codeblock',
-                            content: codeContent.trim(),
-                            language: codeLang
-                        });
+                        i++;
+                        // 终端判断：内容含 > 提示符 或 无语言标记
+                        const isTerminal = code.includes('> ') || lang === '' || lang === 'bash' || lang === 'shell' || lang === 'terminal';
+                        result.push({ type: isTerminal ? 'terminal' : 'codeblock', content: code.trim(), lang });
                         continue;
                     }
 
                     // 普通段落
-                    let paragraphContent = '';
-                    while (i < lines.length && lines[i].trim() !== '' && !lines[i].trim().startsWith('#') && !lines[i].trim().startsWith('---') && !lines[i].trim().startsWith('>') && !lines[i].trim().startsWith('```')) {
-                        paragraphContent += (paragraphContent ? ' ' : '') + lines[i].trim();
+                    let para = '';
+                    while (i < lines.length) {
+                        const tl = lines[i].trim();
+                        if (!tl || /^#{1,2} /.test(tl) || tl === '---' || tl === '***' || tl.startsWith('>') || tl.startsWith('```')) break;
+                        para += (para ? ' ' : '') + tl;
                         i++;
                     }
-
-                    if (paragraphContent) {
-                        this.result.push({
-                            type: 'paragraph',
-                            content: paragraphContent
-                        });
-                        continue;
+                    if (para) {
+                        result.push({ type: 'paragraph', content: para });
+                    } else {
+                        i++;
                     }
-
-                    i++;
                 }
-
-                return this.result;
+                return result;
             }
 
-            // 处理行内格式
-            processInlineFormatting(text) {
-                // 加粗 **text**
+            function inline(text) {
                 text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-
-                // 中文翻译 （）→ translation span
                 text = text.replace(/（([^）]+)）/g, '<span class="translation">（$1）</span>');
-
-                // 对话符号 「」微调颜色
                 text = text.replace(/「([^」]+)」/g, '<span class="dialogue-text">「$1」</span>');
-
                 return text;
             }
-        }
+
+            return { parse, inline };
+        })();
 
         // ================================================================
         // 渲染器
         // ================================================================
-        class Renderer {
-            constructor(containerId) {
-                this.container = document.getElementById(containerId);
-                this.parser = new MarkdownParser();
-            }
-
-            render(parsedData) {
-                this.container.innerHTML = '';
-
-                parsedData.forEach((item, index) => {
-                    const element = this.createElement(item, index);
-                    if (element) {
-                        this.container.appendChild(element);
-                    }
+        const Renderer = (function() {
+            function render(data, containerId) {
+                const c = document.getElementById(containerId);
+                if (!c) return;
+                let html = '';
+                data.forEach(item => {
+                    html += buildElement(item);
                 });
-
-                // 启动段落淡入观察器
-                this.initScrollObserver();
+                c.innerHTML = html;
             }
 
-            createElement(item, index) {
+            function escapeHTML(s) {
+                const d = document.createElement('div');
+                d.textContent = s;
+                return d.innerHTML;
+            }
+
+            function buildElement(item) {
                 switch (item.type) {
                     case 'chapter-title':
-                        return this.createChapterTitle(item.content);
+                        return `<div class="chapter-art-title" id="ch-prologue">${escapeHTML(item.content)}</div>`;
 
                     case 'section-heading':
-                        return this.createSectionHeading(item.content, index);
+                        return `<h2 class="section-heading">${escapeHTML(item.content)}</h2>`;
 
                     case 'separator':
-                        return this.createSeparator();
+                        return `<div class="scene-separator"></div>`;
 
-                    case 'quote':
-                        return this.createQuote(item.content);
+                    case 'quote': {
+                        const lines = item.content.split('\n').filter(l => l.trim());
+                        let ps = '';
+                        lines.forEach(l => { ps += `<p>${MDParser.inline(l)}</p>`; });
+                        return `<blockquote class="art-quote">${ps}</blockquote>`;
+                    }
 
-                    case 'terminal':
-                        return this.createTerminal(item.content);
+                    case 'terminal': {
+                        const esc = escapeHTML(item.content);
+                        return `<div class="terminal-block"><div class="terminal-header"><span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span><span class="terminal-title-bar">terminal@phantasm ~ %</span></div><div class="terminal-body">${esc}<span class="terminal-cursor"></span></div></div>`;
+                    }
 
-                    case 'codeblock':
-                        return this.createCodeBlock(item.content, item.language);
+                    case 'codeblock': {
+                        const esc = escapeHTML(item.content);
+                        return `<div class="terminal-block"><div class="terminal-header"><span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span><span class="terminal-title-bar">${escapeHTML(item.lang || 'code')}</span></div><div class="terminal-body">${esc}</div></div>`;
+                    }
 
                     case 'paragraph':
-                        return this.createParagraph(item.content, index);
+                        return `<p class="content-paragraph">${MDParser.inline(item.content)}</p>`;
 
                     default:
-                        return null;
+                        return '';
                 }
             }
 
-            createChapterTitle(text) {
-                const el = document.createElement('div');
-                el.className = 'chapter-art-title';
-                el.textContent = text;
-                return el;
-            }
-
-            createSectionHeading(text, index) {
-                const el = document.createElement('h2');
-                el.className = 'section-heading';
-                el.textContent = text;
-                el.setAttribute('data-number', String(index).padStart(2, '0'));
-                return el;
-            }
-
-            createSeparator() {
-                const el = document.createElement('div');
-                el.className = 'scene-separator';
-                return el;
-            }
-
-            createQuote(content) {
-                const el = document.createElement('blockquote');
-                el.className = 'art-quote';
-
-                const paragraphs = content.split('\n').filter(p => p.trim());
-                paragraphs.forEach(p => {
-                    const pEl = document.createElement('p');
-                    pEl.innerHTML = `<em>${this.parser.processInlineFormatting(p)}</em>`;
-                    el.appendChild(pEl);
-                });
-
-                return el;
-            }
-
-            createTerminal(code) {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'terminal-block';
-
-                // 终端头部
-                const header = document.createElement('div');
-                header.className = 'terminal-header';
-                header.innerHTML = `
-                    <span class="terminal-dot red"></span>
-                    <span class="terminal-dot yellow"></span>
-                    <span class="terminal-dot green"></span>
-                    <span class="terminal-title-bar">terminal@phantasm ~ %</span>
-                `;
-                wrapper.appendChild(header);
-
-                // 终端内容 — 直接渲染，无逐行动画
-                const body = document.createElement('div');
-                body.className = 'terminal-body';
-                body.textContent = code;
-
-                // 光标
-                const cursor = document.createElement('span');
-                cursor.className = 'terminal-cursor';
-                body.appendChild(cursor);
-
-                wrapper.appendChild(body);
-                return wrapper;
-            }
-
-            createCodeBlock(code, language) {
-                const wrapper = document.createElement('pre');
-                wrapper.className = 'terminal-block';
-                wrapper.innerHTML = `
-                    <div class="terminal-header">
-                        <span class="terminal-dot red"></span>
-                        <span class="terminal-dot yellow"></span>
-                        <span class="terminal-dot green"></span>
-                        <span class="terminal-title-bar">${language || 'code'}</span>
-                    </div>
-                    <div class="terminal-body">${this.escapeHtml(code)}</div>
-                `;
-                return wrapper;
-            }
-
-            createParagraph(text, index) {
-                const el = document.createElement('p');
-                el.className = 'content-paragraph';
-                el.innerHTML = this.parser.processInlineFormatting(text);
-                return el;
-            }
-
-            escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            }
-
-            initScrollObserver() {
-                const observer = new IntersectionObserver(
-                    (entries) => {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting) {
-                                entry.target.classList.add('visible');
-                            }
-                        });
-                    },
-                    {
-                        threshold: 0.1,
-                        rootMargin: '0px 0px -50px 0px'
-                    }
-                );
-
-                document.querySelectorAll('.content-paragraph').forEach(el => {
-                    observer.observe(el);
-                });
-            }
-        }
+            return { render };
+        })();
 
         // ================================================================
-        // 角色卡片渲染器
+        // 角色卡片渲染
         // ================================================================
-        class CharacterRenderer {
-            static getCharacterColor(name) {
-                const colorMap = {
-                    '朱音': '#f59e0b',
-                    '小雪': '#38bdf8',
-                    '零': '#00d4ff',
-                    'Eve': '#a855f7'
-                };
-                for (const [key, value] of Object.entries(colorMap)) {
-                    if (name.includes(key)) return value;
+        const CharRenderer = (function() {
+            const COLOR_MAP = {
+                '零': '#00d4ff', '朱音': '#f59e0b', '小雪': '#38bdf8', 'Eve': '#a855f7'
+            };
+
+            function getColor(name) {
+                for (const [k, v] of Object.entries(COLOR_MAP)) {
+                    if (name.includes(k)) return v;
                 }
-                return '#00d4ff'; // 默认蓝色
+                return '#00d4ff';
             }
 
-            static renderCards(characters) {
+            function render(chars) {
                 const container = document.getElementById('character-cards');
                 const quickNav = document.getElementById('character-quick-nav');
 
-                if (!characters || characters.length === 0) {
-                    container.innerHTML = '<p style="color:var(--text-secondary);font-size:13px;">暂无角色数据</p>';
-                    quickNav.innerHTML = '<p style="color:var(--text-secondary);font-size:12px;">—</p>';
+                if (!chars || !chars.length) {
+                    if (container) container.innerHTML = '<p style="color:var(--text-secondary);font-size:12px;padding:10px;">暂无角色数据</p>';
+                    if (quickNav) quickNav.innerHTML = '<p style="color:var(--text-secondary);font-size:11px;">—</p>';
                     return;
                 }
+                if (container) container.innerHTML = '';
+                if (quickNav) quickNav.innerHTML = '';
 
-                container.innerHTML = '';
-                quickNav.innerHTML = '';
+                chars.forEach((ch, idx) => {
+                    const color = getColor(ch.name_jp || ch.name || '');
+                    const glow = color.replace('#', '');
 
-                characters.forEach((char, idx) => {
-                    const color = this.getCharacterColor(char.name_jp || char.name || '');
-                    const glowColor = color.replace('#', '');
+                    if (container) {
+                        const card = document.createElement('div');
+                        card.className = 'character-card glass-panel';
+                        card.id = 'char-card-' + idx;
+                        card.style.setProperty('--char-color', color);
 
-                    // 角色卡片
-                    const card = document.createElement('div');
-                    card.className = 'character-card glass-panel';
-                    card.id = `char-card-${idx}`;
-                    card.style.setProperty('--char-color', color);
-                    card.style.setProperty('--char-glow', `#${glowColor}33`);
-
-                    card.innerHTML = `
-                        <div class="char-name-jp">${char.name_jp || char.name || '未知'}</div>
-                        <div class="char-name-cn">${char.name_cn || ''}</div>
-                        <div class="char-role">${char.role || ''}</div>
-                        ${char.tags ? `<div class="char-tags">${char.tags.map(t => `<span class="char-tag">${t}</span>`).join('')}</div>` : ''}
-                        <div class="char-description">${char.description || ''}</div>
-                        ${char.new_info_revealed && char.new_info_revealed.length > 0 ? `
-                            <ul class="char-info-list">
-                                ${char.new_info_revealed.slice(0, 3).map(info => `<li class="char-info-item">${info}</li>`).join('')}
-                            </ul>
-                        ` : ''}
-                        <div class="emotion-indicator">
-                            <div class="emotion-label">情绪波动</div>
-                            <div class="emotion-bar">
-                                <div class="emotion-fill" style="width:${Math.random() * 40 + 30}%"></div>
-                            </div>
-                        </div>
-                    `;
-
-                    container.appendChild(card);
-
-                    // 快捷导航链接
-                    const link = document.createElement('div');
-                    link.className = 'character-quick-link';
-                    link.textContent = `• ${char.name_jp || char.name}`;
-                    link.onclick = () => {
-                        document.getElementById(`char-card-${idx}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    };
-                    quickNav.appendChild(link);
-                });
-            }
-        }
-
-        // ================================================================
-        // 视觉小说模式控制器
-        // ================================================================
-        class VisualNovelController {
-            constructor() {
-                this.dialogBox = document.getElementById('vn-dialog-box');
-                this.dialogText = document.getElementById('vn-dialog-text');
-                this.nameTag = document.getElementById('vn-name-tag');
-                this.isRunning = false;
-                this.advanceHandler = null;
-            }
-
-            activate(parsedData) {
-                // 从解析数据中提取对话
-                this.dialogQueue = [];
-
-                parsedData.forEach(item => {
-                    if (item.type === 'paragraph') {
-                        const text = item.content;
-                        const dialogueMatch = text.match(/^([^「]+)?「(.+)」/);
-                        if (dialogueMatch) {
-                            this.dialogQueue.push({
-                                speaker: dialogueMatch[1] ? dialogueMatch[1].trim() : '',
-                                text: dialogueMatch[2]
-                            });
-                        } else {
-                            this.dialogQueue.push({
-                                speaker: '',
-                                text: text.substring(0, 120)
-                            });
+                        let infoHtml = '';
+                        if (ch.new_info_revealed && ch.new_info_revealed.length > 0) {
+                            infoHtml = '<ul class="char-info-list">' +
+                                ch.new_info_revealed.slice(0, 3).map(info =>
+                                    `<li class="char-info-item">${info}</li>`
+                                ).join('') + '</ul>';
                         }
+
+                        card.innerHTML =
+                            '<div class="char-name-jp">' + (ch.name_jp || ch.name || '未知') + '</div>' +
+                            '<div class="char-name-cn">' + (ch.name_cn || '') + '</div>' +
+                            '<div class="char-role">' + (ch.role || '') + '</div>' +
+                            '<div class="char-description">' + (ch.description || '') + '</div>' +
+                            infoHtml +
+                            '<div class="emotion-indicator"><div class="emotion-label">情绪波动</div><div class="emotion-bar"><div class="emotion-fill" style="width:' + (Math.random() * 35 + 30) + '%"></div></div></div>';
+
+                        container.appendChild(card);
+                    }
+
+                    if (quickNav) {
+                        const link = document.createElement('div');
+                        link.className = 'character-quick-link';
+                        link.textContent = '• ' + (ch.name_jp || ch.name);
+                        link.onclick = function() {
+                            const el = document.getElementById('char-card-' + idx);
+                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        };
+                        quickNav.appendChild(link);
                     }
                 });
-
-                this.vnCurrentIndex = 0;
-                this.isRunning = true;
-                this.showCurrentDialog();
-                this.bindClickAdvance();
             }
 
-            showCurrentDialog() {
-                if (!this.isRunning || this.vnCurrentIndex >= this.dialogQueue.length) {
-                    this.vnCurrentIndex = 0;
-                }
+            return { render };
+        })();
 
-                const dialog = this.dialogQueue[this.vnCurrentIndex];
-                this.nameTag.textContent = dialog.speaker || '旁白';
-                this.nameTag.style.display = dialog.speaker ? 'block' : 'none';
-                this.typeWriterEffect(dialog.text);
-            }
+        // ================================================================
+        // 视觉小说控制器
+        // ================================================================
+        const VNController = (function() {
+            const overlay = document.getElementById('vn-overlay');
+            const nameTag = document.getElementById('vn-name-tag');
+            const dialogText = document.getElementById('vn-dialog-text');
+            const dialogBox = document.getElementById('vn-dialog-box');
+            const advanceBtn = document.getElementById('vn-advance-btn');
+            const counterEl = document.getElementById('vn-counter');
+            const historySidebar = document.getElementById('vn-history-sidebar');
+            const historyList = document.getElementById('vn-history-list');
 
-            typeWriterEffect(text) {
-                this.dialogText.innerHTML = '';
-                let i = 0;
-                const speed = 25;
-
-                const type = () => {
-                    if (!this.isRunning) return; // 已退出VN模式则停止打字
-                    if (i < text.length) {
-                        this.dialogText.innerHTML += text.charAt(i);
-                        i++;
-                        setTimeout(type, speed);
+            function extractDialogs(parsedData) {
+                const queue = [];
+                parsedData.forEach(function(item) {
+                    if (item.type !== 'paragraph') return;
+                    const text = item.content;
+                    // 匹配对话：「...」
+                    const dm = text.match(/^([^「]*?)「(.+)」/);
+                    if (dm) {
+                        queue.push({
+                            speaker: dm[1] ? dm[1].trim() : '',
+                            text: dm[2]
+                        });
+                    } else {
+                        // 叙述文本截取前120字
+                        const short = text.length > 120 ? text.substring(0, 120) + '…' : text;
+                        queue.push({ speaker: '', text: short });
                     }
-                };
-                type();
+                });
+                return queue;
             }
 
-            bindClickAdvance() {
-                // 只在对话框区域绑定点击推进，不再用 document 全局捕获
-                this.advanceHandler = () => {
-                    if (!AppState.isVnMode || !this.isRunning) return;
-                    this.vnCurrentIndex++;
-                    this.showCurrentDialog();
-                };
-                this.dialogBox.addEventListener('click', this.advanceHandler);
-            }
-
-            deactivate() {
-                this.isRunning = false;
-                if (this.advanceHandler && this.dialogBox) {
-                    this.dialogBox.removeEventListener('click', this.advanceHandler);
+            function showCurrent() {
+                if (State.vnIndex >= State.vnQueue.length) {
+                    State.vnIndex = 0;
                 }
-                this.advanceHandler = null;
+                const d = State.vnQueue[State.vnIndex];
+                if (!d) return;
+
+                if (d.speaker) {
+                    nameTag.textContent = d.speaker;
+                    nameTag.style.display = 'inline-block';
+                } else {
+                    nameTag.style.display = 'none';
+                }
+
+                updateCounter();
+                typewriter(d.text);
+
+                // 记录历史
+                State.vnHistory.push({ speaker: d.speaker || '旁白', text: d.text });
+                if (State.vnHistory.length > 100) State.vnHistory.shift();
+            }
+
+            function typewriter(text) {
+                State.vnTyping = true;
+                dialogText.innerHTML = '';
+                let i = 0;
+                const speed = 22;
+
+                function tick() {
+                    if (!State.isVnMode) { State.vnTyping = false; return; }
+                    if (i < text.length) {
+                        dialogText.innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(tick, speed);
+                    } else {
+                        State.vnTyping = false;
+                    }
+                }
+                tick();
+            }
+
+            function instantShow(text) {
+                State.vnTyping = false;
+                dialogText.innerHTML = text;
+            }
+
+            function advance() {
+                // 如果正在打字，瞬间显示完
+                if (State.vnTyping) {
+                    const d = State.vnQueue[State.vnIndex];
+                    if (d) instantShow(d.text);
+                    return;
+                }
+                State.vnIndex++;
+                showCurrent();
+            }
+
+            function skip() {
+                // 快速跳到下一段（瞬间显示当前，再推进）
+                if (State.vnTyping) {
+                    const d = State.vnQueue[State.vnIndex];
+                    if (d) instantShow(d.text);
+                }
+                State.vnIndex++;
+                if (State.vnIndex >= State.vnQueue.length) State.vnIndex = 0;
+                showCurrent();
+            }
+
+            function reset() {
+                stopAuto();
+                State.vnIndex = 0;
+                State.vnHistory = [];
+                showCurrent();
+                renderHistory();
+            }
+
+            function toggleAuto() {
+                if (State.vnAutoOn) {
+                    stopAuto();
+                } else {
+                    startAuto();
+                }
+            }
+
+            function startAuto() {
+                State.vnAutoOn = true;
+                const btn = document.getElementById('vn-btn-auto');
+                if (btn) btn.classList.add('active-state');
+                function tick() {
+                    if (!State.vnAutoOn || !State.isVnMode) return;
+                    advance();
+                    State.vnAutoTimer = setTimeout(tick, State.vnSpeed);
+                }
+                tick();
+            }
+
+            function stopAuto() {
+                State.vnAutoOn = false;
+                if (State.vnAutoTimer) { clearTimeout(State.vnAutoTimer); State.vnAutoTimer = null; }
+                const btn = document.getElementById('vn-btn-auto');
+                if (btn) btn.classList.remove('active-state');
+            }
+
+            function toggleHistory() {
+                historySidebar.classList.toggle('open');
+                renderHistory();
+            }
+
+            function closeHistory() {
+                historySidebar.classList.remove('open');
+            }
+
+            function renderHistory() {
+                if (!historyList) return;
+                let h = '';
+                // 从最新往前显示
+                for (let i = State.vnHistory.length - 1; i >= Math.max(0, State.vnHistory.length - 50); i--) {
+                    const item = State.vnHistory[i];
+                    h += '<div class="vn-history-item"><div class="vn-history-speaker">' + item.speaker + '</div>' + item.text + '</div>';
+                }
+                historyList.innerHTML = h || '<p style="padding:20px;text-align:center;color:var(--text-secondary);font-size:12px;">暂无历史记录</p>';
+            }
+
+            function updateCounter() {
+                if (counterEl) {
+                    counterEl.textContent = (State.vnIndex + 1) + ' / ' + State.vnQueue.length;
+                }
+            }
+
+            function activate(parsedData) {
+                State.vnQueue = extractDialogs(parsedData);
+                State.vnIndex = 0;
+                State.vnHistory = [];
+                updateCounter();
+                showCurrent();
+            }
+
+            function enterMode() {
+                State.isVnMode = true;
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                const btnVn = document.getElementById('btn-vn-mode');
+                const btnFic = document.getElementById('btn-fiction-mode');
+                if (btnVn) btnVn.classList.add('active');
+                if (btnFic) btnFic.classList.remove('active');
+            }
+
+            function exitMode() {
+                State.isVnMode = false;
+                State.vnTyping = false;
+                stopAuto();
+                overlay.classList.remove('active');
+                closeHistory();
+                document.body.style.overflow = '';
+
+                const btnVn = document.getElementById('btn-vn-mode');
+                const btnFic = document.getElementById('btn-fiction-mode');
+                if (btnFic) btnFic.classList.add('active');
+                if (btnVn) btnVn.classList.remove('active');
+            }
+
+            function bindEvents() {
+                // 工具栏按钮
+                document.getElementById('vn-btn-back').addEventListener('click', exitMode);
+                document.getElementById('vn-btn-history').addEventListener('click', toggleHistory);
+                document.getElementById('vn-btn-skip').addEventListener('click', skip);
+                document.getElementById('vn-btn-auto').addEventListener('click', toggleAuto);
+                document.getElementById('vn-btn-reset').addEventListener('click', reset);
+                document.getElementById('vn-history-close').addEventListener('click', closeHistory);
+
+                // 推进：对话框点击 + ▶按钮
+                dialogBox.addEventListener('click', advance);
+                advanceBtn.addEventListener('click', function(e) { e.stopPropagation(); advance(); });
+
+                // 键盘 → 推进
+                document.addEventListener('keydown', function(e) {
+                    if (!State.isVnMode) return;
+                    if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        advance();
+                    }
+                });
+            }
+
+            return { activate, enterMode, exitMode, bindEvents };
+        })();
+
+        // ================================================================
+        // 主题切换
+        // ================================================================
+        function setTheme(theme) {
+            State.theme = theme;
+            const root = document.documentElement;
+            const kvBtn = document.getElementById('kv-theme-btn');
+            const darkBtn = document.getElementById('btn-theme-dark');
+            const lightBtn = document.getElementById('btn-theme-light');
+
+            if (theme === 'light') {
+                root.setAttribute('data-theme', 'light');
+                if (kvBtn) kvBtn.textContent = '☀️';
+                if (darkBtn) darkBtn.classList.remove('active');
+                if (lightBtn) lightBtn.classList.add('active');
+            } else {
+                root.removeAttribute('data-theme');
+                if (kvBtn) kvBtn.textContent = '🌙';
+                if (darkBtn) darkBtn.classList.add('active');
+                if (lightBtn) lightBtn.classList.remove('active');
+            }
+        }
+
+        function toggleTheme() {
+            setTheme(State.theme === 'dark' ? 'light' : 'dark');
+        }
+
+        // ================================================================
+        // KV 区交互
+        // ================================================================
+        function setupKV() {
+            const startBtn = document.getElementById('kv-start-btn');
+            const themeBtn = document.getElementById('kv-theme-btn');
+
+            if (startBtn) {
+                startBtn.addEventListener('click', function() {
+                    const mainLayout = document.getElementById('main-layout');
+                    if (mainLayout) {
+                        mainLayout.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    State.kvVisible = false;
+                    // 可选：折叠KV区以节省空间
+                    const kvSec = document.getElementById('kv-section');
+                    if (kvSec) {
+                        kvSec.style.minHeight = '0';
+                        kvSec.style.paddingBottom = '0';
+                    }
+                });
+            }
+
+            if (themeBtn) {
+                themeBtn.addEventListener('click', toggleTheme);
             }
         }
 
         // ================================================================
-        // 初始化与主流程
+        // 模式切换
         // ================================================================
-        async function initializeApp() {
-            // 显示 loading 打字机效果
-            await showLoadingTypewriter();
+        function bindModeSwitch() {
+            const btnFiction = document.getElementById('btn-fiction-mode');
+            const btnVN = document.getElementById('btn-vn-mode');
+
+            if (btnVN) {
+                btnVN.addEventListener('click', function() {
+                    if (State.parsedData) {
+                        VNController.activate(State.parsedData);
+                    }
+                    VNController.enterMode();
+                });
+            }
+
+            if (btnFiction) {
+                btnFiction.addEventListener('click', function() {
+                    VNController.exitMode();
+                });
+            }
+        }
+
+        // ================================================================
+        // 移动端菜单
+        // ================================================================
+        function bindMobileMenu() {
+            const ham = document.getElementById('hamburger-btn');
+            const sidebar = document.getElementById('sidebar-left');
+            const overlay = document.getElementById('mobile-overlay');
+
+            if (!ham || !sidebar) return;
+
+            function open() {
+                sidebar.classList.add('mobile-open');
+                if (overlay) overlay.classList.add('active');
+            }
+            function close() {
+                sidebar.classList.remove('mobile-open');
+                if (overlay) overlay.classList.remove('active');
+            }
+
+            ham.addEventListener('click', open);
+            if (overlay) overlay.addEventListener('click', close);
+        }
+
+        // ================================================================
+        // 章节导航锚点
+        // ================================================================
+        function bindChapterNav() {
+            const items = document.querySelectorAll('.chapter-nav-item:not(.locked)');
+            items.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    const anchor = this.getAttribute('data-anchor');
+                    if (anchor) {
+                        const el = document.getElementById(anchor);
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    // 更新激活状态
+                    items.forEach(function(i) { i.classList.remove('active'); });
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        // ================================================================
+        // 初始化主流程
+        // ================================================================
+        async function init() {
+            // 启动KV粒子系统
+            KVParticles.init();
+            setupKV();
 
             try {
-                // 并行加载 MD 和 JSON 文件
-                const [mdResponse, jsonResponse] = await Promise.all([
+                const [mdRes, jsonRes] = await Promise.all([
                     fetch('chapter_01/chapter_01.md'),
                     fetch('chapter_01/chapter_01_meta.json')
                 ]);
 
-                if (!mdResponse.ok) throw new Error('无法加载章节文件');
-                if (!jsonResponse.ok) throw new Error('无法加载元数据文件');
+                if (!mdRes.ok) throw new Error('无法加载章节文件 chapter_01.md');
+                if (!jsonRes.ok) throw new Error('无法加载元数据 chapter_01_meta.json');
 
-                const mdText = await mdResponse.text();
-                const jsonData = await jsonResponse.json();
+                const mdText = await mdRes.text();
+                const jsonData = await jsonRes.json();
 
-                AppState.chapterData = mdText;
-                AppState.metaData = jsonData;
+                State.metaData = jsonData;
 
-                // 解析并渲染 MD 内容
-                const parser = new MarkdownParser();
-                const parsedData = parser.parse(mdText);
+                // 解析 Markdown
+                State.parsedData = MDParser.parse(mdText);
 
-                const renderer = new Renderer('reading-stage');
-                renderer.render(parsedData);
+                // 渲染中央阅读区（一次性全部渲染，无动画）
+                Renderer.render(State.parsedData, 'reading-stage');
 
-                // 渲染角色卡片
+                // 渲染右侧角色卡片
                 if (jsonData.characters_appeared) {
-                    CharacterRenderer.renderCards(jsonData.characters_appeared);
+                    CharRenderer.render(jsonData.characters_appeared);
                 }
 
-                // 初始化粒子系统
-                new ParticleSystem('particle-canvas');
+                // 绑定事件
+                bindModeSwitch();
+                bindMobileMenu();
+                bindChapterNav();
+                VNController.bindEvents();
 
-                // 初始化 VN 控制器
-                const vnController = new VisualNovelController();
-                vnController.activate(parsedData);
+                // 主题按钮（左侧面板内的）
+                // 在 mode-switcher 区域添加主题切换
+                const modeSwitcher = document.querySelector('.mode-switcher');
+                if (modeSwitcher) {
+                    const themeDiv = document.createElement('div');
+                    themeDiv.style.cssText = 'margin-top:12px;display:flex;gap:5px;';
+                    themeDiv.innerHTML =
+                        '<button class="mode-btn active" id="btn-theme-dark" style="flex:1;font-size:10px;">🌙 深色</button>' +
+                        '<button class="mode-btn" id="btn-theme-light" style="flex:1;font-size:10px;">☀️ 浅色</button>';
+                    modeSwitcher.parentNode.insertBefore(themeDiv, modeSwitcher.nextSibling);
 
-                // 绑定模式切换事件
-                bindModeSwitchEvents(vnController);
+                    document.getElementById('btn-theme-dark').addEventListener('click', function() { setTheme('dark'); });
+                    document.getElementById('btn-theme-light').addEventListener('click', function() { setTheme('light'); });
+                }
 
-                // 绑定移动端菜单事件
-                bindMobileMenuEvents();
-
-                // Fade out loading → 显示主界面
-                setTimeout(() => {
-                    document.getElementById('loading-screen').classList.add('hidden');
-                }, 600);
-
-            } catch (error) {
-                console.error('初始化失败:', error);
-                document.getElementById('loading-screen').innerHTML = `
-                    <div class="loading-logo" style="font-size:1.5rem;color:#ff5f57;">ERROR</div>
-                    <div class="loading-text" style="color:#ff5f57;">
-                        加载失败<br>
-                        <span style="font-size:12px;margin-top:8px;display:block;">请确保通过 HTTP 服务器运行此页面<br>例如: python -m http.server 8080</span>
-                    </div>
-                `;
+            } catch (err) {
+                console.error('初始化失败:', err);
+                const stage = document.getElementById('reading-stage');
+                if (stage) {
+                    stage.innerHTML =
+                        '<div style="text-align:center;padding:80px 20px;font-family:' + "'Space Grotesk'" + ',sans-serif;">' +
+                        '<div style="font-size:24px;color:#ff5f57;margin-bottom:16px;">⚠ 加载错误</div>' +
+                        '<div style="color:var(--text-secondary);font-size:14px;line-height:1.8;">' +
+                        err.message + '<br><br>' +
+                        '<span style="font-size:12px;opacity:0.6;">请通过 HTTP 服务器运行此页面<br>例如: python -m http.server 8080<br>然后访问 http://localhost:8080</span>' +
+                        '</div></div>';
+                }
             }
         }
 
-        // Loading 打字机效果
-        function showLoadingTypewriter() {
-            return new Promise(resolve => {
-                const messages = [
-                    'INITIALIZING TERMINAL...',
-                    'LOADING NARRATIVE DATA...',
-                    'PARSING QUANTUM SIGNATURE...',
-                    'RENDERING INTERFACE...'
-                ];
-                let msgIndex = 0;
-                let charIndex = 0;
-                const typingEl = document.getElementById('typing-text');
-
-                const typeMessage = () => {
-                    if (msgIndex >= messages.length) {
-                        resolve();
-                        return;
-                    }
-
-                    const message = messages[msgIndex];
-
-                    if (charIndex < message.length) {
-                        typingEl.textContent = message.substring(0, charIndex + 1);
-                        charIndex++;
-                        setTimeout(typeMessage, 40 + Math.random() * 30);
-                    } else {
-                        setTimeout(() => {
-                            msgIndex++;
-                            charIndex = 0;
-                            typingEl.textContent = '';
-                            setTimeout(typeMessage, 300);
-                        }, 800);
-                    }
-                };
-
-                typeMessage();
-
-                // 超时保护
-                setTimeout(resolve, 5000);
-            });
+        // 启动
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
         }
-
-        // 模式切换绑定
-        function bindModeSwitchEvents(vnController) {
-            const btnFiction = document.getElementById('btn-fiction-mode');
-            const btnVn = document.getElementById('btn-vn-mode');
-            const mainContainer = document.getElementById('main-container');
-            const backBtn = document.getElementById('vn-back-btn');
-
-            btnVn.addEventListener('click', () => {
-                AppState.isVnMode = true;
-                mainContainer.classList.add('vn-mode');
-                btnVn.classList.add('active');
-                btnFiction.classList.remove('active');
-                document.body.style.background = 'linear-gradient(135deg, #050810 0%, #0a0f1f 100%)';
-            });
-
-            const switchToFiction = () => {
-                AppState.isVnMode = false;
-                mainContainer.classList.remove('vn-mode');
-                btnFiction.classList.add('active');
-                btnVn.classList.remove('active');
-                document.body.style.background = '';
-                vnController.deactivate();
-            };
-
-            btnFiction.addEventListener('click', switchToFiction);
-            backBtn.addEventListener('click', switchToFiction);
-
-            // 主题切换绑定
-            const btnThemeDark = document.getElementById('btn-theme-dark');
-            const btnThemeLight = document.getElementById('btn-theme-light');
-
-            btnThemeDark.addEventListener('click', () => {
-                document.documentElement.removeAttribute('data-theme');
-                btnThemeDark.classList.add('active');
-                btnThemeLight.classList.remove('active');
-            });
-
-            btnThemeLight.addEventListener('click', () => {
-                document.documentElement.setAttribute('data-theme', 'light');
-                btnThemeLight.classList.add('active');
-                btnThemeDark.classList.remove('active');
-            });
-        }
-
-        // 移动端菜单绑定
-        function bindMobileMenuEvents() {
-            const hamburgerBtn = document.getElementById('hamburger-btn');
-            const sidebarLeft = document.getElementById('sidebar-left');
-            const overlay = document.getElementById('mobile-overlay');
-
-            const openMenu = () => {
-                sidebarLeft.classList.add('mobile-open');
-                overlay.classList.add('active');
-            };
-
-            const closeMenu = () => {
-                sidebarLeft.classList.remove('mobile-open');
-                overlay.classList.remove('active');
-            };
-
-            hamburgerBtn.addEventListener('click', openMenu);
-            overlay.addEventListener('click', closeMenu);
-        }
-
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', initializeApp);
+    })();
     </script>
 </body>
 </html>

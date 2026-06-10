@@ -1,0 +1,191 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "spoiler_level": "public",
+    "description": "世界設定データ。ロケーション·社会·アイテム。HTML Wiki 用。"
+  },
+
+  "locations": [
+    {
+      "id": "LOC001",
+      "name_jp": "帝都·星京",
+      "name_kana": "ていと·せいきょう",
+      "name_cn": "帝都·星京",
+      "type": "首都",
+      "first_appearance": "序章",
+      "description": "東和帝国の首都にして最大の都市。魔法工業革命の中心地。和洋折衷の建築が立ち並び、魔力鉄道の高架線が空を横切り、魔晶灯が街を照らす。人口約二百万人。",
+      "districts": [
+        { "name_jp": "皇居区", "name_cn": "皇居区", "description": "皇室と上級貴族の居住区。高い壁と結界で守られている。" },
+        { "name_jp": "貴族街", "name_cn": "贵族街", "description": "中級·下級貴族の居住区。天宮家の本邸がある。" },
+        { "name_jp": "下町", "name_cn": "下町", "description": "平民と没落貴族の居住区。神代家の所在地。人情味あふれる街並み。" },
+        { "name_jp": "工業区", "name_cn": "工业区", "description": "魔油精製所·魔鉱加工場が集中する区域。白い蒸気と紫の魔力光が空を染める。" },
+        { "name_jp": "学園区", "name_cn": "学园区", "description": "星導学園を中心とした文教地区。古書店や魔法道具店が軒を連ねる。" }
+      ],
+      "image_prompts": {
+        "cityscape_day": {
+          "prompt": "masterpiece, best quality, cityscape, fantasy industrial city, Taisho-era Japanese architecture mixed with Western brick buildings, mana crystal street lamps glowing faint blue, elevated mana railway tracks crossing between buildings, steam from factories mixing with clouds, bustling streets with people in kimono and Western clothes, mountain backdrop, warm morning or afternoon light, anime background art style, Makoto Shinkai style lighting, Studio Ghibli background detail",
+          "negative": "lowres, modern cars, skyscrapers, neon, cyberpunk, post-apocalyptic, dark, night",
+          "resolution": "1216x832 (landscape)",
+          "style_notes": "大正ロマン＋魔法工業の融合。未来的すぎず、中世的すぎず。"
+        },
+        "cityscape_night": {
+          "prompt": "masterpiece, best quality, night cityscape, fantasy city at dusk, mana crystal lamps glowing blue and purple along streets, magical aurora effect in sky from factory mana exhaust, warm window lights in traditional buildings, elevated railway with lighted train passing, starry sky visible above light pollution, romantic atmosphere, anime background art, beautiful night scenery",
+          "negative": "lowres, neon signs, cyberpunk, modern, empty streets, scary, dark alleys, dystopian",
+          "resolution": "1216x832 (landscape)"
+        },
+        "shitamachi_alley": {
+          "prompt": "masterpiece, best quality, traditional Japanese alley in fantasy city, old wooden houses, narrow stone-paved street, small mana lamp posts, potted plants, laundry hanging, cat sitting on fence, warm lived-in atmosphere, afternoon sunlight filtering between buildings, slice of life, anime background art style, cozy nostalgic feeling",
+          "negative": "lowres, modern, rich, palace, futuristic, clean, empty, sterile",
+          "resolution": "1216x832 (landscape)"
+        }
+      }
+    },
+    {
+      "id": "LOC002",
+      "name_jp": "神代家",
+      "name_kana": "かみしろけ",
+      "name_cn": "神代家",
+      "type": "自宅",
+      "description": "星京下町にある二階建ての木造住宅。元は下級貴族の邸宅だったが、現在はかなり古びている。一階は台所·食堂·居間。二階は零の部屋と小雪の部屋。居間には父の蔵書と研究資料が山積み。",
+      "image_prompts": {
+        "exterior": {
+          "prompt": "masterpiece, best quality, small two-story traditional Japanese wooden house, slightly aged exterior, tile roof with moss, small front garden with one old cherry tree, traditional sliding doors, morning or evening warm light, cozy but slightly melancholic atmosphere, anime background art style, slice of life",
+          "negative": "lowres, modern house, mansion, apartment, dark, scary, ruined, abandoned",
+          "resolution": "1216x832 (landscape)"
+        },
+        "interior_morning": {
+          "prompt": "masterpiece, best quality, traditional Japanese house interior, tatami floor, morning sunlight streaming through shoji screens, simple wooden furniture, small kitchen with steaming pot, warm cozy atmosphere, lived-in feeling, anime background art, Ghibli-style interior detail",
+          "negative": "lowres, modern kitchen, appliances, rich, fancy, dark, empty",
+          "resolution": "1216x832 (landscape)"
+        }
+      }
+    },
+    {
+      "id": "LOC003",
+      "name_jp": "星導学園",
+      "name_kana": "せいどうがくえん",
+      "name_cn": "星导学园",
+      "type": "学園",
+      "description": "帝国最古·最高峰の魔法学院。和洋折衷の壮麗な建築群。中央講堂の大ドーム、円形闘技場、広大な魔法植物園、地下図書館を有する。",
+      "image_prompts": {
+        "campus": {
+          "prompt": "masterpiece, best quality, grand magic academy campus, Japanese-Western fusion architecture, large central dome glowing with blue mana light, cherry blossom trees lining stone paths, clock tower, students in navy uniforms walking, majestic but academic atmosphere, anime background art, beautiful sky with clouds, fantasy school",
+          "negative": "lowres, modern school, ruined, dark, night, empty, scary",
+          "resolution": "1216x832 (landscape)"
+        },
+        "arena": {
+          "prompt": "masterpiece, best quality, huge circular arena interior, magic barrier dome in center, tiered spectator seating, dramatic lighting from above, stone floor with magic circle patterns, epic scale, anime background art, fantasy colosseum for magic battles",
+          "negative": "lowres, modern sports stadium, small, dark, ruined",
+          "resolution": "1216x832 (landscape)"
+        }
+      }
+    },
+    {
+      "id": "LOC004",
+      "name_jp": "魔力鉄道·中央線",
+      "name_kana": "まりょくてつどう·ちゅうおうせん",
+      "name_cn": "魔力铁道·中央线",
+      "type": "交通機関",
+      "description": "魔鉱エンジンで駆動する都市鉄道。高架線を走り、車窓からは星京の街並みが一望できる。",
+      "image_prompts": {
+        "train_interior": {
+          "prompt": "masterpiece, best quality, inside of fantasy train carriage, Taisho-era aesthetic train interior, wooden seats, brass handles, mana crystal lamps overhead, morning light through windows, passengers in kimono and school uniforms, warm atmosphere, anime background art, nostalgic public transport",
+          "negative": "lowres, modern subway, neon, futuristic, empty, dark",
+          "resolution": "1216x832 (landscape)"
+        }
+      }
+    }
+  ],
+
+  "key_scenes": [
+    {
+      "id": "SCN001",
+      "name_jp": "夕暮れの桜裏庭",
+      "name_cn": "黄昏的樱花后庭",
+      "chapter": "序章",
+      "description": "零が初めて端末と向き合った隠れ家的な場所。学園裏手の桜並木の先。夕日に染まる古桜の下。",
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, hidden garden behind school, old large cherry blossom tree, golden hour sunset light, orange and pink sky, stone path, overgrown slightly, peaceful secluded atmosphere, petals falling gently, a boy in dark uniform sitting against tree trunk looking at something in air (holographic glow), anime scene illustration, emotional, beautiful lighting, nostalgic and mysterious",
+        "negative": "lowres, multiple people, city, modern, dark, night",
+        "resolution": "1216x832 (landscape)",
+        "style_notes": "零と端末の出会いの場所。孤独と希望が混ざり合う瞬間。"
+      }
+    },
+    {
+      "id": "SCN002",
+      "name_jp": "朝の神代家·台所",
+      "name_cn": "早晨的神代家·厨房",
+      "chapter": "序章",
+      "description": "小雪が朝食を作る神代家の台所。朝日が差し込み、出汁の香りが漂う。",
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, traditional Japanese kitchen, morning sunlight streaming through window, silver-haired young girl in white apron cooking, steaming miso soup pot, grilled fish on counter, warm cozy atmosphere, Ghibli-style food detail, nostalgic family scene, anime illustration, slice of life perfection",
+        "negative": "lowres, modern kitchen, dark, multiple people, messy, dirty",
+        "resolution": "1216x832 (landscape)"
+      }
+    },
+    {
+      "id": "SCN003",
+      "name_jp": "朱音、護符を渡す",
+      "name_cn": "朱音递上护身符",
+      "chapter": "序章",
+      "description": "夕暮れの桜裏庭。朱音が零に母の形見の護符を手渡す名シーン。",
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, sunset scene, crimson-haired ponytail girl in school uniform reaching hand forward offering small red embroidered charm to black-haired boy, golden hour backlight creating rim light on both figures, cherry blossom tree in background, emotional atmosphere, bittersweet expression on girl's face, gentle surprise on boy's face, warm orange and pink color palette, anime illustration style, beautiful dramatic lighting, dust particles in sunlight, romantic but subtle",
+        "negative": "lowres, bad anatomy, bad hands, kissing, hugging, dark, night, modern, ugly, deformed",
+        "resolution": "1216x832 (landscape)",
+        "style_notes": "朱音ルートの象徴シーン。派手なラブシーンではなく、護符を介した静かな感情表現。"
+      }
+    }
+  ],
+
+  "items": [
+    {
+      "id": "ITM001",
+      "name_jp": "魔晶灯",
+      "name_cn": "魔晶灯",
+      "type": "日用品",
+      "description": "魔晶（固形魔力結晶）を用いた街灯·室内灯。日中に自然の魔力粒子を吸収し、夜間に淡い青色の光を放つ。",
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, fantasy street lamp, brass and glass construction, blue glowing mana crystal inside, Victorian-Japanese hybrid design, ornate metalwork, soft blue-white light, standing on cobblestone street, evening atmosphere, anime background prop style, detailed prop design",
+        "negative": "lowres, modern electric lamp, LED, neon, broken, dark",
+        "resolution": "832x1216 (portrait prop)"
+      }
+    },
+    {
+      "id": "ITM002",
+      "name_jp": "朱音の護符",
+      "name_cn": "朱音的护身符",
+      "type": "アクセサリー·遺品",
+      "description": "朱音が零に渡した、母·桜子の形見。紅色の布に金色の糸で天宮家の炎の紋章が刺繍されている。火の加護が込められている。",
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, small Japanese charm (omamori), deep red fabric with gold embroidered flame crest, ornate pattern, slightly worn from age, precious heirloom feeling, resting on someone's palm, warm lighting, anime prop illustration, detailed embroidery visible",
+        "negative": "lowres, modern, plastic, large, mass-produced, ugly, plain",
+        "resolution": "832x1216 (portrait prop)"
+      }
+    },
+    {
+      "id": "ITM003",
+      "name_jp": "懐中時計",
+      "name_cn": "怀表",
+      "type": "遺品",
+      "description": "零の父·健一郎の遺品。古びた銀の懐中時計。蓋の裏に母の小さな写真が入っている。零が常に身につけている。",
+      "image_prompts": {
+        "prompt": "masterpiece, best quality, antique silver pocket watch, slightly tarnished, chain attached, ornate engraving on case, open case showing clock face and small faded photograph inside, resting on wooden desk or in hand, vintage feeling, warm light reflection on metal, anime prop illustration, sentimental heirloom",
+        "negative": "lowres, modern digital watch, gold, new, plastic, broken, empty case",
+        "resolution": "832x1216 (portrait prop)"
+      }
+    }
+  ],
+
+  "society": {
+    "political_system": "皇帝制と貴族制の混合。皇帝は象徴的存在で、実権は四大公爵家を中心とする貴族議会が握る。",
+    "social_classes": [
+      { "class_jp": "皇室", "class_cn": "皇室", "rank": 1 },
+      { "class_jp": "四大公爵家（上級貴族）", "class_cn": "四大公爵家（上级贵族）", "rank": 2 },
+      { "class_jp": "一般貴族（下級貴族）", "class_cn": "一般贵族（下级贵族）", "rank": 3 },
+      { "class_jp": "平民", "class_cn": "平民", "rank": 4 },
+      { "class_jp": "被差別層（魔力障害者·異種族）", "class_cn": "被歧视阶层", "rank": 5 }
+    ],
+    "magic_bloodline_system": "魔力粒子親和度は主に遺伝で決まる。貴族階級は世代を超えた血統管理（政略結婚）によって高い魔力を維持。これが社会階層固定化の根本原因。"
+  }
+}
