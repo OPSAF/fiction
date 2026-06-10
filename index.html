@@ -250,6 +250,7 @@
         }
         .nav-section-title:first-of-type { margin-top: 0; }
 
+        /* 章节导航项（保留原有样式） */
         .chapter-nav-item {
             padding: 9px 12px 9px 14px;
             margin-bottom: 3px;
@@ -269,6 +270,25 @@
         .chapter-nav-item.locked { opacity: 0.35; cursor: not-allowed; }
         .chapter-nav-item.locked:hover { background: transparent; color: var(--text-secondary); }
         .chapter-number { font-size: 9px; color: var(--accent-purple); font-weight: 700; margin-right: 5px; }
+
+        /* 分集导航项（子级） */
+        .episode-nav-item {
+            padding: 6px 12px 6px 26px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            font-size: 11.5px;
+            border-left: 2px solid transparent;
+        }
+        .episode-nav-item:hover { background: rgba(124, 58, 237, 0.06); color: var(--text-primary); }
+        .episode-nav-item.active {
+            background: rgba(124, 58, 237, 0.08);
+            color: var(--accent-purple);
+            border-left-color: var(--accent-purple);
+            font-weight: 500;
+        }
 
         .wiki-link {
             display: block;
@@ -309,10 +329,146 @@
             border-color: var(--accent-blue); color: var(--accent-blue);
         }
 
+        /* ========== 语言切换器 ========== */
+        .lang-switcher {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--glass-border);
+        }
+        .lang-section-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+        .lang-btn-group {
+            display: flex;
+            gap: 4px;
+        }
+        .lang-btn {
+            flex: 1;
+            padding: 6px 4px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .lang-btn:hover { background: rgba(124, 58, 237, 0.06); border-color: rgba(124, 58, 237, 0.25); }
+        .lang-btn.active {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+            background: rgba(124, 58, 237, 0.1);
+            font-weight: 600;
+        }
+
         /* 中央阅读舞台 max-width: 700px */
         .reading-stage {
             flex: 1; max-width: 700px; margin: 0 auto;
             padding: 48px 36px; contain: content;
+            position: relative;
+        }
+
+        /* ========== Episode 导航栏 ========== */
+        .episode-nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            margin: -48px -36px 24px -36px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            border-radius: 0;
+        }
+        .ep-btn {
+            padding: 5px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11.5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .ep-btn:hover:not(:disabled) {
+            background: rgba(0, 212, 255, 0.08);
+            border-color: rgba(0, 212, 255, 0.3);
+            color: var(--accent-blue);
+        }
+        .ep-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .ep-selector {
+            flex: 1;
+            min-width: 0;
+        }
+        .ep-select {
+            width: 100%;
+            padding: 5px 10px;
+            padding-right: 28px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11.5px;
+            font-weight: 500;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            transition: all 0.2s ease;
+        }
+        .ep-select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.15);
+        }
+        .ep-select option {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 4px 8px;
+        }
+        .ep-counter {
+            font-size: 11px;
+            color: var(--text-secondary);
+            opacity: 0.65;
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Episode 切换动画容器 */
+        .ep-content-wrapper {
+            transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .ep-content-wrapper.ep-fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        .ep-content-wrapper.ep-fade-in {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* 章节大标题 */
@@ -371,6 +527,31 @@
 
         /* 对话颜色 */
         .dialogue-text { color: var(--dialogue-color); }
+
+        /* ========== 语言模式CSS ========== */
+        .translation.highlight-cn {
+            font-size: 1em !important;
+            color: var(--accent-blue) !important;
+            opacity: 1 !important;
+            font-weight: 600;
+            background: rgba(0, 212, 255, 0.08);
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+
+        .dim-jp {
+            color: var(--text-primary);
+        }
+
+        [data-lang-mode="cn"] .content-paragraph {
+            color: var(--text-secondary);
+            opacity: 0.45;
+        }
+        [data-lang-mode="cn"] .content-paragraph .highlight-cn,
+        [data-lang-mode="cn"] .content-paragraph strong {
+            color: var(--accent-blue) !important;
+            opacity: 1 !important;
+        }
 
         /* 终端代码块 — 直接渲染，无逐行动画 */
         .terminal-block {
@@ -580,6 +761,7 @@
         @media (max-width: 1279px) and (min-width: 768px) {
             .sidebar-right { display: none; }
             .reading-stage { padding: 40px 28px; }
+            .episode-nav-bar { margin: -40px -28px 24px -28px; }
         }
 
         @media (max-width: 767px) {
@@ -596,9 +778,14 @@
             .mobile-overlay.active { display: block; }
             .hamburger-btn { display: flex !important; }
             .reading-stage { padding: 24px 18px; }
+            .episode-nav-bar { margin: -24px -18px 20px -18px; padding: 8px 10px; gap: 5px; }
+            .ep-btn { padding: 4px 8px; font-size: 10.5px; }
+            .ep-select { font-size: 10.5px; padding: 4px 8px; padding-right: 24px; }
+            .ep-counter { font-size: 10px; }
             .chapter-art-title { font-size: 20px; }
             .section-heading { font-size: 17px; }
             .content-paragraph { font-size: 15.5px; }
+            .lang-btn { font-size: 10px; padding: 5px 3px; }
         }
 
         .hamburger-btn {
@@ -652,6 +839,16 @@
                 <div class="logo-subtitle">终端之梦 — NOS v2.0</div>
             </div>
 
+            <!-- 语言切换器（在章节导航上方） -->
+            <div class="lang-switcher" id="lang-switcher">
+                <div class="lang-section-title">语言模式</div>
+                <div class="lang-btn-group">
+                    <button class="lang-btn active" data-lang="both">双语</button>
+                    <button class="lang-btn" data-lang="jp">日本語</button>
+                    <button class="lang-btn" data-lang="cn">中文</button>
+                </div>
+            </div>
+
             <div class="nav-section-title">章节导航</div>
             <nav id="chapter-nav">
                 <div class="chapter-nav-item active" data-chapter="01" data-anchor="ch-prologue">
@@ -662,6 +859,12 @@
                     <span style="font-size:9px;color:var(--text-secondary);margin-left:4px;">[预告]</span>
                 </div>
             </nav>
+
+            <!-- 分集导航（动态生成） -->
+            <div id="episode-nav-container" style="display:none;">
+                <div class="nav-section-title">分节目录</div>
+                <nav id="episode-nav-list"></nav>
+            </div>
 
             <div class="nav-section-title">世界观索引</div>
             <div id="wiki-links">
@@ -698,6 +901,7 @@
             <button class="vn-toolbar-btn" id="vn-btn-skip">⏭ 跳过</button>
             <button class="vn-toolbar-btn" id="vn-btn-auto">▶ 自动</button>
             <button class="vn-toolbar-btn" id="vn-btn-reset">🔄 重置</button>
+            <button class="vn-toolbar-btn" id="vn-lang-toggle">🌐 双语</button>
             <span class="vn-spacer"></span>
             <span id="vn-counter" style="font-size:11px;color:var(--text-secondary);opacity:0.5;">0 / 0</span>
         </div>
@@ -743,7 +947,12 @@
             vnSpeed: 3000,
             vnTyping: false,
             vnHistory: [],
-            kvVisible: true
+            kvVisible: true,
+            // 新增字段
+            episodes: [],
+            currentEpisode: 0,
+            langMode: 'both',
+            vnLangMode: 'both'
         };
 
         // ================================================================
@@ -901,14 +1110,52 @@
                 return result;
             }
 
-            function inline(text) {
+            // 将parse结果按 section-heading (##) 拆分为多个episode
+            function parseEpisodes(parsedData) {
+                const episodes = [];
+                let currentEpisode = { title: '序幕', items: [] };
+
+                parsedData.forEach(function(item) {
+                    if (item.type === 'section-heading') {
+                        // 开始新episode
+                        if (currentEpisode.items.length > 0) {
+                            episodes.push(currentEpisode);
+                        }
+                        currentEpisode = { title: item.content, items: [item] };
+                    } else {
+                        currentEpisode.items.push(item);
+                    }
+                });
+                if (currentEpisode.items.length > 0) {
+                    episodes.push(currentEpisode);
+                }
+                return episodes;
+            }
+
+            function inline(text, langMode) {
+                langMode = langMode || 'both';
+                // 加粗
                 text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-                text = text.replace(/（([^）]+)）/g, '<span class="translation">（$1）</span>');
-                text = text.replace(/「([^」]+)」/g, '<span class="dialogue-text">「$1」</span>');
+
+                if (langMode === 'jp') {
+                    // 仅日文：移除（）内的中文翻译
+                    text = text.replace(/（([^）]+)）/g, '');
+                    // 对话标记保留
+                    text = text.replace(/「([^」]+)」/g, '<span class="dialogue-text">「$1」</span>');
+                } else if (langMode === 'cn') {
+                    // 高亮中文：日文变淡，中文醒目
+                    text = text.replace(/（([^）]+)）/g, '<span class="translation highlight-cn">（$1）</span>');
+                    // 对话中日文部分也变淡
+                    text = text.replace(/「([^」]+)」/g, '<span class="dialogue-text dim-jp">「$1」</span>');
+                } else {
+                    // both: 默认行为
+                    text = text.replace(/（([^）]+)）/g, '<span class="translation">（$1）</span>');
+                    text = text.replace(/「([^」]+)」/g, '<span class="dialogue-text">「$1」</span>');
+                }
                 return text;
             }
 
-            return { parse, inline };
+            return { parse, parseEpisodes, inline };
         })();
 
         // ================================================================
@@ -919,75 +1166,251 @@
                 const c = document.getElementById(containerId);
                 if (!c) return;
                 let html = '';
-                data.forEach(item => {
-                    html += buildElement(item);
+                data.forEach(function(item) {
+                    html += buildElement(item, State.langMode);
                 });
                 c.innerHTML = html;
             }
 
+            // 按集渲染（带导航栏）
+            function renderEpisode(episodeIndex, langMode) {
+                const c = document.getElementById('reading-stage');
+                if (!c || !State.episodes[episodeIndex]) return;
+
+                const ep = State.episodes[episodeIndex];
+                langMode = langMode || State.langMode || 'both';
+
+                // 构建导航栏HTML
+                var totalEpisodes = State.episodes.length;
+                var navHtml = buildEpisodeNavBar(episodeIndex, totalEpisodes);
+
+                // 构建内容HTML
+                var contentHtml = '';
+                ep.items.forEach(function(item) {
+                    contentHtml += buildElement(item, langMode);
+                });
+
+                // 用wrapper包裹内容以便做动画
+                var fullHtml = navHtml + '<div class="ep-content-wrapper ep-fade-in" id="ep-content-wrapper">' + contentHtml + '</div>';
+
+                // 执行切换动画
+                var wrapper = document.getElementById('ep-content-wrapper');
+                if (wrapper) {
+                    wrapper.classList.remove('ep-fade-in');
+                    wrapper.classList.add('ep-fade-out');
+
+                    setTimeout(function() {
+                        c.innerHTML = fullHtml;
+                        // 触发fadeIn
+                        var newWrapper = document.getElementById('ep-content-wrapper');
+                        if (newWrapper) {
+                            newWrapper.classList.remove('ep-fade-out');
+                            newWrapper.classList.add('ep-fade-in');
+                        }
+                        bindEpisodeNavEvents();
+                    }, 200);
+                } else {
+                    c.innerHTML = fullHtml;
+                    bindEpisodeNavEvents();
+                }
+            }
+
+            function buildEpisodeNavBar(currentIdx, total) {
+                var prevDisabled = currentIdx <= 0 ? 'disabled' : '';
+                var nextDisabled = currentIdx >= total - 1 ? 'disabled' : '';
+
+                var optionsHtml = '';
+                for (var i = 0; i < total; i++) {
+                    var epTitle = State.episodes[i] ? State.episodes[i].title : ('第' + (i + 1) + '节');
+                    var selected = i === currentIdx ? ' selected' : '';
+                    optionsHtml += '<option value="' + i + '"' + selected + '>' + epTitle + '</option>';
+                }
+
+                return '<div class="episode-nav-bar">' +
+                    '<button class="ep-btn ep-prev" id="ep-prev-btn" ' + prevDisabled + '>◀ 上一节</button>' +
+                    '<div class="ep-selector"><select id="ep-select" class="ep-select">' + optionsHtml + '</select></div>' +
+                    '<button class="ep-btn ep-next" id="ep-next-btn" ' + nextDisabled + '>下一节 ▶</button>' +
+                    '<span class="ep-counter" id="ep-counter">第' + (currentIdx + 1) + '节 / 共' + total + '节</span>' +
+                    '</div>';
+            }
+
             function escapeHTML(s) {
-                const d = document.createElement('div');
+                var d = document.createElement('div');
                 d.textContent = s;
                 return d.innerHTML;
             }
 
-            function buildElement(item) {
+            function buildElement(item, langMode) {
+                langMode = langMode || State.langMode || 'both';
                 switch (item.type) {
                     case 'chapter-title':
-                        return `<div class="chapter-art-title" id="ch-prologue">${escapeHTML(item.content)}</div>`;
+                        return '<div class="chapter-art-title" id="ch-prologue">' + escapeHTML(item.content) + '</div>';
 
                     case 'section-heading':
-                        return `<h2 class="section-heading">${escapeHTML(item.content)}</h2>`;
+                        return '<h2 class="section-heading">' + escapeHTML(item.content) + '</h2>';
 
                     case 'separator':
-                        return `<div class="scene-separator"></div>`;
+                        return '<div class="scene-separator"></div>';
 
                     case 'quote': {
-                        const lines = item.content.split('\n').filter(l => l.trim());
-                        let ps = '';
-                        lines.forEach(l => { ps += `<p>${MDParser.inline(l)}</p>`; });
-                        return `<blockquote class="art-quote">${ps}</blockquote>`;
+                        var lines = item.content.split('\n').filter(function(l) { return l.trim(); });
+                        var ps = '';
+                        lines.forEach(function(l) { ps += '<p>' + MDParser.inline(l, langMode) + '</p>'; });
+                        return '<blockquote class="art-quote">' + ps + '</blockquote>';
                     }
 
                     case 'terminal': {
-                        const esc = escapeHTML(item.content);
-                        return `<div class="terminal-block"><div class="terminal-header"><span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span><span class="terminal-title-bar">terminal@phantasm ~ %</span></div><div class="terminal-body">${esc}<span class="terminal-cursor"></span></div></div>`;
+                        var esc = escapeHTML(item.content);
+                        return '<div class="terminal-block"><div class="terminal-header"><span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span><span class="terminal-title-bar">terminal@phantasm ~ %</span></div><div class="terminal-body">' + esc + '<span class="terminal-cursor"></span></div></div>';
                     }
 
                     case 'codeblock': {
-                        const esc = escapeHTML(item.content);
-                        return `<div class="terminal-block"><div class="terminal-header"><span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span><span class="terminal-title-bar">${escapeHTML(item.lang || 'code')}</span></div><div class="terminal-body">${esc}</div></div>`;
+                        var esc = escapeHTML(item.content);
+                        return '<div class="terminal-block"><div class="terminal-header"><span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span><span class="terminal-title-bar">' + escapeHTML(item.lang || 'code') + '</span></div><div class="terminal-body">' + esc + '</div></div>';
                     }
 
                     case 'paragraph':
-                        return `<p class="content-paragraph">${MDParser.inline(item.content)}</p>`;
+                        return '<p class="content-paragraph">' + MDParser.inline(item.content, langMode) + '</p>';
 
                     default:
                         return '';
                 }
             }
 
-            return { render };
+            function bindEpisodeNavEvents() {
+                var prevBtn = document.getElementById('ep-prev-btn');
+                var nextBtn = document.getElementById('ep-next-btn');
+                var selectEl = document.getElementById('ep-select');
+
+                if (prevBtn) {
+                    prevBtn.onclick = function() { navigateEpisode(-1); };
+                }
+                if (nextBtn) {
+                    nextBtn.onclick = function() { navigateEpisode(1); };
+                }
+                if (selectEl) {
+                    selectEl.onchange = function() {
+                        var idx = parseInt(this.value, 10);
+                        if (!isNaN(idx)) goToEpisode(idx);
+                    };
+                }
+            }
+
+            return { render, renderEpisode, buildElement };
         })();
+
+        // ================================================================
+        // Episode 导航控制
+        // ================================================================
+        var EpisodeController = (function() {
+            function navigateEpisode(direction) {
+                var newIndex = State.currentEpisode + direction;
+                if (newIndex < 0 || newIndex >= State.episodes.length) return;
+                goToEpisode(newIndex);
+            }
+
+            function goToEpisode(index) {
+                if (index < 0 || index >= State.episodes.length) return;
+                State.currentEpisode = index;
+                Renderer.renderEpisode(index, State.langMode);
+                updateEpisodeSelect();
+                updateSidebarEpisodeNav();
+            }
+
+            function updateEpisodeSelect() {
+                var selectEl = document.getElementById('ep-select');
+                if (selectEl) selectEl.value = String(State.currentEpisode);
+
+                var counterEl = document.getElementById('ep-counter');
+                if (counterEl) {
+                    counterEl.textContent = '第' + (State.currentEpisode + 1) + '节 / 共' + State.episodes.length + '节';
+                }
+
+                var prevBtn = document.getElementById('ep-prev-btn');
+                var nextBtn = document.getElementById('ep-next-btn');
+                if (prevBtn) prevBtn.disabled = State.currentEpisode <= 0;
+                if (nextBtn) nextBtn.disabled = State.currentEpisode >= State.episodes.length - 1;
+            }
+
+            function updateSidebarEpisodeNav() {
+                var container = document.getElementById('episode-nav-container');
+                var list = document.getElementById('episode-nav-list');
+                if (!container || !list) return;
+
+                list.innerHTML = '';
+                State.episodes.forEach(function(ep, idx) {
+                    var item = document.createElement('div');
+                    item.className = 'episode-nav-item' + (idx === State.currentEpisode ? ' active' : '');
+                    item.textContent = ep.title;
+                    item.dataset.episodeIndex = idx;
+                    item.onclick = function() { goToEpisode(idx); };
+                    list.appendChild(item);
+                });
+                container.style.display = 'block';
+            }
+
+            function initSidebarNav() {
+                updateSidebarEpisodeNav();
+            }
+
+            return { navigateEpisode, goToEpisode, updateEpisodeSelect, initSidebarNav };
+        })();
+
+        // 将navigateEpisode暴露到全局作用域供Renderer使用
+        function navigateEpisode(dir) {
+            EpisodeController.navigateEpisode(dir);
+        }
+        function goToEpisode(idx) {
+            EpisodeController.goToEpisode(idx);
+        }
+
+        // ================================================================
+        // 语言模式控制
+        // ================================================================
+        function setLangMode(mode) {
+            State.langMode = mode;
+            document.documentElement.setAttribute('data-lang-mode', mode);
+
+            // 更新按钮active状态
+            document.querySelectorAll('.lang-btn').forEach(function(btn) {
+                btn.classList.toggle('active', btn.dataset.lang === mode);
+            });
+
+            // 重新渲染当前episode
+            if (State.episodes.length > 0) {
+                Renderer.renderEpisode(State.currentEpisode, mode);
+            }
+
+            // 更新episode导航的select
+            EpisodeController.updateEpisodeSelect();
+        }
+
+        function bindLangSwitcher() {
+            document.querySelectorAll('.lang-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    setLangMode(this.dataset.lang);
+                });
+            });
+        }
 
         // ================================================================
         // 角色卡片渲染
         // ================================================================
         const CharRenderer = (function() {
-            const COLOR_MAP = {
+            var COLOR_MAP = {
                 '零': '#00d4ff', '朱音': '#f59e0b', '小雪': '#38bdf8', 'Eve': '#a855f7'
             };
 
             function getColor(name) {
-                for (const [k, v] of Object.entries(COLOR_MAP)) {
-                    if (name.includes(k)) return v;
+                for (var k in COLOR_MAP) {
+                    if (COLOR_MAP.hasOwnProperty(k) && name.indexOf(k) !== -1) return COLOR_MAP[k];
                 }
                 return '#00d4ff';
             }
 
             function render(chars) {
-                const container = document.getElementById('character-cards');
-                const quickNav = document.getElementById('character-quick-nav');
+                var container = document.getElementById('character-cards');
+                var quickNav = document.getElementById('character-quick-nav');
 
                 if (!chars || !chars.length) {
                     if (container) container.innerHTML = '<p style="color:var(--text-secondary);font-size:12px;padding:10px;">暂无角色数据</p>';
@@ -997,22 +1420,21 @@
                 if (container) container.innerHTML = '';
                 if (quickNav) quickNav.innerHTML = '';
 
-                chars.forEach((ch, idx) => {
-                    const color = getColor(ch.name_jp || ch.name || '');
-                    const glow = color.replace('#', '');
+                chars.forEach(function(ch, idx) {
+                    var color = getColor(ch.name_jp || ch.name || '');
 
                     if (container) {
-                        const card = document.createElement('div');
+                        var card = document.createElement('div');
                         card.className = 'character-card glass-panel';
                         card.id = 'char-card-' + idx;
                         card.style.setProperty('--char-color', color);
 
-                        let infoHtml = '';
+                        var infoHtml = '';
                         if (ch.new_info_revealed && ch.new_info_revealed.length > 0) {
                             infoHtml = '<ul class="char-info-list">' +
-                                ch.new_info_revealed.slice(0, 3).map(info =>
-                                    `<li class="char-info-item">${info}</li>`
-                                ).join('') + '</ul>';
+                                ch.new_info_revealed.slice(0, 3).map(function(info) {
+                                    return '<li class="char-info-item">' + info + '</li>';
+                                }).join('') + '</ul>';
                         }
 
                         card.innerHTML =
@@ -1027,11 +1449,11 @@
                     }
 
                     if (quickNav) {
-                        const link = document.createElement('div');
+                        var link = document.createElement('div');
                         link.className = 'character-quick-link';
                         link.textContent = '• ' + (ch.name_jp || ch.name);
                         link.onclick = function() {
-                            const el = document.getElementById('char-card-' + idx);
+                            var el = document.getElementById('char-card-' + idx);
                             if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         };
                         quickNav.appendChild(link);
@@ -1046,22 +1468,35 @@
         // 视觉小说控制器
         // ================================================================
         const VNController = (function() {
-            const overlay = document.getElementById('vn-overlay');
-            const nameTag = document.getElementById('vn-name-tag');
-            const dialogText = document.getElementById('vn-dialog-text');
-            const dialogBox = document.getElementById('vn-dialog-box');
-            const advanceBtn = document.getElementById('vn-advance-btn');
-            const counterEl = document.getElementById('vn-counter');
-            const historySidebar = document.getElementById('vn-history-sidebar');
-            const historyList = document.getElementById('vn-history-list');
+            var overlay = document.getElementById('vn-overlay');
+            var nameTag = document.getElementById('vn-name-tag');
+            var dialogText = document.getElementById('vn-dialog-text');
+            var dialogBox = document.getElementById('vn-dialog-box');
+            var advanceBtn = document.getElementById('vn-advance-btn');
+            var counterEl = document.getElementById('vn-counter');
+            var historySidebar = document.getElementById('vn-history-sidebar');
+            var historyList = document.getElementById('vn-history-list');
+
+            var LANG_LABELS = { both: '🌐 双语', jp: '🇯🇵 日本語', cn: '🇨🇳 中文' };
+
+            // 根据语言模式过滤文本
+            function filterText(text, mode) {
+                if (mode === 'jp') {
+                    return text.replace(/（[^）]+）/, '').trim();
+                } else if (mode === 'cn') {
+                    var m = text.match(/（([^）]+)）/);
+                    return m ? m[1] : text;
+                }
+                return text;
+            }
 
             function extractDialogs(parsedData) {
-                const queue = [];
+                var queue = [];
                 parsedData.forEach(function(item) {
                     if (item.type !== 'paragraph') return;
-                    const text = item.content;
+                    var text = item.content;
                     // 匹配对话：「...」
-                    const dm = text.match(/^([^「]*?)「(.+)」/);
+                    var dm = text.match(/^([^「]*?)「(.+)」/);
                     if (dm) {
                         queue.push({
                             speaker: dm[1] ? dm[1].trim() : '',
@@ -1069,7 +1504,7 @@
                         });
                     } else {
                         // 叙述文本截取前120字
-                        const short = text.length > 120 ? text.substring(0, 120) + '…' : text;
+                        var short = text.length > 120 ? text.substring(0, 120) + '…' : text;
                         queue.push({ speaker: '', text: short });
                     }
                 });
@@ -1080,7 +1515,7 @@
                 if (State.vnIndex >= State.vnQueue.length) {
                     State.vnIndex = 0;
                 }
-                const d = State.vnQueue[State.vnIndex];
+                var d = State.vnQueue[State.vnIndex];
                 if (!d) return;
 
                 if (d.speaker) {
@@ -1091,9 +1526,12 @@
                 }
 
                 updateCounter();
-                typewriter(d.text);
 
-                // 记录历史
+                // 根据VN语言模式过滤文本
+                var displayText = filterText(d.text, State.vnLangMode);
+                typewriter(displayText);
+
+                // 记录历史（使用原始文本）
                 State.vnHistory.push({ speaker: d.speaker || '旁白', text: d.text });
                 if (State.vnHistory.length > 100) State.vnHistory.shift();
             }
@@ -1101,8 +1539,8 @@
             function typewriter(text) {
                 State.vnTyping = true;
                 dialogText.innerHTML = '';
-                let i = 0;
-                const speed = 22;
+                var i = 0;
+                var speed = 22;
 
                 function tick() {
                     if (!State.isVnMode) { State.vnTyping = false; return; }
@@ -1125,8 +1563,8 @@
             function advance() {
                 // 如果正在打字，瞬间显示完
                 if (State.vnTyping) {
-                    const d = State.vnQueue[State.vnIndex];
-                    if (d) instantShow(d.text);
+                    var d = State.vnQueue[State.vnIndex];
+                    if (d) instantShow(filterText(d.text, State.vnLangMode));
                     return;
                 }
                 State.vnIndex++;
@@ -1136,8 +1574,8 @@
             function skip() {
                 // 快速跳到下一段（瞬间显示当前，再推进）
                 if (State.vnTyping) {
-                    const d = State.vnQueue[State.vnIndex];
-                    if (d) instantShow(d.text);
+                    var d = State.vnQueue[State.vnIndex];
+                    if (d) instantShow(filterText(d.text, State.vnLangMode));
                 }
                 State.vnIndex++;
                 if (State.vnIndex >= State.vnQueue.length) State.vnIndex = 0;
@@ -1162,7 +1600,7 @@
 
             function startAuto() {
                 State.vnAutoOn = true;
-                const btn = document.getElementById('vn-btn-auto');
+                var btn = document.getElementById('vn-btn-auto');
                 if (btn) btn.classList.add('active-state');
                 function tick() {
                     if (!State.vnAutoOn || !State.isVnMode) return;
@@ -1175,7 +1613,7 @@
             function stopAuto() {
                 State.vnAutoOn = false;
                 if (State.vnAutoTimer) { clearTimeout(State.vnAutoTimer); State.vnAutoTimer = null; }
-                const btn = document.getElementById('vn-btn-auto');
+                var btn = document.getElementById('vn-btn-auto');
                 if (btn) btn.classList.remove('active-state');
             }
 
@@ -1190,10 +1628,9 @@
 
             function renderHistory() {
                 if (!historyList) return;
-                let h = '';
-                // 从最新往前显示
-                for (let i = State.vnHistory.length - 1; i >= Math.max(0, State.vnHistory.length - 50); i--) {
-                    const item = State.vnHistory[i];
+                var h = '';
+                for (var i = State.vnHistory.length - 1; i >= Math.max(0, State.vnHistory.length - 50); i--) {
+                    var item = State.vnHistory[i];
                     h += '<div class="vn-history-item"><div class="vn-history-speaker">' + item.speaker + '</div>' + item.text + '</div>';
                 }
                 historyList.innerHTML = h || '<p style="padding:20px;text-align:center;color:var(--text-secondary);font-size:12px;">暂无历史记录</p>';
@@ -1205,10 +1642,25 @@
                 }
             }
 
+            // 循环切换VN语言模式
+            function cycleVNLang() {
+                var modes = ['both', 'jp', 'cn'];
+                var idx = (modes.indexOf(State.vnLangMode) + 1) % modes.length;
+                State.vnLangMode = modes[idx];
+                var btn = document.getElementById('vn-lang-toggle');
+                if (btn) btn.textContent = LANG_LABELS[State.vnLangMode];
+                // 重新显示当前对话
+                showCurrent();
+            }
+
             function activate(parsedData) {
                 State.vnQueue = extractDialogs(parsedData);
                 State.vnIndex = 0;
                 State.vnHistory = [];
+                State.vnLangMode = 'both';
+                // 重置VN语言按钮
+                var vnLangBtn = document.getElementById('vn-lang-toggle');
+                if (vnLangBtn) vnLangBtn.textContent = LANG_LABELS['both'];
                 updateCounter();
                 showCurrent();
             }
@@ -1218,8 +1670,8 @@
                 overlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
 
-                const btnVn = document.getElementById('btn-vn-mode');
-                const btnFic = document.getElementById('btn-fiction-mode');
+                var btnVn = document.getElementById('btn-vn-mode');
+                var btnFic = document.getElementById('btn-fiction-mode');
                 if (btnVn) btnVn.classList.add('active');
                 if (btnFic) btnFic.classList.remove('active');
             }
@@ -1232,8 +1684,8 @@
                 closeHistory();
                 document.body.style.overflow = '';
 
-                const btnVn = document.getElementById('btn-vn-mode');
-                const btnFic = document.getElementById('btn-fiction-mode');
+                var btnVn = document.getElementById('btn-vn-mode');
+                var btnFic = document.getElementById('btn-fiction-mode');
                 if (btnFic) btnFic.classList.add('active');
                 if (btnVn) btnVn.classList.remove('active');
             }
@@ -1246,6 +1698,12 @@
                 document.getElementById('vn-btn-auto').addEventListener('click', toggleAuto);
                 document.getElementById('vn-btn-reset').addEventListener('click', reset);
                 document.getElementById('vn-history-close').addEventListener('click', closeHistory);
+
+                // VN语言切换按钮
+                var vnLangBtn = document.getElementById('vn-lang-toggle');
+                if (vnLangBtn) {
+                    vnLangBtn.addEventListener('click', cycleVNLang);
+                }
 
                 // 推进：对话框点击 + ▶按钮
                 dialogBox.addEventListener('click', advance);
@@ -1261,7 +1719,7 @@
                 });
             }
 
-            return { activate, enterMode, exitMode, bindEvents };
+            return { activate, enterMode, exitMode, bindEvents, cycleVNLang };
         })();
 
         // ================================================================
@@ -1269,10 +1727,10 @@
         // ================================================================
         function setTheme(theme) {
             State.theme = theme;
-            const root = document.documentElement;
-            const kvBtn = document.getElementById('kv-theme-btn');
-            const darkBtn = document.getElementById('btn-theme-dark');
-            const lightBtn = document.getElementById('btn-theme-light');
+            var root = document.documentElement;
+            var kvBtn = document.getElementById('kv-theme-btn');
+            var darkBtn = document.getElementById('btn-theme-dark');
+            var lightBtn = document.getElementById('btn-theme-light');
 
             if (theme === 'light') {
                 root.setAttribute('data-theme', 'light');
@@ -1295,18 +1753,17 @@
         // KV 区交互
         // ================================================================
         function setupKV() {
-            const startBtn = document.getElementById('kv-start-btn');
-            const themeBtn = document.getElementById('kv-theme-btn');
+            var startBtn = document.getElementById('kv-start-btn');
+            var themeBtn = document.getElementById('kv-theme-btn');
 
             if (startBtn) {
                 startBtn.addEventListener('click', function() {
-                    const mainLayout = document.getElementById('main-layout');
+                    var mainLayout = document.getElementById('main-layout');
                     if (mainLayout) {
                         mainLayout.scrollIntoView({ behavior: 'smooth' });
                     }
                     State.kvVisible = false;
-                    // 可选：折叠KV区以节省空间
-                    const kvSec = document.getElementById('kv-section');
+                    var kvSec = document.getElementById('kv-section');
                     if (kvSec) {
                         kvSec.style.minHeight = '0';
                         kvSec.style.paddingBottom = '0';
@@ -1323,8 +1780,8 @@
         // 模式切换
         // ================================================================
         function bindModeSwitch() {
-            const btnFiction = document.getElementById('btn-fiction-mode');
-            const btnVN = document.getElementById('btn-vn-mode');
+            var btnFiction = document.getElementById('btn-fiction-mode');
+            var btnVN = document.getElementById('btn-vn-mode');
 
             if (btnVN) {
                 btnVN.addEventListener('click', function() {
@@ -1346,9 +1803,9 @@
         // 移动端菜单
         // ================================================================
         function bindMobileMenu() {
-            const ham = document.getElementById('hamburger-btn');
-            const sidebar = document.getElementById('sidebar-left');
-            const overlay = document.getElementById('mobile-overlay');
+            var ham = document.getElementById('hamburger-btn');
+            var sidebar = document.getElementById('sidebar-left');
+            var overlay = document.getElementById('mobile-overlay');
 
             if (!ham || !sidebar) return;
 
@@ -1369,18 +1826,37 @@
         // 章节导航锚点
         // ================================================================
         function bindChapterNav() {
-            const items = document.querySelectorAll('.chapter-nav-item:not(.locked)');
+            var items = document.querySelectorAll('.chapter-nav-item:not(.locked)');
             items.forEach(function(item) {
                 item.addEventListener('click', function() {
-                    const anchor = this.getAttribute('data-anchor');
+                    var anchor = this.getAttribute('data-anchor');
                     if (anchor) {
-                        const el = document.getElementById(anchor);
+                        var el = document.getElementById(anchor);
                         if (el) el.scrollIntoView({ behavior: 'smooth' });
                     }
-                    // 更新激活状态
                     items.forEach(function(i) { i.classList.remove('active'); });
                     this.classList.add('active');
                 });
+            });
+        }
+
+        // ================================================================
+        // 键盘快捷键（小说模式下 ← → 切换集）
+        // ================================================================
+        function bindKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                if (State.isVnMode) return; // VN模式有自己的键盘处理
+
+                // 在输入框中不响应
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    EpisodeController.navigateEpisode(-1);
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    EpisodeController.navigateEpisode(1);
+                }
             });
         }
 
@@ -1393,24 +1869,34 @@
             setupKV();
 
             try {
-                const [mdRes, jsonRes] = await Promise.all([
-                    fetch('chapter_01/chapter_01.md'),
-                    fetch('chapter_01/chapter_01_meta.json')
-                ]);
+                var mdRes = await fetch('chapter_01/chapter_01.md');
+                var jsonRes = await fetch('chapter_01/chapter_01_meta.json');
 
                 if (!mdRes.ok) throw new Error('无法加载章节文件 chapter_01.md');
                 if (!jsonRes.ok) throw new Error('无法加载元数据 chapter_01_meta.json');
 
-                const mdText = await mdRes.text();
-                const jsonData = await jsonRes.json();
+                var mdText = await mdRes.text();
+                var jsonData = await jsonRes.json();
 
                 State.metaData = jsonData;
 
                 // 解析 Markdown
                 State.parsedData = MDParser.parse(mdText);
 
-                // 渲染中央阅读区（一次性全部渲染，无动画）
-                Renderer.render(State.parsedData, 'reading-stage');
+                // 解析分集
+                State.episodes = MDParser.parseEpisodes(State.parsedData);
+                State.currentEpisode = 0;
+
+                // 渲染第一集（带导航栏）
+                if (State.episodes.length > 0) {
+                    Renderer.renderEpisode(0, State.langMode);
+                } else {
+                    // 如果没有分集（没有 ## 标题），回退到全量渲染
+                    Renderer.render(State.parsedData, 'reading-stage');
+                }
+
+                // 初始化左侧分集导航
+                EpisodeController.initSidebarNav();
 
                 // 渲染右侧角色卡片
                 if (jsonData.characters_appeared) {
@@ -1422,12 +1908,13 @@
                 bindMobileMenu();
                 bindChapterNav();
                 VNController.bindEvents();
+                bindLangSwitcher();
+                bindKeyboardShortcuts();
 
                 // 主题按钮（左侧面板内的）
-                // 在 mode-switcher 区域添加主题切换
-                const modeSwitcher = document.querySelector('.mode-switcher');
+                var modeSwitcher = document.querySelector('.mode-switcher');
                 if (modeSwitcher) {
-                    const themeDiv = document.createElement('div');
+                    var themeDiv = document.createElement('div');
                     themeDiv.style.cssText = 'margin-top:12px;display:flex;gap:5px;';
                     themeDiv.innerHTML =
                         '<button class="mode-btn active" id="btn-theme-dark" style="flex:1;font-size:10px;">🌙 深色</button>' +
@@ -1440,7 +1927,7 @@
 
             } catch (err) {
                 console.error('初始化失败:', err);
-                const stage = document.getElementById('reading-stage');
+                var stage = document.getElementById('reading-stage');
                 if (stage) {
                     stage.innerHTML =
                         '<div style="text-align:center;padding:80px 20px;font-family:' + "'Space Grotesk'" + ',sans-serif;">' +
