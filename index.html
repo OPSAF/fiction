@@ -15,9 +15,11 @@
 
     <style>
         /* ==================== 基础重置与变量 ==================== */
+        /* ==================== 主题变量 ==================== */
         :root {
             --bg-primary: #0a0e17;
             --bg-secondary: #111827;
+            --bg-tertiary: #1a2035;
             --accent-blue: #00d4ff;
             --accent-purple: #7c3aed;
             --text-primary: #e2e8f0;
@@ -29,6 +31,36 @@
             --character-eve: #a855f7;
             --glass-bg: rgba(15, 20, 35, 0.6);
             --glass-border: rgba(255, 255, 255, 0.06);
+            --quote-color: rgba(245, 158, 11, 0.85);
+            --quote-bg: rgba(245, 158, 11, 0.03);
+            --quote-border: rgba(245, 158, 11, 0.4);
+            --dialogue-color: #f0e6d3;
+            --particle-colors: 'rgba(0,212,255,', 'rgba(124,58,237,', 'rgba(255,255,255,';
+            --particle-line: 0, 212, 255;
+        }
+
+        /* 白色主色调 + 红色副色调 */
+        [data-theme="light"] {
+            --bg-primary: #fafafa;
+            --bg-secondary: #f0f0f2;
+            --bg-tertiary: #e8e8ec;
+            --accent-blue: #dc2626;
+            --accent-purple: #b91c1c;
+            --text-primary: #1a1a2e;
+            --text-secondary: #555570;
+            --terminal-green: #16a34a;
+            --character-akane: #dc2626;
+            --character-koyuki: #2563eb;
+            --character-zero: #dc2626;
+            --character-eve: #9333ea;
+            --glass-bg: rgba(255, 255, 255, 0.72);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --quote-color: rgba(185, 28, 28, 0.85);
+            --quote-bg: rgba(220, 38, 38, 0.04);
+            --quote-border: rgba(220, 38, 38, 0.35);
+            --dialogue-color: #2d1810;
+            --particle-colors: 'rgba(220,38,38,', 'rgba(185,28,28,', 'rgba(100,100,100,';
+            --particle-line: 220, 38, 38;
         }
 
         * {
@@ -77,7 +109,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0a0e17 0%, #111827 100%);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -318,6 +350,38 @@
             color: var(--accent-blue);
         }
 
+        /* 主题切换按钮组 */
+        .theme-switcher {
+            margin-top: 12px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .theme-btn {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .theme-btn:hover {
+            background: rgba(0, 212, 255, 0.08);
+            color: var(--text-primary);
+        }
+
+        .theme-btn.active {
+            background: rgba(220, 38, 38, 0.12);
+            border-color: rgba(220, 38, 38, 0.3);
+            color: #dc2626;
+        }
+
         /* ==================== 中央阅读舞台 ==================== */
         .reading-stage {
             flex: 1;
@@ -398,15 +462,15 @@
             text-align: center;
             padding: 32px 40px;
             margin: 40px 0;
-            border-left: 3px solid rgba(245, 158, 11, 0.4);
-            border-right: 3px solid rgba(245, 158, 11, 0.4);
-            background: rgba(245, 158, 11, 0.03);
+            border-left: 3px solid var(--quote-border);
+            border-right: 3px solid var(--quote-border);
+            background: var(--quote-bg);
             border-radius: 4px;
         }
 
         .art-quote p {
             font-style: italic;
-            color: rgba(245, 158, 11, 0.85) !important;
+            color: var(--quote-color) !important;
             font-size: 17px !important;
             line-height: 1.9 !important;
             margin-bottom: 8px !important;
@@ -430,8 +494,12 @@
         }
 
         .content-paragraph strong {
-            color: #f1f5f9;
+            color: var(--text-primary);
             font-weight: 600;
+        }
+
+        [data-theme="light"] .content-paragraph strong {
+            color: #0f172a;
         }
 
         /* 中文翻译样式 */
@@ -442,29 +510,27 @@
 
         /* 对话符号微调 */
         .dialogue-text {
-            color: #f0e6d3;
+            color: var(--dialogue-color);
         }
 
-        /* 首字下沉效果 */
-        .drop-cap::first-letter {
-            float: left;
-            font-size: 3.5em;
-            line-height: 0.85;
-            margin-right: 8px;
-            margin-top: 4px;
-            font-family: 'Orbitron', sans-serif;
-            color: var(--accent-blue);
-            font-weight: 700;
+        /* 首段缩进效果（仅首段微微不同，不放大首字） */
+        .content-paragraph:first-of-type {
+            text-indent: 0;
         }
 
         /* 终端代码块 */
         .terminal-block {
-            background: #0d1117;
+            background: var(--bg-tertiary);
             border-radius: 12px;
             margin: 36px 0;
             overflow: hidden;
             border: 1px solid rgba(0, 255, 136, 0.15);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 60px rgba(0, 255, 136, 0.05);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="light"] .terminal-block {
+            background: #1e1e2e;
+            border-color: rgba(255, 255, 255, 0.08);
         }
 
         .terminal-header {
@@ -628,6 +694,10 @@
             font-weight: 500;
         }
 
+        [data-theme="light"] .char-role {
+            background: rgba(220, 38, 38, 0.08);
+        }
+
         .char-tags {
             display: flex;
             flex-wrap: wrap;
@@ -725,11 +795,16 @@
             height: 140px;
             background: rgba(10, 14, 23, 0.92);
             backdrop-filter: blur(30px);
-            border-top: 1px solid rgba(0, 212, 255, 0.15);
+            border-top: 1px solid var(--glass-border);
             padding: 20px 40px;
             display: none;
             align-items: center;
             z-index: 100;
+        }
+
+        [data-theme="light"] .vn-dialog-box {
+            background: rgba(255, 255, 255, 0.92);
+            border-top-color: rgba(220, 38, 38, 0.15);
         }
 
         .vn-mode .vn-dialog-box {
@@ -743,12 +818,16 @@
             padding: 8px 20px;
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 212, 255, 0.3);
+            border: 1px solid var(--glass-border);
             border-radius: 8px;
             font-family: 'Noto Serif JP', serif;
             font-size: 14px;
             color: var(--accent-blue);
             font-weight: 600;
+        }
+
+        [data-theme="light"] .vn-name-tag {
+            background: rgba(255, 255, 255, 0.85);
         }
 
         .vn-dialog-text {
@@ -782,8 +861,14 @@
         }
 
         .vn-back-btn:hover {
-            background: rgba(0, 212, 255, 0.15);
+            background: rgba(0, 212, 255, 0.12);
             border-color: var(--accent-blue);
+        }
+
+        [data-theme="light"] .vn-back-btn {
+            background: rgba(255, 255, 255, 0.85);
+            color: var(--text-primary);
+            border-color: var(--glass-border);
         }
 
         /* ==================== 响应式设计 ==================== */
@@ -987,6 +1072,12 @@
                 <button class="mode-btn active" id="btn-fiction-mode">📖 小说模式</button>
                 <button class="mode-btn" id="btn-vn-mode">🎭 视觉小说模式</button>
             </div>
+
+            <!-- 主题切换 -->
+            <div class="theme-switcher">
+                <button class="theme-btn active" id="btn-theme-dark" title="深色主题（量子幻想）">🌙 深色</button>
+                <button class="theme-btn" id="btn-theme-light" title="浅色主题（白底红调）">☀️ 浅色</button>
+            </div>
         </aside>
 
         <!-- 中央阅读舞台 -->
@@ -1023,18 +1114,17 @@
         };
 
         // ================================================================
-        // 粒子系统
+        // 粒子系统（轻量优化版）
         // ================================================================
         class ParticleSystem {
             constructor(canvasId) {
                 this.canvas = document.getElementById(canvasId);
+                if (!this.canvas) return;
                 this.ctx = this.canvas.getContext('2d');
                 this.particles = [];
-                this.mouseX = 0;
-                this.mouseY = 0;
                 this.resize();
                 this.init();
-                this.bindEvents();
+                window.addEventListener('resize', () => this.resize());
                 this.animate();
             }
 
@@ -1044,77 +1134,39 @@
             }
 
             init() {
-                const count = window.innerWidth < 768 ? 15 : 30;
+                const count = window.innerWidth < 768 ? 8 : 14;
                 for (let i = 0; i < count; i++) {
                     this.particles.push({
                         x: Math.random() * this.canvas.width,
                         y: Math.random() * this.canvas.height,
-                        vx: (Math.random() - 0.5) * 0.4,
-                        vy: (Math.random() - 0.5) * 0.4,
-                        radius: Math.random() * 2 + 0.5,
-                        color: this.getRandomColor(),
-                        alpha: Math.random() * 0.5 + 0.1
+                        vx: (Math.random() - 0.5) * 0.25,
+                        vy: (Math.random() - 0.5) * 0.25,
+                        radius: Math.random() * 1.5 + 0.5,
+                        alpha: Math.random() * 0.4 + 0.08
                     });
                 }
             }
 
-            getRandomColor() {
-                const colors = [
-                    'rgba(0, 212, 255, ',
-                    'rgba(124, 58, 237, ',
-                    'rgba(255, 255, 255, '
-                ];
-                return colors[Math.floor(Math.random() * colors.length)];
-            }
-
-            bindEvents() {
-                window.addEventListener('resize', () => this.resize());
-                document.addEventListener('mousemove', (e) => {
-                    this.mouseX = e.clientX;
-                    this.mouseY = e.clientY;
-                });
-            }
-
             animate() {
+                if (!this.ctx) return;
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                // 更新和绘制粒子
-                this.particles.forEach((p, i) => {
+                const colors = getComputedStyle(document.documentElement)
+                    .getPropertyValue('--particle-colors').trim()
+                    .split(',').map(s => s.trim().replace(/'/g, ''));
+
+                this.particles.forEach((p) => {
                     p.x += p.vx;
                     p.y += p.vy;
 
-                    // 边界反弹
                     if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
                     if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
 
-                    // 鼠标交互 - 轻微吸引
-                    const dx = this.mouseX - p.x;
-                    const dy = this.mouseY - p.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 150 && dist > 0) {
-                        p.x += dx * 0.0008;
-                        p.y += dy * 0.0008;
-                    }
-
-                    // 绘制粒子
+                    const colorStr = colors[Math.floor(Math.random() * colors.length)] || 'rgba(0,212,255,';
                     this.ctx.beginPath();
                     this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    this.ctx.fillStyle = p.color + p.alpha + ')';
+                    this.ctx.fillStyle = colorStr + p.alpha + ')';
                     this.ctx.fill();
-
-                    // 连线
-                    for (let j = i + 1; j < this.particles.length; j++) {
-                        const p2 = this.particles[j];
-                        const d = Math.sqrt((p.x - p2.x) ** 2 + (p.y - p2.y) ** 2);
-                        if (d < 120) {
-                            this.ctx.beginPath();
-                            this.ctx.moveTo(p.x, p.y);
-                            this.ctx.lineTo(p2.x, p2.y);
-                            this.ctx.strokeStyle = `rgba(0, 212, 255, ${0.03 * (1 - d / 120)})`;
-                            this.ctx.lineWidth = 0.5;
-                            this.ctx.stroke();
-                        }
-                    }
                 });
 
                 requestAnimationFrame(() => this.animate());
@@ -1381,7 +1433,7 @@
 
             createParagraph(text, index) {
                 const el = document.createElement('p');
-                el.className = 'content-paragraph drop-cap';
+                el.className = 'content-paragraph';
                 el.innerHTML = this.parser.processInlineFormatting(text);
                 el.style.transitionDelay = `${index * 0.05}s`;
                 return el;
@@ -1497,6 +1549,7 @@
                 this.dialogText = document.getElementById('vn-dialog-text');
                 this.nameTag = document.getElementById('vn-name-tag');
                 this.isRunning = false;
+                this.advanceHandler = null;
             }
 
             activate(parsedData) {
@@ -1506,7 +1559,6 @@
                 parsedData.forEach(item => {
                     if (item.type === 'paragraph') {
                         const text = item.content;
-                        // 尝试识别对话格式
                         const dialogueMatch = text.match(/^([^「]+)?「(.+)」/);
                         if (dialogueMatch) {
                             this.dialogQueue.push({
@@ -1514,23 +1566,23 @@
                                 text: dialogueMatch[2]
                             });
                         } else {
-                            // 普通叙述文本也加入队列
                             this.dialogQueue.push({
                                 speaker: '',
-                                text: text.substring(0, 100)
+                                text: text.substring(0, 120)
                             });
                         }
                     }
                 });
 
                 this.vnCurrentIndex = 0;
+                this.isRunning = true;
                 this.showCurrentDialog();
                 this.bindClickAdvance();
             }
 
             showCurrentDialog() {
-                if (this.vnCurrentIndex >= this.dialogQueue.length) {
-                    this.vnCurrentIndex = 0; // 循环
+                if (!this.isRunning || this.vnCurrentIndex >= this.dialogQueue.length) {
+                    this.vnCurrentIndex = 0;
                 }
 
                 const dialog = this.dialogQueue[this.vnCurrentIndex];
@@ -1542,9 +1594,10 @@
             typeWriterEffect(text) {
                 this.dialogText.innerHTML = '';
                 let i = 0;
-                const speed = 30;
+                const speed = 25;
 
                 const type = () => {
+                    if (!this.isRunning) return; // 已退出VN模式则停止打字
                     if (i < text.length) {
                         this.dialogText.innerHTML += text.charAt(i);
                         i++;
@@ -1555,15 +1608,21 @@
             }
 
             bindClickAdvance() {
-                document.addEventListener('click', this.advanceHandler = () => {
-                    if (!AppState.isVnMode) return;
+                // 只在对话框区域绑定点击推进，不再用 document 全局捕获
+                this.advanceHandler = () => {
+                    if (!AppState.isVnMode || !this.isRunning) return;
                     this.vnCurrentIndex++;
                     this.showCurrentDialog();
-                }, true);
+                };
+                this.dialogBox.addEventListener('click', this.advanceHandler);
             }
 
             deactivate() {
-                document.removeEventListener('click', this.advanceHandler, true);
+                this.isRunning = false;
+                if (this.advanceHandler && this.dialogBox) {
+                    this.dialogBox.removeEventListener('click', this.advanceHandler);
+                }
+                this.advanceHandler = null;
             }
         }
 
@@ -1695,10 +1754,27 @@
                 btnFiction.classList.add('active');
                 btnVn.classList.remove('active');
                 document.body.style.background = '';
+                vnController.deactivate();
             };
 
             btnFiction.addEventListener('click', switchToFiction);
             backBtn.addEventListener('click', switchToFiction);
+
+            // 主题切换绑定
+            const btnThemeDark = document.getElementById('btn-theme-dark');
+            const btnThemeLight = document.getElementById('btn-theme-light');
+
+            btnThemeDark.addEventListener('click', () => {
+                document.documentElement.removeAttribute('data-theme');
+                btnThemeDark.classList.add('active');
+                btnThemeLight.classList.remove('active');
+            });
+
+            btnThemeLight.addEventListener('click', () => {
+                document.documentElement.setAttribute('data-theme', 'light');
+                btnThemeLight.classList.add('active');
+                btnThemeDark.classList.remove('active');
+            });
         }
 
         // 移动端菜单绑定
