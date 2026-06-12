@@ -57,146 +57,719 @@
 
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background: var(--bg-primary);
+            background: linear-gradient(135deg, #07080f 0%, #0c0e18 40%, #0a0c16 100%);
+            background-size: 400% 400%;
+            animation: bg-drift 20s ease infinite;
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
-            padding-bottom: 100px;
         }
 
-        /* ========== KV 主视觉区（保留并优化） ========== */
-        #kv-section {
+        [data-theme="light"] body {
+            background: linear-gradient(135deg, #f8f8fb 0%, #ececef 50%, #f4f4f8 100%);
+            background-size: 400% 400%;
+        }
+
+        @keyframes bg-drift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* ========== macOS 窗口容器 ========== */
+        .app-window {
             position: relative;
-            min-height: 100vh;
+            width: min(1280px, 96vw);
+            margin: 24px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(12, 14, 22, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 
+                0 0 0 1px rgba(255,255,255,0.03) inset,
+                0 30px 90px rgba(0,0,0,0.45),
+                0 8px 32px rgba(0,0,0,0.25);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .app-window {
+            background: rgba(252, 252, 254, 0.85);
+            border-color: rgba(0,0,0,0.08);
+            box-shadow: 
+                0 0 0 1px rgba(0,0,0,0.03) inset,
+                0 30px 90px rgba(0,0,0,0.08),
+                0 8px 32px rgba(0,0,0,0.05);
+        }
+
+        /* ========== macOS 标题栏 ========== */
+        .window-titlebar {
+            display: flex;
+            align-items: center;
+            height: 48px;
+            padding: 0 20px;
+            background: rgba(8, 10, 18, 0.5);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            -webkit-app-region: drag;
+            user-select: none;
+        }
+
+        [data-theme="light"] .window-titlebar {
+            background: rgba(248, 248, 250, 0.7);
+            border-bottom-color: rgba(0,0,0,0.06);
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 8px;
+            -webkit-app-region: no-drag;
+        }
+
+        .window-dot {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            cursor: default;
+        }
+
+        .window-dot.red { background: #ff5f57; }
+        .window-dot.yellow { background: #febc2e; }
+        .window-dot.green { background: #28c840; }
+        .window-dot:hover { filter: brightness(1.15); transform: scale(1.1); }
+
+        .window-title {
+            flex: 1;
+            text-align: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.3);
+        }
+
+        [data-theme="light"] .window-title { color: rgba(0,0,0,0.3); }
+
+        .window-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            -webkit-app-region: no-drag;
+        }
+
+        .window-tool-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.3);
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .window-tool-btn:hover {
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.7);
+        }
+
+        [data-theme="light"] .window-tool-btn { color: rgba(0,0,0,0.3); }
+        [data-theme="light"] .window-tool-btn:hover {
+            background: rgba(0,0,0,0.05);
+            color: rgba(0,0,0,0.7);
+        }
+
+        /* ========== 窗口主体布局 ========== */
+        .window-body {
+            display: flex;
+            height: calc(90vh - 49px);
+            min-height: 500px;
+        }
+
+        /* ========== 侧边栏 ========== */
+        .app-sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            background: rgba(8, 10, 18, 0.5);
+            border-right: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            contain: layout style;
+        }
+
+        [data-theme="light"] .app-sidebar {
+            background: rgba(248, 248, 250, 0.6);
+            border-right-color: rgba(0,0,0,0.06);
+        }
+
+        .sidebar-logo {
+            padding: 20px 16px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .sidebar-logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            text-align: center;
+        }
+
+        .sidebar-logo-sub {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 10px;
+            color: var(--text-secondary);
+            opacity: 0.5;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 10px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar-nav::-webkit-scrollbar { width: 3px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.2); border-radius: 2px; }
+
+        .sidebar-section { margin-bottom: 4px; }
+
+        .sidebar-section-title {
+            font-size: 9.5px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 8px 12px 4px;
+            opacity: 0.45;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            margin-bottom: 2px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            position: relative;
+            user-select: none;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(0,212,255,0.06);
+            color: var(--text-primary);
+        }
+
+        .sidebar-item.active {
+            background: rgba(0,212,255,0.1);
+            color: var(--accent-blue);
+        }
+
+        .sidebar-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 3px;
+            border-radius: 0 2px 2px 0;
+            background: var(--accent-blue);
+        }
+
+        .sidebar-item .si-icon { font-size: 15px; min-width: 20px; text-align: center; }
+        .sidebar-item .si-label { flex: 1; }
+        .sidebar-item .si-arrow { font-size: 10px; opacity: 0; transition: opacity 0.15s; }
+        .sidebar-item:hover .si-arrow { opacity: 0.4; }
+
+        .sidebar-chapter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            margin-bottom: 2px;
+            border-radius: 7px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-chapter:hover { background: rgba(0,212,255,0.05); color: var(--text-primary); }
+        .sidebar-chapter.active { background: rgba(0,212,255,0.1); color: var(--accent-blue); }
+
+        .sidebar-chapter .sc-num {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--accent-purple);
+            min-width: 30px;
+        }
+
+        .sidebar-chapter .sc-title { flex: 1; }
+
+        .sidebar-chapter .sc-badge {
+            font-size: 8px;
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            padding: 12px 10px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            gap: 6px;
+        }
+
+        [data-theme="light"] .sidebar-footer { border-top-color: rgba(0,0,0,0.06); }
+
+        .sidebar-footer-btn {
+            flex: 1;
+            padding: 7px;
+            border-radius: 7px;
+            border: 1px solid var(--glass-border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-footer-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+        .sidebar-footer-btn.active { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+        /* ========== 内容区 ========== */
+        .app-content {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transform: scale(0.97) translateY(8px);
+            pointer-events: none;
+            transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            overflow-y: auto;
+        }
+
+        .app-panel.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        .app-panel::-webkit-scrollbar { width: 4px; }
+        .app-panel::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.15); border-radius: 2px; }
+
+        /* ========== 阅读面板 ========== */
+        #panel-reading {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .panel-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px 24px;
+            background: rgba(8, 10, 18, 0.4);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0;
+            contain: layout style;
+        }
+
+        [data-theme="light"] .panel-toolbar {
+            background: rgba(248, 248, 250, 0.6);
+            border-bottom-color: rgba(0,0,0,0.04);
+        }
+
+        .toolbar-lang-group {
+            display: flex;
+            gap: 2px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 8px;
+            padding: 3px;
+        }
+
+        [data-theme="light"] .toolbar-lang-group { background: rgba(0,0,0,0.04); }
+
+        .toolbar-lang-btn {
+            padding: 5px 12px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .toolbar-lang-btn.active {
+            background: var(--bg-primary);
+            color: var(--accent-blue);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+
+        [data-theme="light"] .toolbar-lang-btn.active { background: #fff; }
+
+        .toolbar-btn {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+
+        .toolbar-btn:hover {
+            background: rgba(0,212,255,0.06);
+            border-color: rgba(0,212,255,0.25);
+            color: var(--accent-blue);
+        }
+
+        .toolbar-btn.primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-color: transparent;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .toolbar-btn.primary:hover { filter: brightness(1.1); }
+
+        .panel-reading-stage {
+            flex: 1;
+            max-width: 720px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 48px 40px 100px;
+            contain: layout style;
+        }
+
+        @media (max-width: 767px) {
+            .panel-reading-stage { padding: 32px 20px 80px; }
+        }
+
+        /* ========== 角色面板 ========== */
+        #panel-characters {
+            padding: 32px 32px 100px;
+        }
+
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .char-card {
+            border-radius: 14px;
+            padding: 24px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            contain: layout style;
+        }
+
+        .char-card:hover {
+            background: rgba(0,212,255,0.04);
+            border-color: rgba(0,212,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        [data-theme="light"] .char-card {
+            background: rgba(0,0,0,0.02);
+            border-color: rgba(0,0,0,0.07);
+        }
+
+        .char-card.locked { opacity: 0.4; }
+
+        .char-card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .char-card-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(124,58,237,0.1));
+            border: 2px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .char-card-info { flex: 1; min-width: 0; }
+
+        .char-card-name {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .char-card-role {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .char-card-desc {
+            font-size: 12.5px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .char-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .char-card-tag {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(124,58,237,0.1);
+            color: var(--accent-purple);
+        }
+
+        /* ========== 百科面板 ========== */
+        #panel-wiki {
+            padding: 0;
+        }
+
+        .wiki-tabs {
+            display: flex;
+            gap: 4px;
+            padding: 16px 32px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(8,10,18,0.3);
+            contain: layout style;
+        }
+
+        [data-theme="light"] .wiki-tabs {
+            background: rgba(248,248,250,0.5);
+            border-bottom-color: rgba(0,0,0,0.04);
+        }
+
+        .wiki-tab {
+            padding: 7px 16px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .wiki-tab.active {
+            background: rgba(0,212,255,0.1);
+            color: var(--accent-blue);
+        }
+
+        .wiki-tab:hover { background: rgba(0,212,255,0.05); color: var(--text-primary); }
+
+        .wiki-content {
+            padding: 24px 32px 100px;
+            overflow-y: auto;
+            height: calc(100% - 57px);
+        }
+
+        .wiki-section-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 20px 0 10px;
+            padding-left: 8px;
+            border-left: 2px solid var(--accent-blue);
+        }
+
+        [data-theme="light"] .wiki-section-title { color: var(--accent-blue); }
+
+        .wiki-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .wiki-item {
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .wiki-item:hover {
+            background: rgba(0,212,255,0.05);
+            border-color: rgba(0,212,255,0.2);
+        }
+
+        [data-theme="light"] .wiki-item {
+            background: rgba(0,0,0,0.02);
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        .wiki-item-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .wiki-item-desc {
+            font-size: 11px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* ========== KV Hero 入口 ========== */
+        .app-hero {
+            position: relative;
+            min-height: 380px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            z-index: 10;
-            transition: min-height 0.5s ease, padding-bottom 0.5s ease, opacity 0.5s ease;
-        }
-        #kv-section.collapsed {
-            min-height: 0 !important;
-            padding-bottom: 0 !important;
-            opacity: 0;
-            pointer-events: none;
-            height: 0 !important;
-            overflow: hidden;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: linear-gradient(180deg, rgba(0,212,255,0.03) 0%, transparent 100%);
         }
 
-        #kv-canvas {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
+        [data-theme="light"] .app-hero {
+            background: linear-gradient(180deg, rgba(220,38,38,0.02) 0%, transparent 100%);
+            border-bottom-color: rgba(0,0,0,0.05);
         }
 
-        .kv-content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            padding: 40px 20px;
-        }
+        .app-hero #kv-canvas { border-radius: 0; }
 
-        .kv-title {
+        .app-hero-content { position: relative; z-index: 1; text-align: center; padding: 40px 20px; }
+
+        .app-hero-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(32px, 7vw, 64px);
+            font-size: clamp(28px, 5vw, 48px);
             font-weight: 900;
-            letter-spacing: 8px;
+            letter-spacing: 6px;
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            transition: filter 0.4s ease, text-shadow 0.4s ease;
-            cursor: default;
+            transition: filter 0.4s;
         }
 
-        .kv-title:hover {
-            filter: brightness(1.3);
-            text-shadow: 0 0 30px rgba(0, 212, 255, 0.3), 0 0 60px rgba(124, 58, 237, 0.15);
-        }
+        .app-hero-title:hover { filter: brightness(1.25); }
 
-        .kv-subtitle {
+        .app-hero-sub {
             font-family: 'Noto Serif JP', serif;
-            font-size: clamp(18px, 3.5vw, 30px);
+            font-size: clamp(16px, 3vw, 24px);
             font-style: italic;
             color: var(--text-secondary);
-            margin-top: 16px;
-            letter-spacing: 6px;
+            margin-top: 12px;
+            letter-spacing: 4px;
         }
 
-        .kv-quote {
+        .app-hero-quote {
             font-family: 'Noto Serif JP', serif;
-            font-size: clamp(14px, 2vw, 18px);
+            font-size: clamp(13px, 2vw, 16px);
             font-style: italic;
             color: var(--text-secondary);
-            opacity: 0.7;
-            margin-top: 48px;
-            line-height: 1.9;
+            opacity: 0.6;
+            margin-top: 24px;
+            line-height: 1.8;
         }
 
-        .kv-btn {
+        .app-hero-btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            margin-top: 56px;
-            padding: 18px 48px;
+            gap: 8px;
+            margin-top: 32px;
+            padding: 14px 36px;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 600;
-            letter-spacing: 3px;
-            color: var(--bg-primary);
+            letter-spacing: 2px;
+            color: #fff;
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
             border: none;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, filter 0.3s ease;
-        }
-
-        .kv-btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 40px rgba(0, 212, 255, 0.35), 0 0 80px rgba(124, 58, 237, 0.2);
-            filter: brightness(1.12);
-        }
-        .kv-btn:active { transform: translateY(0) scale(0.98); }
-
-        .kv-meta {
-            margin-top: 40px;
-            font-size: 13px;
-            color: var(--text-secondary);
-            opacity: 0.45;
-            letter-spacing: 1.5px;
-        }
-
-        .kv-theme-toggle {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            z-index: 20;
-            width: 44px;
-            height: 44px;
             border-radius: 12px;
-            border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            color: var(--text-primary);
-            font-size: 18px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.25s ease;
-        }
-        .kv-theme-toggle:hover {
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 16px rgba(0, 212, 255, 0.15);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* ========== 中央阅读舞台（纯净居中，max 680px） ========== */
+        .app-hero-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,212,255,0.3);
+        }
+
+        .app-hero-meta {
+            margin-top: 20px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            opacity: 0.35;
+            letter-spacing: 1px;
+        }
+
+        /* ========== 保留的原有样式（阅读相关） ========== */
         .reading-stage {
             max-width: 680px;
             margin: 0 auto;
@@ -205,7 +778,6 @@
             contain: content;
         }
 
-        /* ========== 极简 Episode 导航条（floating-ep-bar） ========== */
         .floating-ep-bar {
             position: sticky;
             top: 0;
@@ -223,6 +795,7 @@
             border-bottom: 1px solid rgba(255,255,255,0.06);
             border-radius: 0 0 14px 14px;
         }
+
         [data-theme="light"] .floating-ep-bar {
             background: rgba(255,255,255,0.75);
             border-bottom-color: rgba(0,0,0,0.06);
@@ -245,11 +818,13 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
+
         .ep-nav-btn:hover:not(:disabled) {
             background: rgba(0, 212, 255, 0.08);
             border-color: rgba(0, 212, 255, 0.25);
             color: var(--accent-blue);
         }
+
         .ep-nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
 
         .ep-nav-select {
@@ -272,6 +847,7 @@
             background-position: right 10px center;
             transition: all 0.2s ease;
         }
+
         .ep-nav-select:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.15); }
         .ep-nav-select option { background: var(--bg-tertiary); color: var(--text-primary); }
 
@@ -284,14 +860,13 @@
             font-variant-numeric: tabular-nums;
         }
 
-        /* Episode 切换动画容器 */
         .ep-content-wrapper {
             transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
+
         .ep-content-wrapper.ep-fade-out { opacity: 0; transform: translateY(-10px); }
         .ep-content-wrapper.ep-fade-in { opacity: 1; transform: translateY(0); }
 
-        /* ========== 排版优化：章节标题 ========== */
         .chapter-art-title {
             font-family: 'Orbitron', sans-serif;
             font-size: 28px;
@@ -305,6 +880,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+
         .chapter-art-title::before,
         .chapter-art-title::after {
             content: '';
@@ -315,10 +891,10 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
         }
+
         .chapter-art-title::before { top: -20px; }
         .chapter-art-title::after { bottom: -16px; }
 
-        /* 节标题 — 宋体风格 */
         .section-heading {
             font-family: 'Noto Serif JP', serif;
             font-size: 19px;
@@ -330,14 +906,14 @@
             opacity: 0.9;
         }
 
-        /* 场景分隔符 */
         .scene-separator {
-            width: 70px; height: 2px; margin: 44px auto;
+            width: 70px;
+            height: 2px;
+            margin: 44px auto;
             background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
             opacity: 0.35;
         }
 
-        /* 引用块 — 书中格言风格 */
         .art-quote {
             text-align: center;
             padding: 36px 48px;
@@ -345,16 +921,19 @@
             max-width: 520px;
             position: relative;
         }
+
         .art-quote::before {
             content: '"';
             position: absolute;
-            top: 12px; left: 24px;
+            top: 12px;
+            left: 24px;
             font-size: 48px;
             color: var(--quote-color);
             opacity: 0.2;
             font-family: Georgia, serif;
             line-height: 1;
         }
+
         .art-quote p {
             font-family: 'Noto Serif JP', serif;
             font-style: italic;
@@ -364,7 +943,6 @@
             margin-bottom: 8px !important;
         }
 
-        /* 正文段落 — 精致排版 */
         .content-paragraph {
             font-family: 'Noto Serif JP', 'Source Han Serif SC', serif;
             font-size: 17.5px;
@@ -375,14 +953,13 @@
             letter-spacing: 0.02em;
             text-indent: 1em;
         }
+
         .content-paragraph strong { color: var(--text-primary); font-weight: 600; }
         [data-theme="light"] .content-paragraph strong { color: #0f172a; }
 
-        /* 翻译文本 */
         .translation { font-size: 0.85em; color: var(--text-secondary); opacity: 0.65; }
         .dialogue-text { color: var(--dialogue-color); }
 
-        /* ========== 语言模式CSS ========== */
         .translation-line {
             opacity: 0.72;
             color: var(--accent-blue);
@@ -391,12 +968,12 @@
             padding-left: 14px;
             margin-top: -18px;
         }
+
         [data-lang-mode="jp"] .translation-line { display: none; }
         [data-lang-mode="jp"] .content-paragraph[data-lang="ja"] { color: var(--text-primary); opacity: 1; }
         [data-lang-mode="cn"] .content-paragraph[data-lang="ja"] { color: var(--text-secondary); opacity: 0.38; font-size: 0.88em; }
         [data-lang-mode="cn"] .translation-line { color: var(--text-primary); opacity: 1; font-size: 1em; font-weight: 500; border-left-color: var(--accent-blue); background: rgba(0, 212, 255, 0.04); }
 
-        /* 终端代码块 */
         .terminal-block {
             background: var(--bg-tertiary);
             border-radius: 12px;
@@ -406,6 +983,7 @@
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
             contain: layout style;
         }
+
         [data-theme="light"] .terminal-block { background: #1a1a24; border-color: rgba(255, 255, 255, 0.06); }
 
         .terminal-header {
@@ -416,17 +994,21 @@
             gap: 7px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
+
         .terminal-dot { width: 11px; height: 11px; border-radius: 50%; }
         .terminal-dot.red { background: #ff5f57; }
         .terminal-dot.yellow { background: #febc2e; }
         .terminal-dot.green { background: #28c840; }
+
         .terminal-title-bar {
-            flex: 1; text-align: center;
+            flex: 1;
+            text-align: center;
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
             color: rgba(148, 163, 184, 0.5);
             margin-left: -46px;
         }
+
         .terminal-body {
             padding: 18px 22px;
             font-family: 'JetBrains Mono', monospace;
@@ -436,739 +1018,231 @@
             white-space: pre-wrap;
             word-break: break-word;
         }
+
         .terminal-cursor {
-            display: inline-block; width: 7px; height: 15px;
+            display: inline-block;
+            width: 7px;
+            height: 15px;
             background: var(--terminal-green);
             animation: cursor-blink 1s step-end infinite;
-            vertical-align: middle; margin-left: 2px;
+            vertical-align: middle;
+            margin-left: 2px;
         }
+
         @keyframes cursor-blink { 50% { opacity: 0; } }
 
-        /* ========== 浮动底栏（Floating Control Bar）— 核心新组件 ========== */
-        .floating-bar {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 90;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 8px 16px;
-            background: rgba(15, 18, 25, 0.82);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 22px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05) inset;
-            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease;
-        }
-        [data-theme="light"] .floating-bar {
-            background: rgba(255,255,255,0.85);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04) inset;
-        }
-
-        .fb-btn {
-            width: 34px; height: 34px;
-            border-radius: 10px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 15px;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s ease;
-        }
-        .fb-btn:hover {
-            background: rgba(0,212,255,0.1);
-            color: var(--accent-blue);
-            transform: scale(1.05);
-        }
-
-        .fb-divider {
-            width: 1px; height: 20px;
-            background: rgba(255,255,255,0.1);
-            margin: 0 4px;
-        }
-
-        .fb-lang-group { display: flex; gap: 2px; }
-        .fb-lang-btn {
-            padding: 4px 10px;
-            border-radius: 8px;
-            border: 1px solid transparent;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 11px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-        .fb-lang-btn.active {
-            background: rgba(124,58,237,0.15);
-            border-color: rgba(124,58,237,0.3);
-            color: var(--accent-purple);
-        }
-        .fb-lang-btn:hover { color: var(--text-primary); }
-
-        .fb-progress {
-            width: 60px; height: 3px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-left: 8px;
-        }
-        .fb-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-            border-radius: 2px;
-            width: 25%;
-            transition: width 0.4s ease;
-        }
-
-        /* ========== 空间覆盖层（Spatial Overlay Panel）========== */
-        .spatial-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            z-index: 200;
-            opacity: 0;
-            pointer-events: none;
-            will-change: opacity;
-            transition: opacity 0.25s ease;
-        }
-        .spatial-overlay.active { opacity: 1; pointer-events: auto; }
-
-        .spatial-panel {
-            position: fixed;
-            top: 0; right: -720px;
-            width: 720px;
-            max-width: 92vw;
-            height: 100vh;
-            background: var(--bg-primary);
-            border-left: 1px solid var(--glass-border);
-            z-index: 201;
-            display: flex;
-            flex-direction: column;
-            will-change: transform;
-            contain: layout style;
-            transition: right 0.35s cubic-bezier(0.32, 0.72, 0, 1);
-            box-shadow: -12px 0 48px rgba(0,0,0,0.25);
-        }
-        [data-theme="light"] .spatial-panel { box-shadow: -8px 0 32px rgba(0,0,0,0.06); }
-        .spatial-panel.open { right: 0; }
-
-        .spatial-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--glass-border);
-        }
-        .spatial-logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .spatial-close {
-            width: 32px; height: 32px;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 16px;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.15s ease;
-        }
-        .spatial-close:hover { background: rgba(255,100,100,0.1); color: #ff6b6b; }
-
-        .spatial-body {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
-
-        /* 左侧导航 58% */
-        .spatial-nav {
-            width: 58%;
-            overflow-y: auto;
-            padding: 16px 0;
-            border-right: 1px solid var(--glass-border);
-        }
-        .spatial-nav::-webkit-scrollbar { width: 3px; }
-        .spatial-nav::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.2); border-radius: 2px; }
-
-        /* 右侧预览 42% */
-        .spatial-preview {
-            width: 42%;
-            padding: 24px;
-            overflow-y: auto;
-            background: rgba(0,0,0,0.15);
-        }
-
-        .spatial-section { margin-bottom: 4px; }
-        .spatial-section-title {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--accent-blue);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 10px 20px 6px;
-        }
-        .spatial-settings {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--glass-border);
-        }
-
-        .spatial-list { padding: 0 12px; }
-
-        .spatial-item {
+        .chapter-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 9px 14px;
-            margin-bottom: 2px;
-            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 3px;
+            border-radius: 10px;
             cursor: pointer;
             color: var(--text-secondary);
             font-size: 13px;
-            transition: all 0.15s ease;
-        }
-        .spatial-item:hover { background: rgba(0,212,255,0.06); color: var(--text-primary); }
-        .spatial-item.active {
-            background: rgba(0,212,255,0.1);
-            color: var(--accent-blue);
-            font-weight: 500;
-        }
-        .spatial-item .item-num {
-            font-size: 9px;
-            color: var(--accent-purple);
-            font-weight: 700;
-            min-width: 28px;
-        }
-        .spatial-item .item-arrow {
-            margin-left: auto;
-            font-size: 10px;
-            opacity: 0;
-            transition: opacity 0.15s;
-        }
-        .spatial-item:hover .item-arrow { opacity: 0.5; }
-
-        /* 折叠分类 */
-        .spatial-collapsible-header {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 20px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.15s ease;
-            border-radius: 8px;
-            margin: 2px 8px;
-        }
-        .spatial-collapsible-header:hover { background: rgba(124,58,237,0.06); color: var(--accent-purple); }
-        .spatial-collapsible-header .coll-arrow { transition: transform 0.2s ease; font-size: 9px; }
-        .spatial-collapsible.open .coll-arrow { transform: rotate(90deg); }
-
-        .spatial-sub-items {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            padding-left: 16px;
-        }
-        .spatial-collapsible.open .spatial-sub-items { max-height: 600px; }
-
-        .spatial-sub-item {
-            padding: 5px 10px 5px 18px;
-            font-size: 12px;
-            color: var(--text-secondary);
-            opacity: 0.7;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.12s ease;
-            position: relative;
-        }
-        .spatial-sub-item::before { content: '·'; position: absolute; left: 6px; color: var(--accent-blue); opacity: 0.4; }
-        .spatial-sub-item:hover { opacity: 1; color: var(--text-primary); }
-
-        /* 设置行 */
-        .spatial-setting-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 20px;
-        }
-        .spatial-setting-row span {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        .spatial-toggle-group { display: flex; gap: 3px; }
-        .st-btn {
-            padding: 5px 10px;
-            border-radius: 6px;
-            border: 1px solid var(--glass-border);
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-        .st-btn.active {
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
-            background: rgba(0,212,255,0.08);
-        }
-
-        /* 预览区样式 */
-        .spatial-preview-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: var(--text-secondary);
-            text-align: center;
-        }
-        .preview-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
-        .spatial-preview-placeholder p { font-size: 13px; opacity: 0.5; }
-
-        /* 角色预览卡片 */
-        .char-preview-card { text-align: center; padding: 20px 0; }
-        .char-preview-avatar {
-            width: 80px; height: 80px;
-            border-radius: 50%;
-            margin: 0 auto 16px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 32px;
-            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(124,58,237,0.1));
-            border: 2px solid var(--char-preview-color, var(--accent-blue));
-        }
-        .char-preview-name-jp {
-            font-family: 'Noto Serif JP', serif;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--char-preview-color, var(--accent-blue));
-            margin-bottom: 4px;
-        }
-        .char-preview-name-cn { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
-        .char-preview-role {
-            display: inline-block;
-            font-size: 11px;
-            padding: 3px 14px;
-            border-radius: 20px;
-            background: rgba(124,58,237,0.1);
-            color: var(--accent-purple);
-            margin-bottom: 16px;
-        }
-        .char-preview-tags {
-            display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 16px;
-        }
-        .char-preview-tag {
-            font-size: 10px;
-            padding: 3px 10px;
-            border-radius: 12px;
-            background: rgba(0,0,0,0.2);
-            color: var(--text-secondary);
-        }
-        .char-preview-desc {
-            font-size: 13px;
-            line-height: 1.7;
-            color: var(--text-secondary);
-            text-align: left;
-        }
-        .char-preview-trait {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--glass-border);
-            font-style: italic;
-            font-size: 12.5px;
-            color: var(--quote-color);
-        }
-
-        /* 词条预览 */
-        .term-preview-card { padding: 4px 0; }
-        .term-preview-category {
-            font-size: 10px;
-            color: var(--accent-purple);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
-        }
-        .term-preview-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--accent-blue);
-            margin-bottom: 12px;
-        }
-        .term-preview-def {
-            font-size: 14px;
-            line-height: 1.8;
-            color: var(--text-secondary);
-        }
-
-        /* ========== 视觉小说模式覆盖层（保留完整功能） ========== */
-        #vn-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            z-index: 1000;
-            visibility: hidden;
-            opacity: 0;
-            background: var(--bg-primary);
-            flex-direction: column;
-            transition: opacity 0.3s ease, visibility 0.3s;
-            will-change: opacity;
-        }
-        #vn-overlay.active { visibility: visible; opacity: 1; }
-
-        .vn-toolbar {
-            display: flex; align-items: center; gap: 8px;
-            padding: 14px 24px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--glass-border);
-            contain: layout style;
-        }
-        .vn-toolbar-btn {
-            padding: 7px 14px; border-radius: 8px; border: 1px solid var(--glass-border);
-            background: transparent; color: var(--text-secondary);
-            font-family: 'Space Grotesk', sans-serif; font-size: 11.5px;
-            font-weight: 500; cursor: pointer; transition: all 0.2s ease;
-            white-space: nowrap;
-        }
-        .vn-toolbar-btn:hover { background: rgba(0, 212, 255, 0.1); border-color: var(--accent-blue); color: var(--accent-blue); }
-        .vn-toolbar-btn.active-state { background: rgba(0, 212, 255, 0.12); border-color: var(--accent-blue); color: var(--accent-blue); }
-        .vn-spacer { flex: 1; }
-
-        .vn-character-area {
-            flex: 1; display: flex; align-items: flex-end; justify-content: center;
-            padding: 20px 60px 0; position: relative; overflow: hidden;
-        }
-        .vn-placeholder-line {
-            width: 200px; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
-            opacity: 0.15;
-        }
-
-        .vn-dialog-container {
-            padding: 0 32px 28px; display: flex; flex-direction: column; align-items: stretch;
-        }
-        .vn-name-tag {
-            display: inline-block; align-self: flex-start;
-            padding: 7px 18px; margin-bottom: 10px;
-            background: rgba(0, 0, 0, 0.65);
-            border: 1px solid var(--glass-border); border-radius: 8px;
-            font-family: 'Noto Serif JP', serif; font-size: 14px;
-            color: var(--accent-blue); font-weight: 600;
-        }
-        [data-theme="light"] .vn-name-tag { background: rgba(255, 255, 255, 0.9); }
-
-        .vn-dialog-box {
-            padding: 22px 28px;
-            background: rgba(10, 12, 20, 0.92);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 14px;
-            cursor: pointer;
-            position: relative;
-            min-height: 80px;
-            display: flex; align-items: center;
-            contain: layout style;
-        }
-        [data-theme="light"] .vn-dialog-box { background: rgba(255, 255, 255, 0.95); }
-
-        .vn-dialog-text {
-            font-family: 'Noto Serif JP', serif;
-            font-size: 17px; line-height: 1.85; color: var(--text-primary);
-            flex: 1;
-        }
-
-        .vn-advance-btn {
-            position: absolute; right: 20px; bottom: 16px;
-            width: 32px; height: 32px; border-radius: 50%;
-            border: 1px solid var(--glass-border); background: transparent;
-            color: var(--text-secondary); font-size: 14px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s ease;
-        }
-        .vn-advance-btn:hover { background: rgba(0, 212, 255, 0.12); border-color: var(--accent-blue); color: var(--accent-blue); }
-
-        /* VN 历史侧栏 */
-        #vn-history-sidebar {
-            position: fixed; top: 0; right: -380px; width: 360px; height: 100vh;
-            background: var(--glass-bg); backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-left: 1px solid var(--glass-border);
-            z-index: 1010; transition: right 0.3s ease;
-            display: flex; flex-direction: column; contain: layout style;
-        }
-        #vn-history-sidebar.open { right: 0; }
-        .vn-history-header {
-            padding: 16px 20px; border-bottom: 1px solid var(--glass-border);
-            font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700;
-            color: var(--accent-blue); display: flex; justify-content: space-between; align-items: center;
-        }
-        .vn-history-close {
-            width: 28px; height: 28px; border-radius: 6px; border: none;
-            background: transparent; color: var(--text-secondary); cursor: pointer;
-            font-size: 16px; display: flex; align-items: center; justify-content: center;
-        }
-        .vn-history-close:hover { background: rgba(255, 100, 100, 0.1); color: #ff6b6b; }
-        .vn-history-list { flex: 1; overflow-y: auto; padding: 12px 16px; }
-        .vn-history-item {
-            padding: 10px 12px; margin-bottom: 6px; border-radius: 8px;
-            font-size: 13px; line-height: 1.6; color: var(--text-secondary);
-            border-left: 3px solid var(--accent-purple); opacity: 0.7;
-        }
-        .vn-history-speaker { font-size: 10px; color: var(--accent-blue); font-weight: 600; margin-bottom: 2px; }
-
-        /* ========== 章节选择器样式 ========== */
-        .chapter-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 14px; margin-bottom: 3px;
-            border-radius: 10px; cursor: pointer;
-            color: var(--text-secondary); font-size: 13px;
             transition: all 0.2s ease;
             position: relative;
         }
+
         .chapter-item:hover { background: rgba(0,212,255,0.06); color: var(--text-primary); }
         .chapter-item.active {
             background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(124,58,237,0.08));
-            color: var(--accent-blue); font-weight: 600;
+            color: var(--accent-blue);
+            font-weight: 600;
             border-left: 3px solid var(--accent-blue);
         }
+
         .chapter-item .ch-num {
             font-family: 'Orbitron', sans-serif;
-            font-size: 9px; font-weight: 700; color: var(--accent-purple);
-            min-width: 36px; text-align: center;
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--accent-purple);
+            min-width: 36px;
+            text-align: center;
         }
+
         .chapter-item .ch-title { flex: 1; }
+
         .chapter-item .ch-badge {
-            font-size: 9px; padding: 2px 7px; border-radius: 6px;
-            font-weight: 600; letter-spacing: 0.5px;
+            font-size: 9px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
+
         .ch-badge-demo {
             background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
-            color: #f59e0b; border: 1px solid rgba(245,158,11,0.25);
+            color: #f59e0b;
+            border: 1px solid rgba(245,158,11,0.25);
         }
+
         .ch-badge-complete { background: rgba(16,185,129,0.1); color: #10b981; }
         .ch-badge-locked { background: rgba(148,163,184,0.08); color: var(--text-secondary); opacity: 0.5; }
         .chapter-item.locked { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
-        /* 章节内Demo标记 */
         .demo-banner {
-            display: flex; align-items: center; justify-content: center;
-            gap: 8px; padding: 8px 16px; margin: 24px auto 32px;
-            max-width: 400px; border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 16px;
+            margin: 24px auto 32px;
+            max-width: 400px;
+            border-radius: 20px;
             background: linear-gradient(135deg, rgba(245,158,11,0.06), rgba(245,158,11,0.02));
             border: 1px solid rgba(245,158,11,0.2);
-            font-size: 12px; color: #f59e0b; font-weight: 500;
+            font-size: 12px;
+            color: #f59e0b;
+            font-weight: 500;
         }
+
         [data-theme="light"] .demo-banner {
             background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.03));
             border-color: rgba(245,158,11,0.25);
         }
 
-        /* ========== 移动端响应式 ========== */
-        @media (max-width: 767px) {
-            .floating-bar {
-                bottom: 12px;
-                padding: 6px 12px;
-                gap: 2px;
-                border-radius: 18px;
-            }
-            .fb-btn { width: 30px; height: 30px; font-size: 13px; }
-            .fb-lang-btn { padding: 3px 7px; font-size: 10px; }
-            .fb-divider { display: none; }
-            .fb-progress { display: none; }
+        /* ========== 响应式 ========== */
+        @media (max-width: 900px) {
+            .app-sidebar { width: 60px; }
+            .sidebar-logo-text { font-size: 9px; letter-spacing: 0; }
+            .sidebar-logo-sub { display: none; }
+            .sidebar-item .si-label { display: none; }
+            .sidebar-item .si-arrow { display: none; }
+            .sidebar-item { justify-content: center; padding: 10px; }
+            .sidebar-section-title { display: none; }
+            .sidebar-chapter { padding: 8px; justify-content: center; }
+            .sidebar-chapter .sc-num, .sidebar-chapter .sc-title, .sidebar-chapter .sc-badge { display: none; }
+            .sidebar-footer { flex-direction: column; gap: 4px; }
+            .sidebar-footer-btn span { display: none; }
+            .sidebar-footer-btn { font-size: 15px; padding: 8px; }
+        }
 
-            .spatial-panel {
-                width: 100vw;
-                max-width: 100vw;
-                right: -100vw;
+        @media (max-width: 640px) {
+            body { padding: 0; }
+            .app-window { 
+                width: 100vw; 
+                margin: 0; 
+                border-radius: 0; 
+                height: 100vh; 
             }
-            .spatial-panel.open { right: 0; }
-            .spatial-body { flex-direction: column; }
-            .spatial-nav { width: 100%; height: 55%; border-right: none; border-bottom: 1px solid var(--glass-border); }
-            .spatial-preview { width: 100%; height: 45%; }
-
-            .reading-stage { padding: 32px 20px 80px; }
-            .content-paragraph { font-size: 16px; line-height: 2.0; }
-            .floating-ep-bar { height: 36px; padding: 0 12px; gap: 6px; margin-bottom: 20px; }
-            .ep-nav-btn { padding: 4px 8px; font-size: 10px; }
-            .ep-nav-counter { font-size: 10px; }
-            .chapter-art-title { font-size: 22px; margin: 48px 0 40px; }
-            .section-heading { font-size: 17px; }
-            .art-quote { padding: 24px 20px; }
-            .kv-title { letter-spacing: 4px; }
-            .kv-btn { padding: 14px 32px; margin-top: 40px; }
+            .window-body { height: calc(100vh - 48px); }
+            .app-sidebar { display: none; }
         }
 
         .hidden-el { display: none !important; }
     </style>
 </head>
 <body>
-    <!-- ==================== KV 主视觉区 ==================== -->
-    <section id="kv-section">
-        <canvas id="kv-canvas"></canvas>
-        <button class="kv-theme-toggle" id="kv-theme-btn" title="切换主题">🌙</button>
-        <div class="kv-content">
-            <div class="kv-title">TERMINAL PHANTASM</div>
-            <div class="kv-subtitle">終端之夢</div>
-            <p class="kv-quote">"世界はコードでできている。"<br><span style="font-size:0.85em">"世界是由代码构成的。"</span></p>
-            <button class="kv-btn" id="kv-start-btn">📖 开始阅读</button>
-            <p class="kv-meta">序章 + 第1章（试读版）&nbsp;|&nbsp; 角色: 5 &nbsp;|&nbsp; 字数: ~49K</p>
-        </div>
-    </section>
-
-    <!-- ==================== 中央阅读舞台 ==================== -->
-    <main class="reading-stage" id="reading-stage"></main>
-
-    <!-- ==================== 浮动底栏 ==================== -->
-    <div class="floating-bar" id="floating-bar">
-        <button class="fb-btn" id="fb-nav-btn" title="导航">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <div class="fb-divider"></div>
-        <div class="fb-lang-group">
-            <button class="fb-lang-btn active" data-lang="both">双语</button>
-            <button class="fb-lang-btn" data-lang="jp">JP</button>
-            <button class="fb-lang-btn" data-lang="cn">中文</button>
-        </div>
-        <div class="fb-divider"></div>
-        <button class="fb-btn" id="fb-vn-btn" title="视觉小说模式">🎭</button>
-        <button class="fb-btn" id="fb-theme-btn" title="切换主题">🌙</button>
-        <button class="fb-btn" id="fb-wiki-btn" title="百科">📖</button>
-        <div class="fb-progress">
-            <div class="fb-progress-fill" id="fb-progress-fill"></div>
-        </div>
-    </div>
-
-    <!-- ==================== 空间覆盖层 ==================== -->
-    <div class="spatial-overlay" id="spatial-overlay"></div>
-    <div class="spatial-panel" id="spatial-panel">
-        <div class="spatial-header">
-            <span class="spatial-logo">TERMINAL PHANTASM</span>
-            <button class="spatial-close" id="spatial-close">✕</button>
-        </div>
-        <div class="spatial-body">
-            <!-- 左侧导航列表 (58%) -->
-            <div class="spatial-nav">
-                <!-- 章节选择器 -->
-                <div class="spatial-section" id="chapter-selector-section">
-                    <div class="spatial-section-title">📑 章节选择</div>
-                    <div id="chapter-list" class="spatial-list"></div>
-                </div>
-
-                <div class="spatial-section">
-                    <div class="spatial-section-title">分集导航</div>
-                    <div id="spatial-episode-list" class="spatial-list"></div>
-                </div>
-
-                <div class="spatial-section">
-                    <div class="spatial-collapsible-header" id="world-collapse-header">
-                        <span class="coll-arrow">▸</span> 🌍 世界设定
-                    </div>
-                    <div id="spatial-world-list" class="spatial-sub-items spatial-collapsible"></div>
-                </div>
-
-                <div class="spatial-section">
-                    <div class="spatial-collapsible-header" id="magic-collapse-header">
-                        <span class="coll-arrow">▸</span> ✨ 魔法体系
-                    </div>
-                    <div id="spatial-magic-list" class="spatial-sub-items spatial-collapsible"></div>
-                </div>
-
-                <div class="spatial-section">
-                    <div class="spatial-collapsible-header" id="term-collapse-header">
-                        <span class="coll-arrow">▸</span> 📖 术语辞典
-                    </div>
-                    <div id="spatial-term-list" class="spatial-sub-items spatial-collapsible"></div>
-                </div>
-
-                <div class="spatial-section">
-                    <div class="spatial-section-title">👤 登场角色</div>
-                    <div id="spatial-char-list" class="spatial-list"></div>
-                </div>
-
-                <div class="spatial-section spatial-settings">
-                    <div class="spatial-section-title">⚙️ 设置</div>
-                    <div class="spatial-setting-row">
-                        <span>语言模式</span>
-                        <div class="spatial-toggle-group">
-                            <button class="st-btn active" data-slang="both">双语</button>
-                            <button class="st-btn" data-slang="jp">日本語</button>
-                            <button class="st-btn" data-slang="cn">中文</button>
-                        </div>
-                    </div>
-                    <div class="spatial-setting-row">
-                        <span>外观主题</span>
-                        <div class="spatial-toggle-group">
-                            <button class="st-btn active" data-stheme="dark">🌙 深色</button>
-                            <button class="st-btn" data-stheme="light">☀️ 浅色</button>
-                        </div>
-                    </div>
-                    <div class="spatial-setting-row">
-                        <span>阅读模式</span>
-                        <div class="spatial-toggle-group">
-                            <button class="st-btn active" id="spatial-fic-btn">📖 小说</button>
-                            <button class="st-btn" id="spatial-vn-btn">🎭 VN</button>
-                        </div>
-                    </div>
-                </div>
+    <!-- ==================== macOS 窗口容器 ==================== -->
+    <div class="app-window">
+        <!-- 标题栏 -->
+        <div class="window-titlebar">
+            <div class="window-dots">
+                <div class="window-dot red"></div>
+                <div class="window-dot yellow"></div>
+                <div class="window-dot green"></div>
             </div>
-
-            <!-- 右侧详情预览区 (42%) -->
-            <div class="spatial-preview" id="spatial-preview">
-                <div class="spatial-preview-placeholder">
-                    <div class="preview-icon">📖</div>
-                    <p>选择左侧条目查看详情</p>
-                </div>
+            <div class="window-title">TERMINAL PHANTASM</div>
+            <div class="window-toolbar">
+                <button class="window-tool-btn" id="toolbar-theme-btn" title="切换主题">🌙</button>
             </div>
         </div>
-    </div>
 
-    <!-- ==================== 视觉小说模式覆盖层 ==================== -->
-    <div id="vn-overlay">
-        <div class="vn-toolbar">
-            <button class="vn-toolbar-btn" id="vn-btn-back">← 返回小说模式</button>
-            <button class="vn-toolbar-btn" id="vn-btn-history">📜 历史</button>
-            <button class="vn-toolbar-btn" id="vn-btn-skip">⏭ 跳过</button>
-            <button class="vn-toolbar-btn" id="vn-btn-auto">▶ 自动</button>
-            <button class="vn-toolbar-btn" id="vn-btn-reset">🔄 重置</button>
-            <button class="vn-toolbar-btn" id="vn-lang-toggle">🌐 双语</button>
-            <span class="vn-spacer"></span>
-            <span id="vn-counter" style="font-size:11px;color:var(--text-secondary);opacity:0.5;">0 / 0</span>
-        </div>
-        <div class="vn-character-area">
-            <div class="vn-placeholder-line"></div>
-        </div>
-        <div class="vn-dialog-container">
-            <div class="vn-name-tag" id="vn-name-tag"></div>
-            <div class="vn-dialog-box" id="vn-dialog-box">
-                <div class="vn-dialog-text" id="vn-dialog-text"></div>
-                <button class="vn-advance-btn" id="vn-advance-btn">▶</button>
+        <!-- Hero 入口 -->
+        <div class="app-hero" id="app-hero">
+            <canvas id="kv-canvas"></canvas>
+            <div class="app-hero-content">
+                <div class="app-hero-title">TERMINAL PHANTASM</div>
+                <div class="app-hero-sub">終端之夢</div>
+                <p class="app-hero-quote">"世界はコードでできている。"</p>
+                <button class="app-hero-btn" id="app-hero-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    开始阅读
+                </button>
+                <p class="app-hero-meta">序章 + 第1章（试读版） | 角色: 5 | 字数: ~49K</p>
             </div>
         </div>
-    </div>
 
-    <!-- VN 历史记录侧栏 -->
-    <div id="vn-history-sidebar">
-        <div class="vn-history-header">
-            <span>对话历史</span>
-            <button class="vn-history-close" id="vn-history-close">✕</button>
+        <!-- 主体布局 -->
+        <div class="window-body">
+            <!-- 侧边栏 -->
+            <aside class="app-sidebar">
+                <div class="sidebar-logo">
+                    <span class="sidebar-logo-text">TP</span>
+                    <span class="sidebar-logo-sub">Terminal Phantasm</span>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">导航</div>
+                        <div class="sidebar-item" data-panel="reading">
+                            <span class="si-icon">📖</span>
+                            <span class="si-label">阅读</span>
+                            <span class="si-arrow">›</span>
+                        </div>
+                        <div class="sidebar-item" data-panel="characters">
+                            <span class="si-icon">👤</span>
+                            <span class="si-label">角色</span>
+                            <span class="si-arrow">›</span>
+                        </div>
+                        <div class="sidebar-item" data-panel="wiki">
+                            <span class="si-icon">📖</span>
+                            <span class="si-label">百科</span>
+                            <span class="si-arrow">›</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">章节</div>
+                        <div id="chapter-list" class="sidebar-chapter-list"></div>
+                    </div>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <button class="sidebar-footer-btn" id="sidebar-theme-btn">
+                        <span>🌙</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- 内容区 -->
+            <main class="app-content">
+                <!-- 阅读面板 -->
+                <div class="app-panel active" id="panel-reading">
+                    <div class="panel-toolbar">
+                        <div class="toolbar-lang-group">
+                            <button class="toolbar-lang-btn active" data-lang="both">双语</button>
+                            <button class="toolbar-lang-btn" data-lang="jp">JP</button>
+                            <button class="toolbar-lang-btn" data-lang="cn">中文</button>
+                        </div>
+                    </div>
+                    <div class="panel-reading-stage" id="reading-stage"></div>
+                </div>
+
+                <!-- 角色面板 -->
+                <div class="app-panel" id="panel-characters">
+                    <div class="char-grid" id="char-grid"></div>
+                </div>
+
+                <!-- 百科面板 -->
+                <div class="app-panel" id="panel-wiki">
+                    <div class="wiki-tabs">
+                        <button class="wiki-tab active" data-wiki-tab="world">世界地点</button>
+                        <button class="wiki-tab" data-wiki-tab="magic">魔法属性</button>
+                        <button class="wiki-tab" data-wiki-tab="terms">术语辞典</button>
+                        <button class="wiki-tab" data-wiki-tab="items">关键物品</button>
+                    </div>
+                    <div class="wiki-content">
+                        <div id="panel-wiki-world"></div>
+                        <div id="panel-wiki-magic"></div>
+                        <div id="panel-wiki-terms"></div>
+                        <div id="panel-wiki-items"></div>
+                    </div>
+                </div>
+            </main>
         </div>
-        <div class="vn-history-list" id="vn-history-list"></div>
     </div>
 
     <script>
@@ -1180,53 +1254,40 @@
         // ================================================================
         const State = {
             theme: 'dark',
-            isVnMode: false,
             parsedData: null,
             metaData: null,
-            vnQueue: [],
-            vnIndex: 0,
-            vnAutoTimer: null,
-            vnAutoOn: false,
-            vnSpeed: 3000,
-            vnTyping: false,
-            vnHistory: [],
             kvVisible: true,
             episodes: [],
             currentEpisode: 0,
             langMode: 'both',
-            vnLangMode: 'both',
             // 世界观数据缓存
             worldData: null,
             termData: null,
             magicData: null,
             charData: [],
             // 章节系统
-            chapters: [],           // 可用章节列表
-            currentChapterId: 'EP00' // 当前章节ID
+            chapters: [],
+            currentChapterId: 'EP00'
         };
 
         // ================================================================
         // CN_SUPPLEMENT 中文补充映射
         // ================================================================
         const CN_SUPPLEMENT = {
-            // 世界地点
             '帝都·星京': '帝都·星京是故事发生的舞台，一座融合了魔法与科技的巨大都市。',
             '神代家': '主人公神代零与义妹小雪共同生活的家宅，位于帝都近郊的安静街区。原为下级贵族邸宅，现已略显古旧。',
             '星導学園': '主角们就读的学园，以优秀的魔法教育闻名全国。拥有中央大讲堂、圆形竞技场、魔法植物园等设施。',
             '星导学园': '主角们就读的学园，以优秀的魔法教育闻名全国。拥有中央大讲堂、圆形竞技场、魔法植物园等设施。',
             '魔力鉄道·中央線': '连接帝都各区域的魔力驱动铁路系统，市民日常通勤的主要交通工具。高架线穿行于城市上空。',
             '魔力铁道·中央线': '连接帝都各区域的魔力驱动铁路系统，市民日常通勤的主要交通工具。高架线穿行于城市上空。',
-            // 物品
             '魔晶灯': '利用压缩魔力粒子发光的高效照明器具，广泛用于家庭和街道照明。日间吸收自然魔力，夜间释放淡蓝色光芒。',
             '朱音の護符': '朱音赠予零的神秘护身符，其母·樱子的遗物。红色布料上绣有天宫家的炎之纹章，据说拥有某种守护力量。',
             '朱音的护身符': '朱音赠予零的神秘护身符，其母·樱子的遗物。红色布料上绣有天宫家的炎之纹章，据说拥有某种守护力量。',
             '懐中時計': '零已故父亲健一郎留下的遗物。古旧的银质怀表，表盖内侧嵌有母亲的小照片。零时刻随身携带。',
             '怀表': '零已故父亲健一郎留下的遗物。古旧的银质怀表，表盖内侧嵌有母亲的小照片。零时刻随身携带。',
-            // 关键场景
             '黄昏的樱花后庭': '零首次与端末对峙的隐秘场所。位于学园后方的樱树林尽头。夕阳染红的古老樱花树下，命运开始转动。',
             '早晨的神代家·厨房': '小雪准备早餐的神代家厨房。晨光透过障子照入，出汁的香气弥漫在空气中。',
             '朱音递上护身符': '黄昏的樱花后庭。朱音将母亲遗物护身符递给零的名场面。夕阳逆光勾勒出两人轮廓，含蓄而深情。',
-            // 术语
             'Mana Particle': '魔力粒子——构成世界一切魔法现象的最基本单位，充斥于大气之中。具有波粒二象性，其波动频率决定了魔法属性。',
             'マナ粒子': '魔力粒子——构成世界一切魔法现象的最基本单位，充斥于大气之中。具有波粒二象性，其波动频率决定了魔法属性。',
             'F級': 'F级——魔力等级最低级别，魔力粒子亲和度极低，几乎无法使用任何魔法。人口约3%，社会上被称为"魔法障碍"。',
@@ -1254,14 +1315,12 @@
             'Seidou Gakuen': '帝国最古老、最高峰的魔法学院。高等部入学率全帝国第一。不论贵族或平民，优秀人才皆汇聚于此。',
             '魔力粒子不親和体質': '魔力粒子不亲和体质——先天性体質，导致魔力粒子无法在体内稳定存在。神代零即为此体质患者。原因不明，无治疗方法。',
             'Mana Particle Incompatibility': '魔力粒子不亲和体质——先天性体質，导致魔力粒子无法在体内稳定存在。神代零即为此体质患者。原因不明，无治疗方法。',
-            // 魔法属性
             '地（Earth）': '地属性——最稳定的元素属性。擅长炼金术、物质强化、建筑构造与结晶化。代表色为琥珀色。',
             '水（Water）': '水属性——兼具治疗与防御能力的均衡属性。擅长流体控制、形态变换与净化。代表色为青色。',
-            '风（Wind）': '风属性——速度最快的元素属性。擅长通信、加速、飞行与探测。代表色为翠绿色。',
+            '風（Wind）': '风属性——速度最快的元素属性。擅长通信、加速、飞行与探测。代表色为翠绿色。',
             '火（Fire）': '火属性——攻击力最强的元素属性。适合正面战斗、能量释放、破坏与锻造。代表色为绯红色。',
             '光（Light）': '光属性——神圣而强大的特殊属性。擅长结界、净化、幻术与强化。代表色为金色。',
             '暗（Dark）': '暗属性——稀有且强大的特殊属性。擅长干涉、吸收、反魔法与封印。代表色为深紫色。',
-            // 能源
             '魔晶': '固形魔力结晶。家庭照明与街灯的主要能源来源。较为常见，广泛普及。',
             '魔鉱': '含有魔力的矿物资源。工业生产与大型机械的核心能源原料。较为稀有。',
             '魔油': '液态魔力浓缩物。交通工具与引擎的高级燃料。稀有度较高。'
@@ -1284,7 +1343,7 @@
         }
 
         // ================================================================
-        // KV 粒子系统（≤8粒子）
+        // KV 粒子系统
         // ================================================================
         const KVParticles = (function() {
             let canvas, ctx, particles, rafId;
@@ -1512,12 +1571,10 @@
                             newWrapper.classList.add('ep-fade-in');
                         }
                         bindEpisodeNavEvents();
-                        updateFloatingBarProgress();
                     }, 200);
                 } else {
                     c.innerHTML = fullHtml;
                     bindEpisodeNavEvents();
-                    updateFloatingBarProgress();
                 }
             }
 
@@ -1611,7 +1668,6 @@
                 State.currentEpisode = index;
                 Renderer.renderEpisode(index, State.langMode);
                 updateEpisodeSelect();
-                updateSpatialEpisodeList();
             }
 
             function updateEpisodeSelect() {
@@ -1629,27 +1685,7 @@
                 if (nextBtn) nextBtn.disabled = State.currentEpisode >= State.episodes.length - 1;
             }
 
-            function updateSpatialEpisodeList() {
-                var container = document.getElementById('spatial-episode-list');
-                if (!container) return;
-
-                container.innerHTML = '';
-                State.episodes.forEach(function(ep, idx) {
-                    var item = document.createElement('div');
-                    item.className = 'spatial-item' + (idx === State.currentEpisode ? ' active' : '');
-                    item.innerHTML = '<span class="item-num">' + String(idx + 1).padStart(2, '0') + '</span>' +
-                        '<span>' + escapeHTML(ep.title) + '</span>' +
-                        '<span class="item-arrow">›</span>';
-                    item.dataset.index = idx;
-                    item.onclick = function() {
-                        goToEpisode(idx);
-                        SpatialController.close();
-                    };
-                    container.appendChild(item);
-                });
-            }
-
-            return { navigateEpisode, goToEpisode, updateEpisodeSelect, updateSpatialEpisodeList, initSidebarNav: updateSpatialEpisodeList };
+            return { navigateEpisode, goToEpisode, updateEpisodeSelect };
         })();
 
         function navigateEpisode(dir) { EpisodeController.navigateEpisode(dir); }
@@ -1662,11 +1698,8 @@
             State.langMode = mode;
             document.documentElement.setAttribute('data-lang-mode', mode);
 
-            document.querySelectorAll('.fb-lang-btn').forEach(function(btn) {
+            document.querySelectorAll('.toolbar-lang-btn').forEach(function(btn) {
                 btn.classList.toggle('active', btn.dataset.lang === mode);
-            });
-            document.querySelectorAll('.st-btn[data-slang]').forEach(function(btn) {
-                btn.classList.toggle('active', btn.dataset.slang === mode);
             });
 
             if (State.episodes.length > 0) {
@@ -1676,53 +1709,9 @@
         }
 
         // ================================================================
-        // 浮动底栏事件绑定 & 进度更新
-        // ================================================================
-        function bindFloatingBarEvents() {
-            // 导航按钮 → 打开空间面板
-            var navBtn = document.getElementById('fb-nav-btn');
-            if (navBtn) navBtn.addEventListener('click', SpatialController.toggle);
-
-            // 百科按钮 → 打开空间面板
-            var wikiBtn = document.getElementById('fb-wiki-btn');
-            if (wikiBtn) wikiBtn.addEventListener('click', SpatialController.toggle);
-
-            // 语言切换
-            document.querySelectorAll('.fb-lang-btn').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    setLangMode(this.dataset.lang);
-                });
-            });
-
-            // VN模式按钮
-            var vnBtn = document.getElementById('fb-vn-btn');
-            if (vnBtn) {
-                vnBtn.addEventListener('click', function() {
-                    if (State.parsedData) {
-                        VNController.activate(State.parsedData);
-                    }
-                    VNController.enterMode();
-                });
-            }
-
-            // 主题切换
-            var themeBtn = document.getElementById('fb-theme-btn');
-            if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
-        }
-
-        function updateFloatingBarProgress() {
-            var fill = document.getElementById('fb-progress-fill');
-            if (fill && State.episodes.length > 0) {
-                var pct = ((State.currentEpisode + 1) / State.episodes.length) * 100;
-                fill.style.width = pct + '%';
-            }
-        }
-
-        // ================================================================
         // Chapter Controller — 章节切换控制器
         // ================================================================
         var ChapterController = (function() {
-            // 章节注册表（静态定义）
             var CHAPTER_REGISTRY = [
                 {
                     id: 'EP00',
@@ -1747,7 +1736,6 @@
                     badgeClass: 'ch-badge-demo',
                     badgeText: '📖 试读'
                 }
-                // 未来章节在此添加，status: 'locked'
             ];
 
             function initRegistry() {
@@ -1767,24 +1755,21 @@
 
                     var badgeHtml = '';
                     if (ch.badgeText) {
-                        badgeHtml = '<span class="ch-badge ' + ch.badgeClass + '">' + ch.badgeText + '</span>';
+                        badgeHtml = '<span class="sc-badge ' + ch.badgeClass + '">' + ch.badgeText + '</span>';
                     }
 
-                    html += '<div class="chapter-item' + activeClass + lockedClass + '" data-ch-id="' + ch.id + '" data-status="' + ch.status + '">' +
-                        '<span class="ch-num">' + ch.num + '</span>' +
-                        '<span class="ch-title">' + escapeHTML(ch.title) + '</span>' +
+                    html += '<div class="sidebar-chapter' + activeClass + lockedClass + '" data-ch-id="' + ch.id + '" data-status="' + ch.status + '">' +
+                        '<span class="sc-num">' + ch.num + '</span>' +
+                        '<span class="sc-title">' + escapeHTML(ch.title) + '</span>' +
                         badgeHtml +
                         '</div>';
                 });
                 container.innerHTML = html;
 
-                // 绑定点击事件
-                container.querySelectorAll('.chapter-item:not(.locked)').forEach(function(item) {
+                container.querySelectorAll('.sidebar-chapter:not(.locked)').forEach(function(item) {
                     item.addEventListener('click', function() {
                         var chId = this.dataset.chId;
                         switchToChapter(chId);
-                        // 关闭空间面板
-                        SpatialController.close();
                     });
                 });
             }
@@ -1798,7 +1783,6 @@
                 }
                 if (!targetCh || targetCh.status === 'locked') return;
 
-                // 显示加载状态
                 var stage = document.getElementById('reading-stage');
                 if (stage) {
                     stage.innerHTML =
@@ -1809,7 +1793,6 @@
                         '</div></div>';
                 }
 
-                // 加载新章节
                 loadChapter(targetCh);
             }
 
@@ -1838,26 +1821,17 @@
                     State.episodes = MDParser.parseEpisodes(State.parsedData);
                     State.currentEpisode = 0;
 
-                    // 渲染第一集
                     if (State.episodes.length > 0) {
                         Renderer.renderEpisode(0, State.langMode);
                     } else {
                         Renderer.render(State.parsedData, 'reading-stage');
                     }
 
-                    // 如果是demo章节，在标题后插入demo标记
                     if (ch.status === 'demo') {
                         injectDemoBanner(ch.demoNote || '试读版');
                     }
 
-                    // 更新章节选择器高亮
                     updateActiveChapter();
-
-                    // 更新空间面板的分集导航
-                    EpisodeController.initSidebarNav();
-                    updateFloatingBarProgress();
-
-                    // 滚动到顶部
                     window.scrollTo({ top: 0, behavior: 'smooth' });
 
                 }).catch(function(err) {
@@ -1877,12 +1851,11 @@
                 var banner = document.createElement('div');
                 banner.className = 'demo-banner';
                 banner.innerHTML = '✨ <strong>' + escapeHTML(note) + '</strong> ✨';
-                // 插入到内容区最前面（导航栏之后）
                 wrapper.insertBefore(banner, wrapper.firstChild);
             }
 
             function updateActiveChapter() {
-                document.querySelectorAll('.chapter-item').forEach(function(item) {
+                document.querySelectorAll('.sidebar-chapter').forEach(function(item) {
                     item.classList.toggle('active', item.dataset.chId === State.currentChapterId);
                 });
             }
@@ -1902,296 +1875,9 @@
 
             return { initRegistry, renderChapterList, switchToChapter, updateActiveChapter, getCurrentChapterInfo };
         })();
-        const SpatialController = (function() {
-            var overlay = document.getElementById('spatial-overlay');
-            var panel = document.getElementById('spatial-panel');
-            var preview = document.getElementById('spatial-preview');
-            var isOpen = false;
-
-            function open() {
-                isOpen = true;
-                overlay.classList.add('active');
-                panel.classList.add('open');
-                document.body.style.overflow = 'hidden';
-                // 内容已在 init 时预渲染，无需每次 open 重新渲染
-            }
-
-            function close() {
-                isOpen = false;
-                overlay.classList.remove('active');
-                panel.classList.remove('open');
-                document.body.style.overflow = '';
-            }
-
-            function toggle() {
-                if (isOpen) close(); else open();
-            }
-
-            function renderNavigation() {
-                ChapterController.renderChapterList();
-                renderEpisodeList();
-                renderWorldList();
-                renderMagicList();
-                renderTermList();
-                renderCharList();
-                bindCollapsibles();
-                bindSettingsToggles();
-            }
-
-            function renderEpisodeList() {
-                var container = document.getElementById('spatial-episode-list');
-                if (!container || !State.episodes.length) return;
-                container.innerHTML = '';
-                State.episodes.forEach(function(ep, idx) {
-                    var item = document.createElement('div');
-                    item.className = 'spatial-item' + (idx === State.currentEpisode ? ' active' : '');
-                    item.innerHTML = '<span class="item-num">' + String(idx + 1).padStart(2, '0') + '</span>' +
-                        '<span>' + escapeHTML(ep.title) + '</span>' +
-                        '<span class="item-arrow">›</span>';
-                    item.dataset.index = idx;
-                    item.onclick = function() {
-                        goToEpisode(idx);
-                        close();
-                    };
-                    container.appendChild(item);
-                });
-            }
-
-            function renderWorldList() {
-                var container = document.getElementById('spatial-world-list');
-                if (!container || !State.worldData) return;
-                container.innerHTML = '';
-
-                var locs = State.worldData.locations || [];
-                locs.forEach(function(loc) {
-                    var name = loc.name_cn || loc.name_jp || '';
-                    var rawDesc = loc.description || '';
-                    var desc = supplementCN(name, rawDesc);
-                    addItem(container, name, desc, 'world');
-                });
-
-                var items = State.worldData.items || [];
-                items.forEach(function(itm) {
-                    var name = itm.name_cn || itm.name_jp || '';
-                    var rawDesc = itm.description || '';
-                    var desc = supplementCN(name, rawDesc);
-                    addItem(container, name, desc, 'world');
-                });
-
-                var scenes = State.worldData.key_scenes || [];
-                scenes.forEach(function(scene) {
-                    var name = scene.name_cn || scene.name_jp || '';
-                    var rawDesc = scene.description || '';
-                    var desc = supplementCN(name, rawDesc);
-                    addItem(container, name, desc, 'world');
-                });
-            }
-
-            function renderMagicList() {
-                var container = document.getElementById('spatial-magic-list');
-                if (!container || !State.magicData) return;
-                container.innerHTML = '';
-
-                var affinities = State.magicData.affinities || [];
-                affinities.forEach(function(aff) {
-                    var name = aff.name_cn || aff.name_jp || '';
-                    var uses = aff.typical_uses ? aff.typical_uses.join(' / ') : '';
-                    var cnUses = supplementCN(name, '');
-                    var desc = cnUses || (name + ' — ' + uses);
-                    addItem(container, name, desc, 'magic');
-                });
-
-                var ranks = State.magicData.ranks || [];
-                ranks.forEach(function(rk) {
-                    var name = rk.rank || '';
-                    var desc = rk.description_cn || rk.description_jp || '';
-                    addItem(container, name, desc, 'magic');
-                });
-
-                var sources = State.magicData.energy_sources || [];
-                sources.forEach(function(es) {
-                    var name = es.name_cn || es.name_jp || '';
-                    var rawDesc = es.usage || '';
-                    var desc = supplementCN(name, rawDesc);
-                    addItem(container, name, desc, 'magic');
-                });
-            }
-
-            function renderTermList() {
-                var container = document.getElementById('spatial-term-list');
-                if (!container || !State.termData) return;
-                container.innerHTML = '';
-
-                var terms = State.termData.terms || [];
-                terms.forEach(function(term) {
-                    var name = term.term_cn || term.term_jp || term.term_en || '';
-                    var rawDef = term.definition || '';
-                    var def = supplementCN(name, rawDef);
-                    addItem(container, name, def, 'term', term.category || '');
-                });
-            }
-
-            function renderCharList() {
-                var container = document.getElementById('spatial-char-list');
-                if (!container || !State.charData || !State.charData.length) return;
-                container.innerHTML = '';
-
-                State.charData.forEach(function(ch, idx) {
-                    var name = ch.name_jp || ch.name || '未知';
-                    var isActive = ch.status === 'active';
-                    var item = document.createElement('div');
-                    item.className = 'spatial-item';
-                    item.innerHTML = '<span class="item-num">' + (isActive ? '●' : '🔒') + '</span>' +
-                        '<span>' + escapeHTML(name) + '</span>' +
-                        '<span class="item-arrow">›</span>';
-                    item.onclick = function() {
-                        showPreview('character', ch);
-                        setActiveItem(this, container);
-                    };
-                    container.appendChild(item);
-                });
-            }
-
-            function addItem(container, name, desc, type, category) {
-                var item = document.createElement('div');
-                item.className = 'spatial-sub-item';
-                item.textContent = name;
-                item.dataset.name = name;
-                item.dataset.desc = desc || '';
-                item.dataset.type = type || '';
-                item.dataset.category = category || '';
-                item.onclick = function() {
-                    showPreview(type || 'term', {
-                        name: name,
-                        desc: desc || '',
-                        category: category || ''
-                    });
-                };
-                container.appendChild(item);
-            }
-
-            function setActiveItem(el, container) {
-                container.querySelectorAll('.spatial-item').forEach(function(i) { i.classList.remove('active'); });
-                el.classList.add('active');
-            }
-
-            function showPreview(type, data) {
-                if (type === 'character') {
-                    renderCharPreview(data);
-                } else if (type === 'term' || type === 'world' || type === 'magic') {
-                    renderTermPreview(data);
-                }
-            }
-
-            function renderCharPreview(ch) {
-                var color = CharRenderer.getColor(ch.name_jp || ch.name || '');
-                var profile = ch.profile || {};
-                var personality = ch.personality || {};
-                var tags = [];
-                if (profile.age) tags.push(profile.age + '岁');
-                if (profile.height_cm) tags.push(profile.height_cm + 'cm');
-                if (profile.magic_rank) tags.push(profile.magic_rank);
-                if (profile.occupation) tags.push(profile.occupation);
-
-                var traitText = personality.traits && personality.traits.length > 0 ? personality.traits[0] : '';
-                var statusBadge = ch.status === '未登場'
-                    ? '<span style="font-size:11px;color:#94a3b8;">🔒 未登場</span>'
-                    : '<span style="font-size:11px;color:#10b981;">● 已登场</span>';
-
-                preview.innerHTML =
-                    '<div class="char-preview-card">' +
-                    '<div class="char-preview-avatar" style="--char-preview-color:' + color + '">' +
-                    (ch.status === '未登場' ? '❓' : '👤') + '</div>' +
-                    '<div class="char-preview-name-jp" style="color:' + color + '">' + (ch.name_jp || '') + '</div>' +
-                    '<div class="char-preview-name-cn">' + (ch.name_cn || '') + ' ' + statusBadge + '</div>' +
-                    '<div class="char-preview-role">' + escapeHTML(ch.archetype || ch.role || '') + '</div>' +
-                    '<div class="char-preview-tags">' + tags.map(function(t) { return '<span class="char-preview-tag">' + t + '</span>'; }).join('') + '</div>' +
-                    '<div class="char-preview-desc">' + escapeHTML((ch.description || personality.description || '').substring(0, 250)) + '</div>' +
-                    (traitText ? '<div class="char-preview-trait">「' + escapeHTML(traitText) + '」</div>' : '') +
-                    '</div>';
-            }
-
-            function renderTermPreview(data) {
-                preview.innerHTML =
-                    '<div class="term-preview-card">' +
-                    (data.category ? '<div class="term-preview-category">' + escapeHTML(data.category) + '</div>' : '') +
-                    '<div class="term-preview-title">' + escapeHTML(data.name) + '</div>' +
-                    '<div class="term-preview-def">' + escapeHTML(data.desc || data.definition || '') + '</div>' +
-                    '</div>';
-            }
-
-            function bindCollapsibles() {
-                var headers = document.querySelectorAll('.spatial-collapsible-header');
-                headers.forEach(function(h) {
-                    h.addEventListener('click', function() {
-                        var parent = this.parentElement;
-                        var subItems = parent.querySelector('.spatial-sub-items');
-                        if (subItems) {
-                            parent.classList.toggle('open');
-                        }
-                    });
-                });
-                // 默认展开第一个折叠项
-                var firstCollapse = document.querySelector('.spatial-collapsible');
-                if (firstCollapse) firstCollapse.classList.add('open');
-            }
-
-            function bindSettingsToggles() {
-                // 语言设置
-                document.querySelectorAll('.st-btn[data-slang]').forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        document.querySelectorAll('.st-btn[data-slang]').forEach(function(b) { b.classList.remove('active'); });
-                        this.classList.add('active');
-                        setLangMode(this.dataset.slang);
-                    });
-                });
-
-                // 主题设置
-                document.querySelectorAll('.st-btn[data-stheme]').forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        document.querySelectorAll('.st-btn[data-stheme]').forEach(function(b) { b.classList.remove('active'); });
-                        this.classList.add('active');
-                        setTheme(this.dataset.stheme);
-                    });
-                });
-
-                // VN模式设置
-                var ficBtn = document.getElementById('spatial-fic-btn');
-                var vnBtn = document.getElementById('spatial-vn-btn');
-                if (ficBtn) {
-                    ficBtn.addEventListener('click', function() {
-                        VNController.exitMode();
-                        close();
-                    });
-                }
-                if (vnBtn) {
-                    vnBtn.addEventListener('click', function() {
-                        if (State.parsedData) VNController.activate(State.parsedData);
-                        VNController.enterMode();
-                        close();
-                    });
-                }
-            }
-
-            // ESC关闭
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && isOpen) close();
-            });
-
-            // overlay点击关闭
-            if (overlay) {
-                overlay.addEventListener('click', close);
-            }
-
-            // close按钮
-            var closeBtn = document.getElementById('spatial-close');
-            if (closeBtn) closeBtn.addEventListener('click', close);
-
-            return { open, close, toggle, renderNavigation, showPreview };
-        })();
 
         // ================================================================
-        // 角色渲染器（用于空间面板的角色颜色映射）
+        // 角色渲染器
         // ================================================================
         const CharRenderer = (function() {
             var COLOR_MAP = {
@@ -2228,251 +1914,59 @@
         }
 
         // ================================================================
-        // 视觉小说控制器（保留完整功能）
+        // Panel Controller — 面板切换控制器
         // ================================================================
-        const VNController = (function() {
-            var overlay = document.getElementById('vn-overlay');
-            var nameTag = document.getElementById('vn-name-tag');
-            var dialogText = document.getElementById('vn-dialog-text');
-            var dialogBox = document.getElementById('vn-dialog-box');
-            var advanceBtn = document.getElementById('vn-advance-btn');
-            var counterEl = document.getElementById('vn-counter');
-            var historySidebar = document.getElementById('vn-history-sidebar');
-            var historyList = document.getElementById('vn-history-list');
+        var PanelController = (function() {
+            var ACTIVE_PANEL_KEY = 'tp-active-panel';
 
-            var LANG_LABELS = { both: '🌐 双语', jp: '🇯🇵 日本語', cn: '🇨🇳 中文' };
-
-            function filterText(text, mode) {
-                if (mode === 'jp') {
-                    return text.replace(/（[^）]+）/g, '').trim();
-                }
-                return text;
-            }
-
-            function extractDialogs(parsedData) {
-                var queue = [];
-                for (var idx = 0; idx < parsedData.length; idx++) {
-                    var item = parsedData[idx];
-                    if (item.type === 'translation') continue;
-                    if (item.type !== 'paragraph') continue;
-
-                    var text = item.content;
-                    var cnText = '';
-                    if (idx + 1 < parsedData.length && parsedData[idx + 1].type === 'translation') {
-                        cnText = parsedData[idx + 1].content;
-                    }
-
-                    var dm = text.match(/^([^「]*?)「(.+)」/);
-                    if (dm) {
-                        queue.push({
-                            speaker: dm[1] ? dm[1].trim() : '',
-                            text: dm[2],
-                            cnText: cnText
-                        });
-                    } else {
-                        var short = text.length > 120 ? text.substring(0, 120) + '…' : text;
-                        queue.push({ speaker: '', text: short, cnText: cnText });
-                    }
-                }
-                return queue;
-            }
-
-            function showCurrent() {
-                if (State.vnIndex >= State.vnQueue.length) {
-                    State.vnIndex = 0;
-                }
-                var d = State.vnQueue[State.vnIndex];
-                if (!d) return;
-
-                if (d.speaker) {
-                    nameTag.textContent = d.speaker;
-                    nameTag.style.display = 'inline-block';
-                } else {
-                    nameTag.style.display = 'none';
-                }
-
-                updateCounter();
-
-                var rawText = d.text;
-                if (State.vnLangMode === 'cn' && d.cnText) {
-                    rawText = d.cnText;
-                }
-                var displayText = filterText(rawText, State.vnLangMode);
-                typewriter(displayText);
-
-                State.vnHistory.push({ speaker: d.speaker || '旁白', text: rawText });
-                if (State.vnHistory.length > 100) State.vnHistory.shift();
-            }
-
-            function typewriter(text) {
-                State.vnTyping = true;
-                dialogText.innerHTML = '';
-                var i = 0;
-                var speed = 22;
-
-                function tick() {
-                    if (!State.isVnMode) { State.vnTyping = false; return; }
-                    if (i < text.length) {
-                        dialogText.innerHTML += text.charAt(i);
-                        i++;
-                        setTimeout(tick, speed);
-                    } else {
-                        State.vnTyping = false;
-                    }
-                }
-                tick();
-            }
-
-            function instantShow(text) {
-                State.vnTyping = false;
-                dialogText.innerHTML = text;
-            }
-
-            function advance() {
-                if (State.vnTyping) {
-                    var dd = State.vnQueue[State.vnIndex];
-                    if (dd) {
-                        var raw = (State.vnLangMode === 'cn' && dd.cnText) ? dd.cnText : dd.text;
-                        instantShow(filterText(raw, State.vnLangMode));
-                    }
-                    return;
-                }
-                State.vnIndex++;
-                showCurrent();
-            }
-
-            function skip() {
-                if (State.vnTyping) {
-                    var ds = State.vnQueue[State.vnIndex];
-                    if (ds) {
-                        var raws = (State.vnLangMode === 'cn' && ds.cnText) ? ds.cnText : ds.text;
-                        instantShow(filterText(raws, State.vnLangMode));
-                    }
-                }
-                State.vnIndex++;
-                if (State.vnIndex >= State.vnQueue.length) State.vnIndex = 0;
-                showCurrent();
-            }
-
-            function reset() {
-                stopAuto();
-                State.vnIndex = 0;
-                State.vnHistory = [];
-                showCurrent();
-                renderHistory();
-            }
-
-            function toggleAuto() {
-                if (State.vnAutoOn) {
-                    stopAuto();
-                } else {
-                    startAuto();
-                }
-            }
-
-            function startAuto() {
-                State.vnAutoOn = true;
-                var btn = document.getElementById('vn-btn-auto');
-                if (btn) btn.classList.add('active-state');
-                function tick() {
-                    if (!State.vnAutoOn || !State.isVnMode) return;
-                    advance();
-                    State.vnAutoTimer = setTimeout(tick, State.vnSpeed);
-                }
-                tick();
-            }
-
-            function stopAuto() {
-                State.vnAutoOn = false;
-                if (State.vnAutoTimer) { clearTimeout(State.vnAutoTimer); State.vnAutoTimer = null; }
-                var btn = document.getElementById('vn-btn-auto');
-                if (btn) btn.classList.remove('active-state');
-            }
-
-            function toggleHistory() {
-                historySidebar.classList.toggle('open');
-                renderHistory();
-            }
-
-            function closeHistory() {
-                historySidebar.classList.remove('open');
-            }
-
-            function renderHistory() {
-                if (!historyList) return;
-                var h = '';
-                for (var i = State.vnHistory.length - 1; i >= Math.max(0, State.vnHistory.length - 50); i--) {
-                    var item = State.vnHistory[i];
-                    h += '<div class="vn-history-item"><div class="vn-history-speaker">' + item.speaker + '</div>' + item.text + '</div>';
-                }
-                historyList.innerHTML = h || '<p style="padding:20px;text-align:center;color:var(--text-secondary);font-size:12px;">暂无历史记录</p>';
-            }
-
-            function updateCounter() {
-                if (counterEl) {
-                    counterEl.textContent = (State.vnIndex + 1) + ' / ' + State.vnQueue.length;
-                }
-            }
-
-            function cycleVNLang() {
-                var modes = ['both', 'jp', 'cn'];
-                var idx = (modes.indexOf(State.vnLangMode) + 1) % modes.length;
-                State.vnLangMode = modes[idx];
-                var btn = document.getElementById('vn-lang-toggle');
-                if (btn) btn.textContent = LANG_LABELS[State.vnLangMode];
-                showCurrent();
-            }
-
-            function activate(parsedData) {
-                State.vnQueue = extractDialogs(parsedData);
-                State.vnIndex = 0;
-                State.vnHistory = [];
-                State.vnLangMode = 'both';
-                var vnLangBtn = document.getElementById('vn-lang-toggle');
-                if (vnLangBtn) vnLangBtn.textContent = LANG_LABELS['both'];
-                updateCounter();
-                showCurrent();
-            }
-
-            function enterMode() {
-                State.isVnMode = true;
-                overlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-
-            function exitMode() {
-                State.isVnMode = false;
-                State.vnTyping = false;
-                stopAuto();
-                overlay.classList.remove('active');
-                closeHistory();
-                document.body.style.overflow = '';
-            }
-
-            function bindEvents() {
-                document.getElementById('vn-btn-back').addEventListener('click', exitMode);
-                document.getElementById('vn-btn-history').addEventListener('click', toggleHistory);
-                document.getElementById('vn-btn-skip').addEventListener('click', skip);
-                document.getElementById('vn-btn-auto').addEventListener('click', toggleAuto);
-                document.getElementById('vn-btn-reset').addEventListener('click', reset);
-                document.getElementById('vn-history-close').addEventListener('click', closeHistory);
-
-                var vnLangBtn = document.getElementById('vn-lang-toggle');
-                if (vnLangBtn) vnLangBtn.addEventListener('click', cycleVNLang);
-
-                dialogBox.addEventListener('click', advance);
-                advanceBtn.addEventListener('click', function(e) { e.stopPropagation(); advance(); });
-
-                document.addEventListener('keydown', function(e) {
-                    if (!State.isVnMode) return;
-                    if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        advance();
-                    }
+            function switchTo(panelId) {
+                document.querySelectorAll('.sidebar-item').forEach(function(el) {
+                    el.classList.toggle('active', el.dataset.panel === panelId);
                 });
+
+                document.querySelectorAll('.app-panel').forEach(function(el) {
+                    el.classList.toggle('active', el.id === 'panel-' + panelId);
+                });
+
+                var hero = document.getElementById('app-hero');
+                var windowBody = document.querySelector('.window-body');
+                if (hero && windowBody) {
+                    if (panelId === 'reading' && State.kvVisible) {
+                        hero.style.display = '';
+                        windowBody.style.display = '';
+                    } else {
+                        hero.style.display = 'none';
+                        windowBody.style.display = 'flex';
+                    }
+                }
+
+                localStorage.setItem(ACTIVE_PANEL_KEY, panelId);
             }
 
-            return { activate, enterMode, exitMode, bindEvents, cycleVNLang };
+            function init() {
+                document.querySelectorAll('.sidebar-item').forEach(function(el) {
+                    el.addEventListener('click', function() {
+                        var panel = this.dataset.panel;
+                        if (panel) switchTo(panel);
+
+                        var chId = this.dataset.chId;
+                        if (chId && !this.classList.contains('locked')) {
+                            ChapterController.switchToChapter(chId);
+                            switchTo('reading');
+                        }
+                    });
+                });
+
+                var heroBtn = document.getElementById('app-hero-btn');
+                if (heroBtn) {
+                    heroBtn.addEventListener('click', function() {
+                        State.kvVisible = false;
+                        switchTo('reading');
+                    });
+                }
+            }
+
+            return { switchTo, init, ACTIVE_PANEL_KEY };
         })();
 
         // ================================================================
@@ -2481,24 +1975,17 @@
         function setTheme(theme) {
             State.theme = theme;
             var root = document.documentElement;
-            var kvBtn = document.getElementById('kv-theme-btn');
-            var fbThemeBtn = document.getElementById('fb-theme-btn');
+            var toolbarBtn = document.getElementById('toolbar-theme-btn');
+            var sidebarBtn = document.getElementById('sidebar-theme-btn');
 
             if (theme === 'light') {
                 root.setAttribute('data-theme', 'light');
-                if (kvBtn) kvBtn.textContent = '☀️';
-                if (fbThemeBtn) fbThemeBtn.textContent = '☀️';
-                // 同步空间面板中的主题按钮状态
-                document.querySelectorAll('.st-btn[data-stheme]').forEach(function(b) {
-                    b.classList.toggle('active', b.dataset.stheme === 'light');
-                });
+                if (toolbarBtn) toolbarBtn.textContent = '☀️';
+                if (sidebarBtn) sidebarBtn.innerHTML = '<span>☀️</span>';
             } else {
                 root.removeAttribute('data-theme');
-                if (kvBtn) kvBtn.textContent = '🌙';
-                if (fbThemeBtn) fbThemeBtn.textContent = '🌙';
-                document.querySelectorAll('.st-btn[data-stheme]').forEach(function(b) {
-                    b.classList.toggle('active', b.dataset.stheme === 'dark');
-                });
+                if (toolbarBtn) toolbarBtn.textContent = '🌙';
+                if (sidebarBtn) sidebarBtn.innerHTML = '<span>🌙</span>';
             }
         }
 
@@ -2507,37 +1994,10 @@
         }
 
         // ================================================================
-        // KV 区交互
-        // ================================================================
-        function setupKV() {
-            var startBtn = document.getElementById('kv-start-btn');
-            var themeBtn = document.getElementById('kv-theme-btn');
-
-            if (startBtn) {
-                startBtn.addEventListener('click', function() {
-                    var stage = document.getElementById('reading-stage');
-                    if (stage) {
-                        stage.scrollIntoView({ behavior: 'smooth' });
-                    }
-                    State.kvVisible = false;
-                    var kvSec = document.getElementById('kv-section');
-                    if (kvSec) {
-                        kvSec.classList.add('collapsed');
-                    }
-                });
-            }
-
-            if (themeBtn) {
-                themeBtn.addEventListener('click', toggleTheme);
-            }
-        }
-
-        // ================================================================
         // 键盘快捷键
         // ================================================================
         function bindKeyboardShortcuts() {
             document.addEventListener('keydown', function(e) {
-                if (State.isVnMode) return;
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
 
                 if (e.key === 'ArrowLeft') {
@@ -2551,14 +2011,90 @@
         }
 
         // ================================================================
+        // 渲染百科面板
+        // ================================================================
+        function renderWikiPanel() {
+            renderWikiSection('panel-wiki-world', State.worldData, 'locations', '世界地点');
+            renderWikiSection('panel-wiki-magic', State.magicData, 'affinities', '魔法属性');
+            renderWikiSection('panel-wiki-terms', State.termData, 'terms', '术语辞典');
+            renderWikiSection('panel-wiki-items', State.worldData, 'items', '关键物品');
+        }
+
+        function renderWikiSection(containerId, data, key, title) {
+            var container = document.getElementById(containerId);
+            if (!container || !data) return;
+            var items = data[key] || [];
+            var html = '<div class="wiki-section-title">' + title + '</div>';
+            html += '<div class="wiki-grid">';
+            items.forEach(function(item) {
+                var name = item.name_cn || item.name_jp || item.term_cn || item.term_jp || item.name || item.term_en || '';
+                var rawDesc = item.description || item.definition || item.typical_uses ? (item.typical_uses || []).join(' / ') : '';
+                var desc = supplementCN(name, rawDesc) || rawDesc;
+                html += '<div class="wiki-item" data-name="' + escapeHTML(name) + '" data-desc="' + escapeHTML(desc) + '">' +
+                    '<div class="wiki-item-name">' + escapeHTML(name) + '</div>' +
+                    '<div class="wiki-item-desc">' + escapeHTML(desc) + '</div></div>';
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // ================================================================
+        // 渲染角色面板
+        // ================================================================
+        function renderCharPanel() {
+            var container = document.getElementById('char-grid');
+            if (!container || !State.charData || !State.charData.length) return;
+            container.innerHTML = '';
+            State.charData.forEach(function(ch) {
+                var color = CharRenderer.getColor(ch.name_jp || ch.name || '');
+                var profile = ch.profile || {};
+                var tags = [];
+                if (profile.age) tags.push(profile.age + '岁');
+                if (profile.magic_rank) tags.push(profile.magic_rank);
+                if (profile.affinity) tags.push(profile.affinity);
+
+                var desc = (ch.description || '').substring(0, 150);
+
+                var html = '<div class="char-card' + (ch.status === '未登場' ? ' locked' : '') + '" style="border-top: 2px solid ' + color + '20;">' +
+                    '<div class="char-card-header">' +
+                    '<div class="char-card-avatar" style="border-color: ' + color + '20; color: ' + color + ';">' + (ch.status === '未登場' ? '❓' : '👤') + '</div>' +
+                    '<div class="char-card-info">' +
+                    '<div class="char-card-name" style="color: ' + color + ';">' + (ch.name_jp || '') + '</div>' +
+                    '<div class="char-card-role">' + escapeHTML(ch.archetype || ch.role || '') + ' · ' + (ch.name_cn || '') + '</div></div></div>' +
+                    '<div class="char-card-desc">' + escapeHTML(desc) + '</div>' +
+                    '<div class="char-card-tags">' + 
+                    tags.map(function(t) { return '<span class="char-card-tag">' + t + '</span>'; }).join('') +
+                    '</div></div>';
+                container.innerHTML += html;
+            });
+        }
+
+        // ================================================================
         // 初始化主流程
         // ================================================================
         async function init() {
             KVParticles.init();
-            setupKV();
 
-            // 初始化章节系统
             ChapterController.initRegistry();
+            PanelController.init();
+
+            document.querySelectorAll('.toolbar-lang-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.toolbar-lang-btn').forEach(function(b) { b.classList.remove('active'); });
+                    this.classList.add('active');
+                    setLangMode(this.dataset.lang);
+                });
+            });
+
+            var toolbarThemeBtn = document.getElementById('toolbar-theme-btn');
+            if (toolbarThemeBtn) {
+                toolbarThemeBtn.addEventListener('click', toggleTheme);
+            }
+
+            var sidebarThemeBtn = document.getElementById('sidebar-theme-btn');
+            if (sidebarThemeBtn) {
+                sidebarThemeBtn.addEventListener('click', toggleTheme);
+            }
 
             try {
                 var mdRes = await fetch('PROLOGUE/prologue.md');
@@ -2582,7 +2118,6 @@
                     Renderer.render(State.parsedData, 'reading-stage');
                 }
 
-                // 并行加载世界观数据
                 try {
                     var [worldRes, termRes, magicRes, charRes] = await Promise.all([
                         fetch('data/world.json'),
@@ -2597,18 +2132,14 @@
                     var charJson = await charRes.json();
                     State.charData = charJson.characters || [];
 
-                    // 渲染空间面板导航内容
-                    SpatialController.renderNavigation();
+                    renderWikiPanel();
+                    renderCharPanel();
                 } catch(e) {
                     console.warn('部分世界观数据加载失败:', e.message);
-                    SpatialController.renderNavigation();
                 }
 
-                // 绑定所有事件
-                bindFloatingBarEvents();
-                VNController.bindEvents();
                 bindKeyboardShortcuts();
-                updateFloatingBarProgress();
+                PanelController.switchTo('reading');
 
             } catch (err) {
                 console.error('初始化失败:', err);
@@ -2625,7 +2156,6 @@
             }
         }
 
-        // 启动
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
         } else {

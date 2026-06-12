@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>终端之梦 ～ Terminal Phantasm ～</title>
+<style>
+/* ===== 基础 ===== */
+:root {
+  --bg: #f5f0e8;
+  --text: #2c2416;
+  --accent: #8b4513;
+  --link: #c41e3a;
+  --terminal-bg: #0a0a0f;
+  --terminal-text: #00ff88;
+  --terminal-prompt: #ff6b6b;
+  --popup-bg: #fffef8;
+  --popup-border: #c9b896;
+  --choice-bg: #faf6f0;
+  --choice-hover: #f0e8d5;
+  --choice-a: #c41e3a;
+  --choice-b: #2e6b8f;
+  --divider: #d4c5a9;
+  --tag-bg: #fef0e0;
+  --tag-border: #e8c888;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', 'STSong', Georgia, serif;
+  font-size: 17px;
+  line-height: 2;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== 阅读容器 ===== */
+.reader-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 60px 32px 120px;
+}
+
+/* ===== 章节头 ===== */
+.chapter-header {
+  text-align: center;
+  margin-bottom: 48px;
+  padding-bottom: 32px;
+  border-bottom: 2px solid var(--divider);
+}
+.chapter-header .chap-num {
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.chapter-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.chapter-header .subtitle {
+  font-size: 15px;
+  color: #8b7355;
+  font-style: italic;
+}
+
+/* ===== 小节标题 ===== */
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  margin: 48px 0 24px;
+  letter-spacing: 1px;
+}
+.section-title::before { content: '◆ '; color: var(--accent); font-size: 14px; }
+.section-title::after  { content: ' ◆'; color: var(--accent); font-size: 14px; }
+
+/* ===== 段落 ===== */
+p { margin-bottom: 1.2em; text-indent: 2em; }
+p.no-indent { text-indent: 0; }
+
+/* ===== 强调/斜体内心独白 ===== */
+.inner-thought {
+  color: #6b5a4e;
+  font-style: italic;
+}
+
+/* ===== 分隔线 ===== */
+.scene-divider {
+  text-align: center;
+  margin: 36px 0;
+  color: var(--divider);
+  font-size: 20px;
+  letter-spacing: 8px;
+}
+
+/* ===== 可互动文字 ===== */
+.interactive {
+  color: var(--link);
+  border-bottom: 1px dashed var(--link);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.interactive:hover {
+  color: #8b1528;
+  background: rgba(196, 30, 58, 0.06);
+  border-bottom-style: solid;
+}
+.interactive.person { color: #8b4513; border-color: #c9a87c; }
+.interactive.person:hover { color: #6b3410; background: rgba(139, 69, 19, 0.08); }
+.interactive.term { color: #2e6b8f; border-color: #8fbcce; }
+.interactive.term:hover { color: #1a4a63; background: rgba(46, 107, 143, 0.08); }
+.interactive.place { color: #5a8a3c; border-color: #a8cc8f; }
+.interactive.place:hover { color: #3d5e28; background: rgba(90, 138, 60, 0.08); }
+
+/* ===== 弹出卡片 ===== */
+.popup-card {
+  position: fixed;
+  z-index: 1000;
+  max-width: 360px;
+  background: var(--popup-bg);
+  border: 1px solid var(--popup-border);
+  border-radius: 6px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08);
+  padding: 18px 20px;
+  font-size: 14px;
+  line-height: 1.7;
+  pointer-events: auto;
+  animation: popupIn 0.2s ease-out;
+}
+@keyframes popupIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.popup-card .popup-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--divider);
+  padding-bottom: 4px;
+}
+.popup-card .popup-tags {
+  font-size: 12px;
+  color: #8b7355;
+  margin-bottom: 8px;
+}
+.popup-card .popup-tags span {
+  display: inline-block;
+  background: var(--tag-bg);
+  border: 1px solid var(--tag-border);
+  border-radius: 3px;
+  padding: 1px 6px;
+  margin: 1px 2px;
+  font-size: 11px;
+}
+.popup-card .popup-detail {
+  color: #4a3f32;
+  font-size: 13px;
+}
+.popup-close {
+  position: absolute;
+  top: 6px; right: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #b0a090;
+  background: none; border: none;
+}
+.popup-close:hover { color: #6b5a4e; }
+
+/* ===== 终端模拟 ===== */
+.terminal-block {
+  background: var(--terminal-bg);
+  border-radius: 8px;
+  margin: 20px 0;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.terminal-header {
+  background: #1a1a25;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #252535;
+}
+.terminal-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.terminal-dot.red    { background: #ff5f56; }
+.terminal-dot.yellow { background: #ffbd2e; }
+.terminal-dot.green  { background: #27c93f; }
+.terminal-title {
+  color: #666;
+  font-size: 11px;
+  margin-left: 8px;
+  font-family: system-ui;
+}
+
+.terminal-body {
+  padding: 16px 18px;
+  color: var(--terminal-text);
+  white-space: pre-wrap;
+  word-break: break-all;
+  min-height: 40px;
+  position: relative;
+}
+.terminal-body .prompt { color: var(--terminal-prompt); }
+.terminal-body .cmd    { color: #ffffff; }
+.terminal-body .output { color: #88aacc; }
+.terminal-body .warn   { color: #ffcc00; }
+.terminal-body .error  { color: #ff4444; }
+.terminal-body .info   { color: #888; }
+.terminal-body .cursor {
+  display: inline-block;
+  width: 8px; height: 15px;
+  background: var(--terminal-text);
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+/* ===== 选择肢系统 ===== */
+.choice-block {
+  background: var(--choice-bg);
+  border: 2px solid var(--divider);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin: 28px 0;
+  text-align: center;
+  transition: all 0.3s;
+}
+.choice-block .choice-label {
+  font-size: 14px;
+  color: #8b7355;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+.choice-block .choice-hint {
+  font-size: 12px;
+  color: #b0a090;
+  margin-top: 12px;
+  font-style: italic;
+}
+.choice-btn {
+  display: block;
+  width: 100%;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: 1px solid var(--divider);
+  border-radius: 6px;
+  background: #fffef9;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.6;
+  text-align: left;
+  transition: all 0.2s;
+  color: var(--text);
+}
+.choice-btn:hover {
+  background: var(--choice-hover);
+  border-color: var(--accent);
+  transform: translateX(4px);
+}
+.choice-btn .choice-letter {
+  display: inline-block;
+  width: 24px; height: 24px;
+  line-height: 24px; text-align: center;
+  border-radius: 50%;
+  margin-right: 10px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #fff;
+}
+.choice-btn.a .choice-letter { background: var(--choice-a); }
+.choice-btn.b .choice-letter { background: var(--choice-b); }
+.choice-btn.c .choice-letter { background: #5a8a3c; }
+.choice-btn .choice-text { vertical-align: middle; }
+.choice-btn .choice-sub {
+  display: block;
+  font-size: 12px;
+  color: #999;
+  margin-top: 2px;
+  margin-left: 36px;
+  font-style: italic;
+}
+
+.choice-resolved {
+  background: #f8f4ec;
+  border-color: #d4c5a9;
+  padding: 16px 20px;
+  font-size: 13px;
+  color: #8b7355;
+  text-align: center;
+  border-radius: 8px;
+  margin: 20px 0;
+  font-style: italic;
+}
+
+/* ===== 路线追踪器 ===== */
+.route-tracker {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: var(--popup-bg);
+  border: 1px solid var(--popup-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  z-index: 500;
+  max-width: 200px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.route-tracker:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+}
+.route-tracker .route-title {
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.route-tracker .route-item {
+  color: #6b5a4e;
+  margin: 2px 0;
+}
+.route-tracker .route-bar {
+  height: 3px;
+  border-radius: 2px;
+  margin: 3px 0;
+  transition: width 0.5s;
+}
+.route-bar.akane { background: #c41e3a; }
+.route-bar.koyuki { background: #88bbdd; }
+.route-bar.eruna { background: #5a9a5a; }
+.route-bar.maya { background: #8b5a9a; }
+
+/* ===== 响应式 ===== */
+@media (max-width: 768px) {
+  .reader-container { padding: 40px 16px 100px; }
+  p { text-indent: 1.5em; }
+  .chapter-header h1 { font-size: 22px; }
+  .popup-card { max-width: 280px; left: 16px !important; right: 16px !important; }
+  .route-tracker { bottom: 12px; right: 8px; padding: 8px 12px; }
+}
+
+/* ===== 打印/导出 ===== */
+@media print {
+  .route-tracker, .popup-card { display: none !important; }
+  .interactive { color: inherit; border-bottom: none; cursor: default; }
+  .terminal-block { box-shadow: none; border: 1px solid #ccc; }
+}
+
+/* ===== 初次加载提示 ===== */
+.first-visit-tip {
+  background: #fef9e7;
+  border: 1px solid #e8d5a0;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 32px;
+  font-size: 14px;
+  color: #8b7355;
+  text-align: center;
+}
+.first-visit-tip .tip-icon { font-size: 20px; margin-right: 6px; }
+.first-visit-tip .tip-close {
+  float: right;
+  cursor: pointer;
+  font-weight: bold;
+  color: #c9b896;
+  font-size: 16px;
+}
+.first-visit-tip .tip-close:hover { color: #8b7355; }
+</style>
+</head>
+<body>
+
+<div class="reader-container" id="reader">
+  <!-- 内容由 JS 动态渲染 -->
+</div>
+
+<div class="route-tracker" id="routeTracker" style="display:none" title="点击查看详细路线信息">
+  <div class="route-title">📊 观测记录</div>
+  <div id="routeContent"></div>
+</div>
+
+<script>
+// ============================================================
+// 终端之梦 ～ Web阅读系统
+// ============================================================
+
+const READER = document.getElementById('reader');
+const TRACKER = document.getElementById('routeTracker');
+
+// ===== 状态管理 =====
+const STATE = {
+  routeFlags: {},       // 路线好感度累积
+  choicesMade: [],      // 所有选择记录
+  currentChapter: null,
+};
+
+// 从 localStorage 恢复状态
+function loadState() {
+  try {
+    const saved = localStorage.getItem('terminal_phantasm_state');
+    if (saved) {
+      const s = JSON.parse(saved);
+      STATE.routeFlags = s.routeFlags || {};
+      STATE.choicesMade = s.choicesMade || [];
+    }
+  } catch(e) {}
+}
+function saveState() {
+  try {
+    localStorage.setItem('terminal_phantasm_state', JSON.stringify({
+      routeFlags: STATE.routeFlags,
+      choicesMade: STATE.choicesMade,
+    }));
+  } catch(e) {}
+}
+
+loadState();
+
+// ===== 路线追踪 =====
+function addRoutePoint(heroine, amount) {
+  STATE.routeFlags[heroine] = (STATE.routeFlags[heroine] || 0) + amount;
+  saveState();
+  updateTracker();
+}
+
+function updateTracker() {
+  const routes = [
+    { key: 'akane', name: '朱音', cls: 'akane', val: STATE.routeFlags.akane || 0 },
+    { key: 'koyuki', name: '小雪', cls: 'koyuki', val: STATE.routeFlags.koyuki || 0 },
+    { key: 'eruna', name: '艾露娜', cls: 'eruna', val: STATE.routeFlags.eruna || 0 },
+    { key: 'maya', name: '真夜', cls: 'maya', val: STATE.routeFlags.maya || 0 },
+  ].filter(r => r.val > 0);
+
+  if (routes.length === 0) {
+    TRACKER.style.display = 'none';
+    return;
+  }
+
+  TRACKER.style.display = 'block';
+  const maxVal = Math.max(...routes.map(r => r.val), 1);
+  let html = '';
+  routes.forEach(r => {
+    const pct = Math.round((r.val / maxVal) * 100);
+    html += `<div class="route-item">${r.name}: ${'❤'.repeat(Math.min(r.val, 5))}</div>`;
+    html += `<div class="route-bar ${r.cls}" style="width:${pct}%"></div>`;
+  });
+  html += `<div style="font-size:10px;color:#b0a090;margin-top:4px;">已选择 ${STATE.choicesMade.length} 次</div>`;
+  document.getElementById('routeContent').innerHTML = html;
+}
+
+TRACKER.addEventListener('click', () => {
+  if (STATE.choicesMade.length === 0) return;
+  const summary = STATE.choicesMade.map((c, i) => `第${i+1}次：[${c.label}] → ${c.chosen}`).join('\n');
+  alert('📊 观测记录\n\n' + summary + '\n\n好感度：\n' +
+    Object.entries(STATE.routeFlags).map(([k,v]) => `${k}: ${'❤'.repeat(Math.min(v,5))} (${v})`).join('\n'));
+});
+
+// ===== 弹出卡片系统 =====
+let currentPopup = null;
+
+function closePopup() {
+  if (currentPopup) { currentPopup.remove(); currentPopup = null; }
+}
+
+document.addEventListener('click', (e) => {
+  if (currentPopup && !e.target.closest('.interactive') && !e.target.closest('.popup-card')) {
+    closePopup();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closePopup();
+});
+
+function showPopup(anchor, data) {
+  closePopup();
+  const card = document.createElement('div');
+  card.className = 'popup-card';
+  card.innerHTML = `
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div class="popup-name">${data.name}</div>
+    <div class="popup-tags">${(data.tags || []).map(t => `<span>${t}</span>`).join('')}</div>
+    <div class="popup-detail">${data.detail}</div>
+  `;
+
+  const rect = anchor.getBoundingClientRect();
+  let left = rect.left;
+  let top = rect.bottom + 8;
+
+  // 防止溢出
+  if (left + 360 > window.innerWidth) left = window.innerWidth - 370;
+  if (top + 200 > window.innerHeight) top = rect.top - 210;
+  if (left < 8) left = 8;
+  if (top < 8) top = 8;
+
+  card.style.left = left + 'px';
+  card.style.top = top + 'px';
+
+  document.body.appendChild(card);
+  currentPopup = card;
+}
+
+// ===== 渲染引擎 =====
+function renderChapter(chapterData) {
+  STATE.currentChapter = chapterData.id;
+  let html = '';
+
+  // 章节头
+  html += `<div class="chapter-header">
+    <div class="chap-num">${chapterData.label || ''}</div>
+    <h1>${chapterData.title}</h1>
+    ${chapterData.subtitle ? `<div class="subtitle">${chapterData.subtitle}</div>` : ''}
+  </div>`;
+
+  // 第一次访问提示
+  if (!localStorage.getItem('terminal_phantasm_visited')) {
+    html += `<div class="first-visit-tip" id="firstTip">
+      <span class="tip-icon">📖</span> 点击文中 <span style="color:#c41e3a;border-bottom:1px dashed #c41e3a;">红色下划线文字</span> 可查看人物/术语详情。
+      遇到 <span style="color:#2e6b8f;">蓝色终端代码</span> 可以点击交互。
+      <button class="tip-close" onclick="document.getElementById('firstTip').remove();localStorage.setItem('terminal_phantasm_visited','1')">✕</button>
+    </div>`;
+  }
+
+  // 渲染内容块
+  chapterData.blocks.forEach(block => {
+    switch (block.type) {
+      case 'section':
+        html += `<div class="section-title">${block.text}</div>`;
+        break;
+
+      case 'p':
+        html += `<p>${renderInline(block.text, block.interactives)}</p>`;
+        break;
+
+      case 'divider':
+        html += `<div class="scene-divider">＊ ＊ ＊</div>`;
+        break;
+
+      case 'terminal':
+        html += renderTerminal(block);
+        break;
+
+      case 'choice':
+        html += renderChoice(block);
+        break;
+
+      case 'choice_resolved':
+        html += `<div class="choice-resolved">▸ ${block.text}</div>`;
+        break;
+
+      case 'thought':
+        html += `<p class="inner-thought">（${block.text}）</p>`;
+        break;
+
+      default:
+        html += `<p>${renderInline(block.text || '', block.interactives)}</p>`;
+    }
+  });
+
+  READER.innerHTML = html;
+  bindInteractives();
+  bindChoices();
+  updateTracker();
+
+  // 滚动到顶部
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== 行内渲染（互动文字） =====
+function renderInline(text, interactives) {
+  if (!text) return '';
+  let result = text;
+
+  if (interactives) {
+    interactives.forEach(iv => {
+      const marker = `{{${iv.id}}}`;
+      const cls = iv.cls || '';
+      result = result.replace(marker,
+        `<span class="interactive ${cls}" data-iv-id="${iv.id}">${iv.label}</span>`);
+    });
+  }
+
+  return result;
+}
+
+// ===== 终端渲染 =====
+function renderTerminal(block) {
+  const lines = block.lines || [];
+  let body = '';
+
+  lines.forEach(line => {
+    if (line.startsWith('> ')) {
+      body += `<span class="prompt">&gt; </span><span class="cmd">${escapeHTML(line.slice(2))}</span>\n`;
+    } else if (line.startsWith('[Warn')) {
+      body += `<span class="warn">${escapeHTML(line)}</span>\n`;
+    } else if (line.startsWith('[Error')) {
+      body += `<span class="error">${escapeHTML(line)}</span>\n`;
+    } else if (line.startsWith('[') || line.startsWith('{')) {
+      body += `<span class="output">${escapeHTML(line)}</span>\n`;
+    } else if (line === '> _' || line === '>') {
+      body += `<span class="prompt">&gt; </span><span class="cursor"></span>\n`;
+    } else {
+      body += `<span class="info">${escapeHTML(line)}</span>\n`;
+    }
+  });
+
+  // 如果最后一行是光标，加闪烁动画
+  if (block.blink !== false && lines.length > 0) {
+    const last = lines[lines.length - 1];
+    if (last === '> _' || last === '>') {
+      // cursor already added above
+    } else {
+      body += `<span class="cursor"></span>`;
+    }
+  }
+
+  return `
+    <div class="terminal-block">
+      <div class="terminal-header">
+        <div class="terminal-dot red"></div>
+        <div class="terminal-dot yellow"></div>
+        <div class="terminal-dot green"></div>
+        <span class="terminal-title">${escapeHTML(block.title || 'Terminal v1.0.0 — User: KAMISHIRO_REI')}</span>
+      </div>
+      <div class="terminal-body">${body}</div>
+    </div>
+  `;
+}
+
+// ===== 选择肢渲染 =====
+function renderChoice(block) {
+  const choiceId = block.id;
+  const saved = STATE.choicesMade.find(c => c.id === choiceId);
+
+  if (saved) {
+    return `<div class="choice-resolved">▸ 已选择：${saved.chosen} —— ${saved.effect || ''}</div>`;
+  }
+
+  let buttons = '';
+  block.options.forEach((opt, i) => {
+    const letter = String.fromCharCode(65 + i); // A, B, C
+    buttons += `
+      <button class="choice-btn ${letter.toLowerCase()}" data-choice-id="${choiceId}" data-option="${i}">
+        <span class="choice-letter">${letter}</span>
+        <span class="choice-text">${opt.label}</span>
+        ${opt.sub ? `<span class="choice-sub">${opt.sub}</span>` : ''}
+      </button>`;
+  });
+
+  return `
+    <div class="choice-block" id="choice-${choiceId}">
+      <div class="choice-label">⚡ 选择肢</div>
+      ${buttons}
+      <div class="choice-hint">（选择仅影响细节与好感度，主线剧情不变）</div>
+    </div>
+  `;
+}
+
+// ===== 绑定互动事件 =====
+function bindInteractives() {
+  document.querySelectorAll('.interactive').forEach(el => {
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const ivId = this.dataset.ivId;
+      const data = INTERACTIVE_DATA[ivId];
+      if (data) {
+        showPopup(this, data);
+      }
+    });
+  });
+}
+
+// ===== 绑定选择事件 =====
+function bindChoices() {
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const choiceId = this.dataset.choiceId;
+      const optIndex = parseInt(this.dataset.option);
+      const choiceBlock = CHOICE_REGISTRY[choiceId];
+      if (!choiceBlock) return;
+
+      const opt = choiceBlock.options[optIndex];
+
+      // 记录选择
+      STATE.choicesMade.push({
+        id: choiceId,
+        label: choiceBlock.label || choiceId,
+        chosen: opt.label,
+        effect: opt.effect || '',
+      });
+
+      // 更新路线
+      if (opt.route) {
+        Object.entries(opt.route).forEach(([heroine, val]) => {
+          addRoutePoint(heroine, val);
+        });
+      }
+
+      saveState();
+
+      // 替换选择块为已选择状态
+      const container = document.getElementById('choice-' + choiceId);
+      if (container) {
+        container.outerHTML = `<div class="choice-resolved">▸ 已选择：<strong>${opt.label}</strong> —— ${opt.effect || '你的选择将被记录。'}</div>`;
+      }
+
+      updateTracker();
+    });
+  });
+}
+
+// ===== 辅助函数 =====
+function escapeHTML(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ===== 互动数据注册表 =====
+const INTERACTIVE_DATA = {};
+
+function registerInteractive(id, data) {
+  INTERACTIVE_DATA[id] = data;
+}
+
+// ===== 选择肢注册表 =====
+const CHOICE_REGISTRY = {};
+
+function registerChoice(id, data) {
+  CHOICE_REGISTRY[id] = data;
+}
+
+// ===== 加载章节 =====
+function loadChapter(chapterId) {
+  const chapter = CHAPTERS[chapterId];
+  if (chapter) {
+    renderChapter(chapter);
+  }
+}
+
+// ============================================================
+// 互动数据 —— 人物/术语/地点卡片
+// ============================================================
+
+registerInteractive('rei', {
+  name: '神代 零（かみしろ れい）',
+  tags: ['主人公', 'F级', '16岁', '174cm', 'Observer #7'],
+  detail: '黑发灰瞳，偏瘦体型，肤色偏苍白。使用终端时瞳孔浮现金色代码流光。左手腕戴着父亲的遗物怀表。冷静理性，但在意的人面前会流露温柔。'
+});
+
+registerInteractive('akane', {
+  name: '天宮 朱音（あまみや あかね）',
+  tags: ['傲娇', '幼驯染', '火属性A+级', '深红高马尾', '琥珀瞳'],
+  detail: '帝国四大公爵家·天宮家长女。深红长发高高扎起，琥珀色的眼睛在战斗时会燃成绯红。嘴上从不饶零，但十一年的行动全是反证。'
+});
+
+registerInteractive('koyuki', {
+  name: '神代 小雪（かみしろ こゆき）',
+  tags: ['义妹', '治愈系', '银白短发', '冰蓝瞳', '小动物系', '甘党'],
+  detail: '零的义妹，14岁。银白色蓬松短发在月光下会微微发光。全年戴着白色手套遮住左手腕的冰晶痣。每天早上做便当+写手写小纸条。草莓大福和炼乳刨冰是她的死穴。'
+});
+
+registerInteractive('eruna', {
+  name: '艾露娜·温德尔（エルナ・ヴィンデル）',
+  tags: ['精灵族', '学年首席', '淡金长发', '翡翠瞳', '风属性A+级'],
+  detail: '精灵王国留学生。淡金色长发在月光下会散发柔和荧光。8cm的长耳朵会随情绪微妙摆动。知识欲极其旺盛，但恋爱方面完全是天然状态——她会把"心跳加速"当作研究课题。'
+});
+
+registerInteractive('hiyori', {
+  name: '七瀬 日和（ななせ ひより）',
+  tags: ['天使系', '天然呆', '光属性', '治愈师', '呆毛'],
+  detail: '150cm的软糯少女。亚麻色长发编成两条低麻花辫。头顶的呆毛会随情绪自由变形——开心时竖立，困惑时卷成问号。只使用治愈魔法，"学园的天使"。'
+});
+
+registerInteractive('maya', {
+  name: '黒鉄 真夜（くろがね まや）',
+  tags: ['小恶魔', '高攻低防', '魔族', '异色瞳', '夜行性'],
+  detail: '魔族转校生。左眼深红、右眼金色的异色瞳在夜晚会微微发光。头顶一对2cm的小角是感情开关——害羞时会无意识从刘海间探出。主动调戏，被动秒怂。'
+});
+
+registerInteractive('eve', {
+  name: 'Eve（イヴ）',
+  tags: ['AI', '银发少女', '终端助手', '逐渐人性化'],
+  detail: '终端系统内的AI。在意识空间中呈现为银发蓝瞳的少女形态，身体轮廓带着微弱的像素化效果。称零为"Observer #7"。随着时间推移，她的语气正变得越来越像"人"。'
+});
+
+registerInteractive('seido', {
+  name: '星導学園',
+  tags: ['帝国最顶级魔法学院', '古代魔力增幅装置', '地下禁书库'],
+  detail: '帝国最古老最权威的魔法学院。校园建筑本身就是巨大的古代魔导增幅回路，校内魔力密度是外界的3.2倍。地下图书馆有五层，其中最深处收藏着禁书和古代遗迹。'
+});
+
+registerInteractive('terminal', {
+  name: '终端（Terminal）',
+  tags: ['命令行界面', '底层代码访问', 'Token消耗', '观测者效应'],
+  detail: '零意识中觉醒的特殊能力。一个命令行界面，可以直接操控世界魔法的底层代码。使用时消耗Token（算力配额），周围观测者太多会导致不稳定。命令包括 analyze、compile、execute、monitor 等。'
+});
+
+registerInteractive('mana_rank', {
+  name: '魔力等级（Magic Rank）',
+  tags: ['S〜F级', '血统决定', '魔力粒子亲和度'],
+  detail: '以魔力粒子亲和度和操控精度评估的七级体系。S级传说级不到0.01%，A级大贵族约0.1%，D级是普通市民的50%，F级约3%被称为"魔法残疾"。等级主要由血统遗传决定。'
+});
+
+// ============================================================
+// 章节内容定义
+// ============================================================
+
+// 选择肢注册（全局）
+registerChoice('ch01_elna_help', {
+  label: '艾露娜的提议',
+  options: [
+    { label: '接受艾露娜的协助——她是认真的，而你需要同伴', sub: '艾露娜好感度+2', route: { eruna: 2 }, effect: '艾露娜将成为你在学术上的协作者' },
+    { label: '婉拒——这个力量太危险，不能把别人卷进来', sub: '朱音好感度+1', route: { akane: 1 }, effect: '你选择独自承担，但朱音察觉到了你的坚持' },
+  ]
+});
+
+registerChoice('ch01_exam_announce', {
+  label: '特别考试公告后的反应',
+  options: [
+    { label: '与朱音对视，微微点头——你在意她的反应', sub: '朱音路线 flag +1', route: { akane: 1 }, effect: '朱音感受到了你的视线，耳尖微红' },
+    { label: '观察艾露娜——她对"星导之间"的反应不太对劲', sub: '艾露娜路线 flag +1', route: { eruna: 1 }, effect: '艾露娜的耳朵抖了一下，她在盘算什么' },
+    { label: '思考考试策略——谁组队都不重要，赢就行', sub: '中立（小雪路线微增）', route: { koyuki: 1 }, effect: '小雪今晚会给你做特别的晚餐' },
+  ]
+});
+
+// ===== Chapter 01 数据 =====
+const CHAPTERS = {};
+
+CHAPTERS['ch01'] = {
+  id: 'ch01',
+  label: 'Chapter 01 · 未完待续',
+  title: '星導学園（せいどうがくえん）',
+  subtitle: '「知识就是力量。而力量——伴随着代价。」',
+  blocks: [
+    // ===== Part 1 摘要（已完成内容提示） =====
+    { type: 'section', text: 'Part 1 回顾 · 入学初日' },
+    { type: 'p', text: '前一卷中，{{rei}}在入学考试中以F级之身合格，觉醒了名为{{terminal}}的终端能力。入学式当天，他与青梅竹马{{akane}}一同踏入{{seido}}。在那里，他们遇到了精灵族留学生{{eruna}}——学年首席、A+级风属性使。魔力测定仪式上，零被判定为F级，全场嘲笑。朱音当众站起，以天宮家名义为他辩护。随后，艾露娜在午休时主动接近零："魔力粒子没有避开你——而是穿过了你。"她在零身上看到了不自然的现象，而她的求知欲不允许她放过这个谜。', interactives: [
+      { id: 'rei', label: '神代零', cls: 'person' },
+      { id: 'terminal', label: '「终端」', cls: 'term' },
+      { id: 'akane', label: '天宮朱音', cls: 'person' },
+      { id: 'seido', label: '星導学園', cls: 'place' },
+      { id: 'eruna', label: '艾露娜·温德尔', cls: 'person' },
+    ]},
+    { type: 'p', text: '零在学园地下图书馆的禁书库中，发现了关于"古代终端使"的记录——以及三条被审查的异常魔力事件。当晚，他的monitor在学园内检测到异常的量子波动：除他之外，还有另一个终端使用者。'},
+    { type: 'p', text: '入学第一周的最后一天，零带着满腹的疑问回到了家。小雪准备了特别的晚餐——明天是周末，零难得能在家休息。但周一的特别全校集会，将彻底改变接下来一个月的节奏。'},
+
+    // ===== Part 2 开始 =====
+    { type: 'divider' },
+    { type: 'section', text: 'Part 2 · 魔法演習' },
+    { type: 'section', text: '十：実技訓練の朝（じつぎくんれんのあさ）' },
+
+    { type: 'p', text: '入学第二日。清晨六点四十分。零睁开眼时，枕边的怀表指针还没走到他习惯的起床时间。天花板的木纹在晨光中显出淡淡的暖色——今天是个好天气。', interactives: [] },
+
+    { type: 'p', text: '他昨晚没有熬夜。Eve在Token管理上的建议起了作用——"每天的Token恢复上限是固定的，零。如果你继续现在这种消耗速度，七天后就会见底。把非紧急搜索都尽量合并到夜间批量处理，能省下不少。"所以零昨晚只做了三件事：保存状态、检查常驻脚本、关闭终端。然后他睡了整七个小时，这在最近是极其稀有的。', interactives: [
+      { id: 'eve', label: 'Eve', cls: 'person' },
+    ]},
+
+    { type: 'p', text: '但这不代表醒来时感觉良好。魔力不足体质的人睡再多也不会神清气爽——就像一个永远充不到满电的电池。零翻身坐起来，手指下意识按了按太阳穴。昨晚梦里又出现了那个白色房间。这一次，房间里多了一面镜子。镜子里的自己穿着白大褂，胸牌上的字模糊不清，但最后一个字好像是——"林"。他还没来得及细看，小雪的声音就把他拉回了现实。'},
+
+    { type: 'p', text: '「お兄ちゃん——朝ごはん、できましたよ」从楼下传来的声音。零看了眼时间：六点四十五。这意味着小雪至少六点就起来了。她每天比他早一个小时起床，从不例外。', interactives: []},
+
+    { type: 'thought', text: '……到底是她在照顾我，还是我在拖累她的睡眠时间。'},
+
+    { type: 'p', text: '零下楼时，厨房里的画面和昨天一样、和前天一样、和过去的每一个早晨一样——小雪穿着深蓝的水手服（她已经换好了制服），外面套着白色的割烹着，银白的短发在味增汤的热气中微微飘动。她的白手套上沾了一小片面粉——今天做的是玉子烧和盐烤鲑鱼，加昨晚剩的筑前煮热了一下。便当盒已经摆好，正在往里装炸鸡块。', interactives: [
+      { id: 'koyuki', label: '小雪', cls: 'person' },
+    ]},
+
+    { type: 'p', text: '零靠在厨房门框上看了几秒。小雪没发现他——她正在专注地把炸鸡块摆成放射状的花形。每一块之间的距离肉眼几乎一致。摆好之后她后退半步，歪着头审视了一下自己的作品，然后轻轻点了一下头。银色的刘海随着动作晃了一晃。零决定不告诉她他在看——因为告诉她的话，她一定会脸红的。而他还没吃早饭，空腹状态下看小雪红着脸手足无措的样子，对心脏不太好。'},
+
+    { type: 'p', text: '「おはよう、小雪。」'},
+    { type: 'p', text: '「——ひゃっ！？」'},
+    { type: 'p', text: '果然还是被吓到了。小雪整个人微微一跳，手里的筷子差点掉进便当盒里。她转过身来，冰蓝色的眼睛睁得圆圆的，然后意识到自己刚才的反应有点夸张，脸颊以肉眼可见的速度从白皙转成淡粉。零知道，再过两秒她的耳朵尖也会红。果然红了。', interactives: []},
+
+    { type: 'p', text: '「お、お兄ちゃん、おはようございます。あの、もうすぐできますから、座って待っててください。今日の玉子焼き、ちょっとだけお砂糖多めにしたんです。お兄ちゃん、昨日ちょっと疲れてたから——あ、でも別に、顔色が悪かったとかそういうわけじゃなくて、ただなんとなく……はい。座っててください」'},
+
+    { type: 'p', text: '零は黙って椅子に座った。テーブルの上にはすでに味噌汁が置いてある。具は豆腐とわかめ——小雪なりに零の疲労を気遣って、消化のいい組み合わせにしたのだろう。彼の少しの変化を察知する観察力は、十四年分の"零だけを見てきた時間"の蓄積だった。'},
+
+    { type: 'p', text: '食事中、小雪は箸を置いて、少しだけ背筋を伸ばした。まるでこれから大事な発表でもするみたいに。零が顔を上げると、彼女は一瞬だけ言い淀んで——それから思い切ったように口を開いた。'},
+
+    { type: 'p', text: '「お兄ちゃん。今日、実技の授業があるんですよね」'},
+    { type: 'p', text: '「ああ。魔法演習だ」'},
+    { type: 'p', text: '「……無理しちゃダメですよ。お兄ちゃんはすぐ無理するから」'},
+    { type: 'p', text: '小雪は零の目をまっすぐに見た。この視線は、普段のふんわりしたものとは違う——芯がある。彼女は零より四つ年下で、身長は二十センチ以上低くて、魔力以外のすべてにおいて零より"弱い"立場なのに、こういう時だけはなぜか零より強い目ができる。零は一口、味噌汁を啜ってから答えた。'},
+
+    { type: 'p', text: '「無理はしない。——まだ」'},
+    { type: 'p', text: '「"まだ"？」'},
+    { type: 'p', text: '「いや、なんでもない」'},
+    { type: 'p', text: '小雪は少しだけ眉を下げた——"納得してないけど、これ以上追及しない"という顔。零のこの手の言い逃れに彼女はとっくに慣れている。でも黙って見送る選択をするあたり、彼女もまた"零を見守るプロ"だった。'},
+
+    { type: 'p', text: '朝食後、零が玄関で靴を履いていると、小雪が小走りで追いかけてきた。手に小さな包みを持っている。白い布巾に包まれた、まだ溫かい何か。'},
+    { type: 'p', text: '「……これ、よかったら。お昼までお腹すいちゃうと思って」'},
+    { type: 'p', text: '零が受け取ると、布巾の中から小さなおにぎりが二つ。一口サイズ。彼女はすでに三段重ねの特製弁当を作っているのに、それとは別に、いわば"午前中用のおやつ"を用意したのだ。'},
+    { type: 'p', text: '「ありがとう。……でも小雪、お前、毎日こんな早起きして——」'},
+    { type: 'p', text: '「いいんです。わたしが好きでやってること、なので」'},
+    { type: 'p', text: '小雪はそう言うと、零の返事を待たずにぱっと顔を伏せ、くるっと背を向けて台所に戻っていった。耳の先が赤かった。'},
+
+    { type: 'thought', text: '——好きでやってること、か。'},
+    { type: 'thought', text: '朱音も同じことを言っていた。'},
+
+    { type: 'p', text: '零はおにぎりを鞄の内ポケットにしまい、玄関を出た。春の朝の空気はまだ少し冷たくて、遠くに魔力鉄道の低い唸りが聞こえる。星京の街は今日も平常運転。だが——零の視界の隅では、カーソルがいつも通り点滅している。今日は実技の授業。観測者が三十人以上の環境で、端末はどれだけ機能するのか——それを確かめる最初の機会だ。', interactives: []},
+
+    { type: 'divider' },
+    { type: 'section', text: '十一：魔力放出——観測者効果（まりょくほうしゅつ·かんそくしゃこうか）' },
+
+    { type: 'p', text: '円形闘技場。昨日の魔力測定と同じ場所だが、今日は朝日が闘技場全体を明るく照らしている。観客席には誰もいない——生徒全員が闘技場の中央、つまり戦闘エリアに集合している。今日は観客ではない。全員が参加者だ。', interactives: []},
+
+    { type: 'p', text: '特待科壱組の三十名は闘技場中央に整列していた。中央には教官が一人——鉄杖のバルド。退役軍人で、背筋は六十歳を過ぎても鉄のようにまっすぐ。右手に握った杖の先端には魔力を帯びた青白い光が灯っている。彼はその杖で地面を一度打つと、ざわついていた生徒たちが一瞬で静まった。'},
+
+    { type: 'p', text: '「——黙れ。これより魔法演習·基礎動作を開始する。本日の課題は"魔力放出"。手のひらに魔力粒子を集中し、可視光球を形成·維持せよ。これは魔法の基礎中の基礎だ。D級でも扱える。貴様ら特待科なら、なおさら完璧にこなせ」'},
+
+    { type: 'p', text: 'バルドの視線が一人ひとりを品定めするように動く。零と目が合った時、その視線は一瞬だけ止まった——F級の存在を確認したのだろう。だがバルドは何も言わずに視線を外した。配慮なのか、興味がないのか。'},
+
+    { type: 'p', text: '「一人ずつ、名前を呼ばれた者から前に出ろ」'},
+
+    { type: 'p', text: '最初に呼ばれたのは、平民出身の男子生徒だった。彼は手を前に差し出すと、手のひらに青白い光の球を作り出した——水属性の魔力光だ。直径十五センチほど。安定しているが、輝度はそれほど高くない。バルドが短く「C+級相当。合格」と言った。'},
+
+    { type: 'p', text: '次々と呼ばれる。B級の火属性がオレンジの光球を。C級の地属性が琥珀色の光球を。そして——'},
+
+    { type: 'p', text: '「——天宮朱音」'},
+
+    { type: 'p', text: '朱音が一歩前に出た。彼女の深紅のポニーテールが朝日に照らされて、燃えるような色に見える。三十人の視線が彼女に集中した——だが彼女は気にしない。気にしてなどいられない。彼女は右手を差し出し、手のひらを上に向けた。'},
+
+    { type: 'p', text: '——瞬間。'},
+
+    { type: 'p', text: '朱音の手のひらに、緋色の光が爆発的に膨れ上がった。直径三十センチを超える火球——いや、火"球"というにはあまりに精密だ。表面は滑らかで、内部の炎の渦がガラス越しに見えるよう。闘技場の空気が一瞬で加熱され、前列にいた生徒たちが一歩後退った。'},
+
+    { type: 'p', text: '「——A+級。合格。……見事だ、天宮」バルドの声が、今日初めてわずかに柔らかくなった。'},
+
+    { type: 'p', text: '朱音は無言で火球を消し、整列に戻った。彼女が零の隣に戻ったとき、他の誰にも聞こえない声で言った。'},
+    { type: 'p', text: '「……別に、アンタが気にすることじゃないから」'},
+    { type: 'p', text: '零は何も言わずに、ほんの少しだけ口元を緩めた。朱音はそれを見て「なに笑ってんのよ」と小声で言い、耳を赤くして前を向いた。'},
+    { type: 'divider' },
+
+    { type: 'p', text: 'それから何人かが呼ばれ——エルナの風の光球は翡翠色で、それはもう"光球"というより"小さな竜巻の中に閉じ込められた光"だった。バルドは「精霊族の精度はさすがだ」とだけ言った。そして——ひよりの光球は柔らかな金色で、攻撃的な輝きはまったくなかった。バルドは少しだけ眉を動かして「B級·治癒特化。——実戦ではそれが弱点になりうる。覚えておけ」と言った。ひよりは「……はい」と小さく返事をしたが、彼女の呆毛はしおしおと垂れていた。数秒後にまたぴんと立ったが。', interactives: [
+      { id: 'eruna', label: '艾露娜', cls: 'person' },
+      { id: 'hiyori', label: '七瀬日和', cls: 'person' },
+    ]},
+
+    { type: 'p', text: 'そして——'},
+    { type: 'p', text: '「——神代零」'},
+
+    { type: 'p', text: '名前を呼ばれた瞬間、三十人の視線が零に集中した。それは好奇と、嘲笑と、そして一部の純粋な疑問——"なぜこいつが特待科にいるのか"——が混ざったものだった。零は慣れている。少なくとも、慣れたふりはできる。'},
+
+    { type: 'p', text: '零が一歩前に出ると同時に——視界の端のカーソルが早く点滅し始めた。それだけでなく、端末画面全体が微かに震えている——ノイズだ。'},
+
+    { type: 'terminal', title: 'Terminal v1.0.0 — User: KAMISHIRO_REI', lines: [
+      '> compile mana_sphere --mode basic',
+      '[Compiling mana_sphere...]',
+      '[WARNING: Quantum field instability detected.]',
+      '[Observer count: 34. Threshold exceeded.]',
+      '[Estimated success rate: 41%]',
+      '[Proceed? (Y/N)]',
+      '> _',
+    ], blink: true},
+
+    { type: 'thought', text: '——三十四人。全員が"観測者"として端末に負荷をかけている。'},
+
+    { type: 'p', text: '零は心の中で"Y"を唱えた。端末が震えながら応答する。コマンドが走り、コンパイルが始まる——だが通常よりずっと遅い。プログレスバーが少しずつ伸びていく間、零の手のひらの上には、まだ何も現れていない。彼は右手を差し出して、待った。周囲の魔力粒子に意識を向ける。粒子は彼の体を素通りしていく——いつも通り。しかし端末を通して"別の経路"からアクセスされた粒子が、わずかに手のひらの上に集まり始める。'},
+
+    { type: 'terminal', title: 'Terminal v1.0.0 — User: KAMISHIRO_REI', lines: [
+      '[Compilation complete.]',
+      '[Token cost: 3]',
+      '[Stability: LOW — Observer interference present]',
+      '> execute mana_sphere',
+      '[Executing...]',
+      '[Output: Minimal — D-rank equivalent at best]',
+    ], blink: false},
+
+    { type: 'p', text: '零の手のひらに、光が現れた。'},
+    { type: 'p', text: '——ただし。それは"光球"と呼ぶにはあまりにもお粗末だった。豆粒大の灰色がかった光が、手のひらの上で不安定に揺れている。明るさは教室の隅の魔晶灯以下。三十秒ほど維持して、光はぱっと消えた。'},
+
+    { type: 'p', text: '数秒の沈黙。誰かが小さく「……ぷっ」と吹き出した。それに釣られて、何人かが笑いをこらえるような声を漏らす。ただし——昨日の魔力測定の時と違って、大きな嘲笑は起こらなかった。朱音が一昨日、この闘技場で吼えたからだ。誰も表立っては零を馬鹿にできない——少なくとも、朱音の前では。'},
+
+    { type: 'p', text: 'バルドは数秒の沈黙の後、短く言った。'},
+    { type: 'p', text: '「……F級。努力は認める。戻れ」'},
+
+    { type: 'p', text: '零が列に戻ると、朱音は何も言わなかった。ただ、ほんの少しだけ——他の誰にも分からないくらい——彼女の肩の力が抜けた。緊張していたのは零だけではなかったのだ。'},
+
+    { type: 'p', text: '一方、列の反対側では——エルナの翡翠色の目が、零の背中をじっと見つめていた。彼女は他の誰も気づかなかったものを見た。魔力粒子の流れ——零の手のひらに光が現れた瞬間、周囲の魔力粒子が"不自然な経路"で動いた。あれは通常の魔力放出ではない。まるで——"誰かが遠隔操作している"かのような動き。彼女の長い耳が、知識欲に反応してピクリと前方に傾いた。', interactives: [
+      { id: 'eruna', label: '艾露娜', cls: 'person' },
+    ]},
+
+    { type: 'divider' },
+
+    { type: 'p', text: '課題が終わり、各自が自由練習に入った。バルドは「基礎ができている者は応用練習を。できていない者は基礎を繰り返せ」と言い残して、闘技場の端で数人の生徒に個別指導を始めた。'},
+
+    { type: 'p', text: '零は人混みから少し離れた場所に移動した。闘技場の南側——観客席の陰になっていて、他の生徒たちから死角になる場所だ。ここなら観測者の数が減る——三方向を壁と観客席に囲まれている分、周囲の魔力場の複雑さが若干軽減される。'},
+
+    { type: 'p', text: '零はEveに体内会話で指示を出した。'},
+
+    { type: 'terminal', title: 'Terminal v1.0.0 — User: KAMISHIRO_REI', lines: [
+      '> monitor --detailed --range 15m',
+      '[Scanning...]',
+      '[Active observers within range: 8]',
+      '[Dominant mana signatures:]',
+      '  - Fire/A-rank: 11m NW (Amamiya Akane)',
+      '  - Wind/A+-rank: 14m NE (Elna Vinderu)',
+      '  - Light/B+-rank: 7m E (Nanase Hiyori)',
+      '  - [5 other C-rank students]',
+      '[Terminal stability: 72% — Improved.]',
+      '> _',
+    ], blink: true},
+
+    { type: 'thought', text: '——七十二パーセント。三十四人の時は四十パーセントだった。観測者の数が半分以下になると、安定性は大幅に改善する。つまり、本番の試験で観客が二百人以上いる状況では——端末はほとんど使い物にならない。'},
+
+    { type: 'p', text: '零は手のひらを上に向け、もう一度`mana_sphere`を実行した。今度は——ゴルフボール大の灰色の光が、安定して輝いた。D+級相当。これが、八人の観測者の下で出せる彼の"偽装された実力"だった。'},
+
+    { type: 'p', text: 'そして——もし観測者がゼロなら。零は手の中の光を消し、周囲に誰もいないことを確認してから——もう一度手を差し出した。今度はEveに頼まず、直接コマンドを頭の中で叩く。'},
+
+    { type: 'terminal', title: 'Terminal v1.0.0 — User: KAMISHIRO_REI', lines: [
+      '> execute mana_sphere --full',
+      '[Executing...]',
+      '[Observers: 0. Stability: 100%.]',
+      '[Output: A-rank equivalent — Pure mana construct.]',
+    ], blink: false},
+
+    { type: 'p', text: '手のひらに——完璧な球体の光が現れた。灰色ではなく、銀色に近い青白い光。表面は滑らかで、内部の魔力の流れが規則的な幾何学パターンを描いている。直径二十センチ。輝度は——さっきの朱音の火球には及ばないが、B+級と十分に張り合えるレベルだ。零は一秒だけそれを見つめて、すぐに消した。誰にも見られていない——誰にも。'},
+
+    { type: 'thought', text: '——これが、俺の本当の力。誰にも見せられない、本当の力。'},
+
+    { type: 'p', text: '彼は拳を握った。観測者効果。この制約をどう克服するか——それが、一ヶ月後の試験で勝つための最大の課題だった。'},
+
+    { type: 'p', text: 'その時、零の視界の隅に小さな影が映った。振り返ると——ひよりが立っていた。彼女は両手で小さな包みを持って、零の顔を覗き込むように見上げている（身長差24センチ）。呆毛はゆるやかに揺れていた。', interactives: [
+      { id: 'hiyori', label: '日和', cls: 'person' },
+    ]},
+
+    { type: 'p', text: '「神代くん、大丈夫？」'},
+    { type: 'p', text: '「……何がだ」'},
+    { type: 'p', text: '「なんか、今、すごく——集中してたから。邪魔しちゃ悪いと思って、ちょっと離れてたんだけど。でも、手のひらの光、さっきよりきれいだった」'},
+    { type: 'p', text: '零は一瞬だけ固まった。見られていた——？だがひよりの口調には"不自然なものを見た"というニュアンスはなかった。彼女は単に"光がきれいだった"と言っただけだ。'},
+    { type: 'p', text: '「光属性のひよりから見て、俺の光はどう見える」'},
+    { type: 'p', text: '「えっ……うーん」ひよりは少し首を傾げた。呆毛が一緒に傾く。「……ちょっと、さみしそうな色。でも——きらいじゃないです。わたし、ああいう色、好き」'},
+    { type: 'p', text: '「さみしそう」——その表現は意外に的を射ていた。灰という色は、白でも黒でもない、どこにも属せない色だ。F級でもA級でもない零の立場そのものだった。'},
+    { type: 'p', text: 'ひよりはポケットから何かを取り出して、零の手に乗せた。小さな包み——彼女が先ほど持っていたものと同じ包み。'},
+    { type: 'p', text: '「はい。今日は二つ持ってきてたから。実技訓練、がんばったで賞」'},
+    { type: 'p', text: '包みの中には、はちみつ漬けの飴玉がふたつ。祖母のレシピだという。'},
+    { type: 'p', text: '「……いいのか」'},
+    { type: 'p', text: '「うん。神代くん、昨日よりちょっとだけ——目が疲れてるから。はちみつは、疲れにいいんだよ」'},
+    { type: 'p', text: '零は飴をひとつ口に入れた。優しい甘さが広がった。ひよりもひとつを自分の口に放り込んで、小さく笑った——両頬に酒窩が浮かぶ。呆毛も心なしかピンと立っている。'},
+    { type: 'p', text: '「じゃあ、わたし医務室に戻ります。また何かあったら来てね」'},
+    { type: 'p', text: 'ひよりは軽やかに去っていった。その後ろ姿を見ながら、零は思った——この少女は、おそらくこの学園で唯一、"零の秘密"にまったく興味がない人間だ。彼女の興味は"人が痛いかどうか"だけに向けられている。それは、ある意味で最も純粋な関心だった。'},
+
+    { type: 'divider' },
+    { type: 'section', text: '十二：エルナの実験（エルナのじっけん）' },
+
+    { type: 'p', text: '放課後。零が教室を出ようとした瞬間、後ろから声がかかった。'},
+    { type: 'p', text: '「——神代くん。少し、お時間をいただけますか」'},
+    { type: 'p', text: 'エルナだった。彼女は教室の出口で零を待っていたらしい。翡翠色の目が、今日の実技訓練での零の挙動をまだ分析している——そんな目つきだった。彼女は零の返事を待たずに、すでに歩き出している。"ついてきて"と言外に示すように。'},
+
+    { type: 'p', text: 'エルナが零を連れて行ったのは、学園の北側にある「風の庭」だった。精霊族の文化様式で造園された小さな庭で、中央に小さな人工滝が流れ、周囲には風車草やススキが風に揺れている。学園内でも人の少ない場所で、放課後はほとんど誰も来ない。ここはエルナの"お気に入りの場所"だという。'},
+
+    { type: 'p', text: '「——今日の実技訓練、とても興味深かったわ」エルナは滝のそばの石のベンチに腰掛けながら言った。淡金の髪が午後の日差しに透けて、月明かりで見るのとはまた違う輝き方をしている。'},
+    { type: 'p', text: '「どこがだ」'},
+    { type: 'p', text: '「君が最初に光球を作った時——魔力粒子の動きが、普通じゃなかった」エルナは右手を空中に挙げて、指先で見えない何かをなぞるような仕草をした。「私は魔力粒子の流れが視える。君が魔力を放出しようとした時——周囲の魔力粒子がまるで"外部から指令を受けた"みたいに動いていた。あれは、体内で粒子を励起して放出する通常のプロセスじゃない。まるで——」'},
+
+    { type: 'p', text: '「——操り人形の糸」零が言った。これは彼女が昨日の中庭で使った比喩だった。'},
+    { type: 'p', text: '「ええ。私は今日それをもっとはっきりと見たわ。君が二回目に光球を作った時——南側の隅で——あの時、周囲の魔力粒子は完全に"君の命令"に従っていた。でも君の体内から魔力は一切出ていなかった。ということは」'},
+    { type: 'p', text: 'エルナの翡翠の目が、まっすぐに零を捉えた。長い耳がわずかに前方に傾いている——集中している時の癖だ。'},
+    { type: 'p', text: '「——君は、"自分以外の何か"を使って魔法を動かしている。違うかしら」'},
+
+    { type: 'p', text: '零は黙った。この精霊族の少女は鋭すぎる。二日の観察で、ここまで見抜くとは思わなかった。だが——彼女の目に悪意はない。あるのは純粋な、抑えがたい知識欲だけだ。'},
+    { type: 'p', text: '「……もしそうだとしたら、どうする」'},
+    { type: 'p', text: '「何もしないわ」エルナは即答した。「私は研究者。警察じゃない。君の秘密を暴いて公表する気はない——ただ、知りたいだけ。君がどうやってそれをやっているのか。君のその力はどこから来ているのか。そして——君は何者なのか」'},
+    { type: 'p', text: 'エルナは立ち上がって、零に一歩近づいた。168センチの彼女と174センチの零は、近づくとほぼ目線が同じ高さになる。彼女の翡翠の目は、零の深灰の目をのぞき込んでいた。この距離では、彼女の肌が微かに発光しているのがわかる——精霊族の皮下魔力膜が、太陽光を反射しているのだ。'},
+
+    { type: 'p', text: '「私は——君の秘密を知りたい。でも、それは君を危険にさらすためじゃない。むしろ逆——君がそれを隠し続けられるように、協力したい」'},
+    { type: 'p', text: '「なぜ」'},
+    { type: 'p', text: '「なぜなら」エルナは少しだけ口元を緩めた。それは彼女が零に見せた初めての、人間的な笑顔だった。「——君は面白いから。私は面白いものを見つけたら、とことん調べないと気が済まないの。これは、精霊族の長寿がもたらした数少ない悪癖の一つよ」'},
+
+    { type: 'p', text: '零は数秒考えてから、言った。「分かった。協力を受け入れる。——ただし条件がある」'},
+    { type: 'p', text: '「なに」'},
+    { type: 'p', text: '「見つけたことは、まず俺に報告すること。誰にも言うな。そして——危険だと思ったら、すぐ手を引け。深入りするな」'},
+    { type: 'p', text: 'エルナの耳がピンと立った。翡翠の目が心なしか輝く。'},
+    { type: 'p', text: '「——約束するわ。精霊族は、人間よりずっと約束を重んじる種族なの。何百年も生きるから、約束を破るとその分長く後悔することになる。だから——約束は守る」'},
+    { type: 'p', text: '彼女が右手を差し出した。長くて細い指——精霊族の手は、人間より指が一本分長い。零はその手を握り返した。意外に冷たい手だった。風属性の使い手は体温が低い——エルナが言っていたのを思い出す。'},
+
+    { type: 'p', text: 'これが——零とエルナの、最初の"共同研究"の始まりだった。', interactives: []},
+
+    { type: 'divider' },
+    { type: 'choice', id: 'ch01_elna_help' },
+    { type: 'divider' },
+
+    { type: 'section', text: '十三：地下図書館の禁書（ちかとしょかんのきんしょ）' },
+
+    { type: 'p', text: '今夜も、零は大図書館に向かった。時計は午後八時を回っている。小雪には「遅くなる」と伝えてある——彼女は何も聞かずに「はい、気をつけて」とだけ言って、零のマフラーを巻き直した。'},
+
+    { type: 'p', text: '地下三層——古代魔法史の書架群。地下四層——禁書指定された研究資料の保管庫。前回はここで古い魔力異常の記録を見つけた。今日はもっと深く——地下五層。図書館の構造図によれば、地下五層は一般学生立ち入り禁止区域だが、入学式の混乱で施錠管理が緩んでいる。先日確認した時は入れなかったが、今日は——違った。'},
+
+    { type: 'p', text: '地下五層への螺旋階段は、四層の最も奥まった場所——「魔導基層論」の書架の裏——に隠されていた。埃をかぶった書架を横にずらすと、狭い石造りの階段が闇に向かって伸びている。零は持参した小型の魔晶灯を点けて、階段を降りた。'},
+
+    { type: 'p', text: '地下五層。空気が違った。三層や四層の古い紙と革の匂いとは別の——もっと古い、石と土と、微かに金属が錆びた匂い。魔晶灯の光が照らし出すのは、高い天井と、無数の石造りの書架。ここにあるのは紙の本ではない——石版と金属板に刻まれた、古代文字の記録群だった。'},
+
+    { type: 'terminal', title: 'Terminal v1.0.0 — User: KAMISHIRO_REI', lines: [
+      '> monitor --detailed --range 30m',
+      '[Scanning...]',
+      '[No human mana signatures within range.]',
+      '[Ambient mana density: 1247.8 mP/m³ — 4.2x external baseline.]',
+      '[WARNING: Unusual mana frequency detected — source unknown.]',
+      '[Safe to proceed.]',
+      '> _',
+    ], blink: true},
+
+    { type: 'p', text: '「——通常の四倍以上か。地下の方が魔力密度が高いのか、それとも——ここが古代の魔力装置に近いからか」'},
+    { type: 'p', text: '零は最も奥の石版棚に向かった。そこで彼が見つけたのは——'},
+
+    { type: 'p', text: '『魔導基層論』——タイトルは古代文字で刻まれているが、昨夜Eveにインストールしておいた古代文字翻訳スクリプトのおかげで読める。著者名は削り取られていた。石版は全部で十二枚。そのうち最初の三枚だけが読める状態で、残りは——破壊されていた。誰かが意図的に、後半部分を粉砕したのだ。'},
+
+    { type: 'p', text: '最初の三枚に書かれていたこと：'},
+    { type: 'p', text: '「魔力粒子の基層には、すべての魔法現象を記述する普遍的な『コード』が存在する。このコードを読み書きできる者を、古代文明は『観測者（オブザーバー）』と呼んだ。観測者は魔法を使うのではない——世界に対して、どのような魔法現象を『起こすべきか』を指示するのだ。これは魔法ではなく、魔法を記述する言語である」'},
+
+    { type: 'p', text: '零は自分の手を見た。自分の端末も、まさにそれだ——魔法という現象を、コードという言語で記述し、実行する。古代文明はすでに同じコンセプトに到達していた。'},
+
+    { type: 'p', text: 'そして、石版の余白に——手書きの文字。石版を刻んだ者とは別の人物が、後から書き加えたものだ。翻訳スクリプトが読み解いたその文字は——'},
+    { type: 'p', text: '「オブザーバー#3の記録。#4は既に——（ここで文字が途切れ、石版に深い傷がついている）——#4はコードを書き換えすぎた。世界が彼を拒絶し始めている。我々は封印を準備しなければならない。#3より」'},
+
+    { type: 'p', text: '——#3。ここに#3がいた。#4は——コードの改変によって、存在を不安定にしたのか。そして#3は#4を"封印"した。'},
+    { type: 'thought', text: '俺は#7だ。#5と#6は？'},
+
+    { type: 'p', text: '零はさらに奥へ進んだ。地下五層の最深部——そこに、それはあった。'},
+    { type: 'p', text: '石造りの台座の上に、直径一メートルほどの金属製の円盤。表面には精密な魔法陣が刻まれ、中心には——小さな魔晶の結晶が埋め込まれている。これは電子機器ではない。魔晶と古代魔法陣で構成された、いわば——"古代のコンピュータ端末"だった。'},
+
+    { type: 'p', text: '零がそれに触れた瞬間——'},
+
+    { type: 'terminal', title: 'Terminal v1.0.0 — User: KAMISHIRO_REI', lines: [
+      '[EXTERNAL SIGNAL DETECTED]',
+      '[Signal origin: Ancient terminal — ID: OBSERVER_#4]',
+      '[Residual data stream incoming...]',
+      '[Decoding...]',
+      '[Message fragment:]',
+      '「警告：コードの改変は世界の崩壊を招く。」',
+      '「#3は世界を書き換えようとした。私はそれを止めなければならなかった。」',
+      '「だが——封印は完全ではない。いつか誰かが、この端末を再び起動する。」',
+      '「それが#5なのか、#6なのか、それとも——」',
+      '[Signal lost.]',
+      '> _',
+    ], blink: true},
+
+    { type: 'p', text: '零は手を離した。冷や汗が背中を伝っている。#4の残留メッセージ——これは少なくとも数百年以上前のものだ。だが、その内容は零の状況とあまりにも直結している。'},
+    { type: 'thought', text: 'コードの改変は世界の崩壊を招く。#4は#3を止めた。そして自分も封印された。では#5と#6は——'},
+    { type: 'thought', text: 'そして俺は、まだ何も知らないまま、この力を使っている。'},
+
+    { type: 'p', text: '零は深呼吸して、古代端末から離れた。今日得た情報を整理しなければ。Eveに指示して、発見した内容をすべて端末のローカルデータベースに記録する。'},
+
+    { type: 'p', text: '「——零。重要なことを伝えます」Eveの声が、いつもより少しだけ緊迫していた。'},
+    { type: 'p', text: '「なんだ」'},
+    { type: 'p', text: '「先ほど古代端末に接触した際、短時間ですが——学園内の別の場所から、同様の量子波形が応答しました。位置は——時計塔付近です」'},
+    { type: 'p', text: '零は顔を上げた。時計塔——学園のシンボルであり、最も高い建造物。そして——前回の夜のmonitorでも、同じ場所から異常波形を検出していた。'},
+    { type: 'p', text: '「——やはり、もう一人いる。この学園に」'},
+    { type: 'p', text: '零は魔晶灯を持ち直し、地下五層から四層へと戻り始めた。今夜はこれ以上深入りできない——でも、時計塔の調査は、近いうちに必ず。'},
+
+    { type: 'p', text: '図書館を出たのは午後十時を過ぎていた。夜空には星が冴え、学園の時計塔が月光にシルエットを浮かび上がらせている。零はその塔を一瞥してから、帰路についた。小雪が待っている——そして、明日もまた、戦いの一日が始まる。'},
+
+    { type: 'divider' },
+    { type: 'section', text: '次回予告 · Part 3 「星の兆し」' },
+
+    { type: 'p', text: '小雪との日曜日——日常の中の小さな幸せ。そして月曜の全校集会で発表される「特別試験」。一ヶ月後に迫ったその日のために、零は"端末支援型戦術"の確立を決意する。一方、各ヒロインたちもそれぞれの準備を始めて——'},
+
+    { type: 'p', text: '次回、Chapter 01 Part 3：「星の兆し」'},
+
+    { type: 'divider' },
+
+    { type: 'p', text: '（Chapter 01 Part 2 — END）', interactives: []},
+  ]
+};
+
+// ============================================================
+// 初始化
+// ============================================================
+function init() {
+  loadChapter('ch01');
+  updateTracker();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

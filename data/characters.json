@@ -224,7 +224,7 @@
       "name_kana": "かみしろ こゆき",
       "name_romaji": "Kamishiro Koyuki",
       "name_cn": "神代小雪",
-      "aliases": ["小雪", "小雪ちゃん", "雪の子"],
+      "aliases": ["小雪", "小雪ちゃん", "雪の子", "神代家の小さな主婦（自称しないが周囲の評価）", "お兄ちゃんの妹（本人はこの呼称が一番好き）"],
       "role": "セカンドヒロイン",
       "archetype": "義妹·献身型",
       "first_appearance": "EP（序章）",
@@ -244,34 +244,41 @@
 
       "appearance": {
         "hair": {
-          "color_jp": "銀白色（ぎんはくしょく）のショートヘア。魔力変異による先天性の色素脱失。",
-          "color_en": "Silver-white short hair (congenital depigmentation due to mana mutation)",
-          "style": "耳が隠れる程度のボブカット。前髪は眉上で切り揃え。動くとふわりと揺れる。"
+          "color_jp": "銀白色（ぎんはくしょく）のショートヘア。魔力変異による先天性の色素脱失。月明かりの下ではほのかに青白く発光する。",
+          "color_en": "Silver-white short hair (congenital depigmentation due to mana mutation). Faintly glows bluish-white under moonlight.",
+          "style": "耳が隠れる程度のふんわりボブカット。前髪は眉上でぱっつん。動くとふわりと揺れ、風のない室内でも静電気でたまにぴょんと跳ねる。寝起きは右側だけはねる（寝ぐせ）。"
         },
         "eyes": {
-          "color_jp": "氷青色（ひょうせいしょく）。魔法使用時は瞳孔に雪の結晶模様が浮かぶ",
-          "color_en": "Ice blue; snowflake crystal patterns appear in pupils when using magic"
+          "color_jp": "氷青色（ひょうせいしょく）。感情によって微妙に色の深さが変わる——嬉しいときは明るく、不安なときは深く沈んだ色に。魔法使用時は瞳孔に雪の結晶模様が浮かぶ。",
+          "color_en": "Ice blue; shade subtly shifts with emotion — brighter when happy, deeper when anxious. Snowflake crystal patterns appear in pupils when using magic."
         },
-        "build": "小柄で華奢。魔力負荷のため平均より痩せ気味。",
-        "skin": "色白（透き通るような白さ）。寒さに強いが暑さに極端に弱い。",
-        "special_marks": "左手首に氷晶状の痣（あざ）——魔力変異の外的徴候。普段は長袖や手袋で隠している。",
+        "build": "小柄で華奢（151cm）。魔力負荷のため平均より痩せ気味だが、本人は気にしていない。「小さい方が、お兄ちゃんに守ってもらいやすい」と思っている節がある。",
+        "skin": "色白（透き通るような白さ）。触れるとひんやりしている（魔力変異の副次効果）。寒さに強いが暑さに極端に弱く、夏はぐったりしていることが多い。ほっぺたはふっくらしていて、朱音から「もちもち」と評される（触られるのは本人はちょっと恥ずかしい）。",
+        "special_marks": "左手首に氷晶状の痣（あざ）——魔力変異の外的徴候。白い手袋は年中着用（寝るとき以外はほとんど外さない）。この痣について尋ねられるのが苦手で、話題になると小さく首を振ってそっと手を背中に隠す。",
+        "moe_details": "笑顔は控えめだが、本気で嬉しいときは目が三日月形になり、口元がほころぶ。零の前でだけ見せる特別な表情。困ったときは眉がハの字になり、上目遣いで助けを求める。くしゃみは「ふぁっ……くしゅん」と小さく、そのあと必ず周囲をキョロキョロ見回して誰かに聞かれなかったか確認する。",
         "clothing": {
-          "daily": "白や薄青を基調としたシンプルな服。動きやすいワンピース＋カーディガン。",
-          "uniform": "帝国中等部制服——紺色セーラー服。白いスカーフ。スカートはやや長め。",
-          "apron": "家事のときは白い割烹着＋手袋（魔力の痣を隠すため年中手袋をしている）。"
+          "daily": "白や薄青を基調としたシンプルな服。動きやすいワンピース＋ふわふわしたカーディガン（お気に入り）。夏でも長袖（痣を隠すため＋冷房が苦手なため）。",
+          "uniform": "帝国中等部制服——紺色セーラー服。白いスカーフ。スカートはやや長め（膝下5cm。本人曰く「短いと落ち着かない」）。",
+          "apron": "家事のときは白い割烹着＋手袋。割烹着には自分で刺繍した小さな雪の結晶がポケットの隅にある。",
+          "nightwear": "白い寝巻き＋ゆるく編んだ銀色の髪。このときだけ手袋を外している（痣が露わになるが、零しか見ていないので気にしない——むしろ、零だけには見せられる自分でいたいと思っている）。"
         }
       },
 
       "personality": {
         "traits": [
-          "献身的——兄·零の生活を支えることが最大の喜び。家事全般を完璧にこなす",
-          "控えめ——声は小さく、自分から前に出ることは少ない",
-          "繊細——他人の微細な変化に敏感。特に零の状態には驚くほど鋭い",
-          "芯の強さ——見た目に反して内面は強い。自分の魔力変異に怯えながらも、決して零の前では泣かない",
-          "独占欲の萌芽——零に対する感情が「家族愛」から別のものへと変化しつつある（本人はまだ自覚していない）"
+          "癒し系義妹——兄·零の生活を完璧に支えるしっかり者でありながら、年相応のあどけなさと小動物的な可愛らしさを持つ。朝は誰より早く起き、朝食と弁当を用意。台所に立つ姿は神代家の日常風景",
+          "小動物的反応——褒められると耳まで真っ赤になり、慌てると言葉が吃る（「あ、あの……えと……」）。嬉しいときは無意識に爪先立ちになり、驚くと「ひゃっ」と小さく声を上げる。恥ずかしいときは銀色の前髪で顔を隠す癖がある",
+          "献身的——零の生活を支えることが最大の喜びであり、生きがい。家事全般を完璧にこなし、特に料理と裁縫が得意。毎日のお弁当に小さな手書きメッセージを忍ばせる（「今日もがんばって」「……大好き」→最後のは入れすぎて後悔する）",
+          "甘党——甘いものに目がない。いちご大福と練乳のかかった氷菓子が好物。甘いものを食べているときは無意識に頬が緩み、いつもより口調がふにゃっとする。零に「甘いものばかり食べてると太るよ」と言われてショックを受け、三日間お菓子を我慢したことがある（四日目に零がいちご大福を買ってきたので断念）",
+          "繊細——他人の微細な変化に敏感。特に零の状態——目の色、声のトーン、食欲の有無——には驚くほど鋭い。これは能力ではなく、零だけをずっと見てきた証",
+          "芯の強さ——見た目に反して内面は強い。自分の魔力変異に怯えながらも、零の前では決して泣かない。零が困っているときは、自分がどんなに怖くても一歩前に出る勇気を持つ",
+          "独占欲の萌芽——零への感情が「家族愛」から別のものへと変化しつつある（本人はまだ自覚していない）。零が他の女性（特に朱音やエルナ）と親しげに話しているのを見ると胸がチクリと痛むが、その感情に名前をつけられない——「わたしは、お兄ちゃんの妹だから」",
+          "収集癖——零からもらったものは何でも大切に取ってある。小石、押し花、古い包み紙——すべて「お兄ちゃんとの思い出」として小さな木箱に仕舞われている。零はこの箱の存在を知らない",
+          "寝ぼけモード——朝は強いが夜は弱い。ソファで零の帰りを待っているうちにうたた寝してしまうことが多く、起こされると普段より幼い口調になる（「……お兄ちゃん……？ふぇ、いま何時……？」）",
+          "膨れっ面（ぷくー）——零が無茶をしたり食事を抜いたりすると、口をきかずにほっぺたを膨らませる。怒っているのに可愛いという反則級の抗議方法。零が謝るまで続く（最長記録：四十二分）"
         ],
-        "speech_style": "柔らかい敬語調。零を「お兄ちゃん」と呼ぶ。緊張すると吃りがち。句尾は「〜です」「〜ます」。",
-        "inner_conflict": "自分は神代家の「本物の家族」ではないという不安。零のために尽くすことで自分の居場所を確保しようとする心理。そして、その感情が「家族愛」の枠を超えかけていることへの罪悪感。"
+        "speech_style": "柔らかい敬語調。零を「お兄ちゃん」と呼ぶ。緊張すると吃りがち（「あ、あの……えと……」）。句尾は「〜です」「〜ます」。嬉しいときは声が一段階高くなる。寝ぼけているときは敬語が抜けて幼い口調に。怒っている（ふりをしている）ときは無言＋膨れっ面。",
+        "inner_conflict": "自分は神代家の「本物の家族」ではないという根源的な不安。零のために尽くすことで自分の居場所を確保しようとする心理。そして、その感情が「家族愛」の枠を超えかけていることへの罪悪感と戸惑い。「お兄ちゃんの妹」でありたい気持ちと、「それ以上」になりたいのかもしれないという気持ちの狭間で揺れている。"
       },
 
       "abilities_public": {
@@ -321,7 +328,55 @@
             "negative": "lowres, bad anatomy, bad hands, deformed eyes, asymmetrical eyes, ugly"
           }
         },
-        "style_notes": "小雪のビジュアルコアは「銀白の髪」と「氷青の瞳」。全体的に青白い色調だが、完全なモノクロではなく、肌だけがわずかに暖かみを持つコントラストが美しい。おすすめLoRA: 「Silver Hair」「Snow & Ice Effects」「Soft Girl Expression」。目の雪の結晶模様は「瞳孔の中に幾何学模様」と指定するのがコツ。"
+        "variations": {
+          "morning_apron": {
+            "prompt": "masterpiece, best quality, 1girl, silver-white bob hair, ice blue eyes, gentle smile, wearing white apron over casual clothes, holding cooking utensils, in warm kitchen with morning sunlight through window, cooking breakfast, steam from hot food, cozy atmosphere, anime style, slice of life, warm lighting contrasting with her cool-toned appearance",
+            "negative": "lowres, bad anatomy, bad hands, angry, dark, messy kitchen, modern appliances"
+          },
+          "ice_magic_awakening": {
+            "prompt": "masterpiece, best quality, 1girl, silver-white hair floating, ice blue eyes glowing, snowflake crystal pattern in pupils, ice magic surrounding, frost forming on ground and air, cold mist, dramatic lighting, blue and white color scheme, fragile but powerful, snow crystals floating, ethereal atmosphere, anime style, beautiful and haunting",
+            "negative": "lowres, bad anatomy, bad hands, fire, warm colors, smiling, multiple people"
+          },
+          "waiting_at_door": {
+            "prompt": "masterpiece, best quality, 1girl, silver-white bob hair, ice blue eyes, waiting at traditional Japanese house entrance, evening golden hour light, gentle welcoming expression, hand reaching toward door, nostalgic warm atmosphere, school uniform, white gloves, sunset shadows, emotional, anime style, Makoto Shinkai-esque lighting",
+            "negative": "lowres, bad anatomy, bad hands, dark, scary, crying, multiple people"
+          },
+          "snow_garden": {
+            "prompt": "masterpiece, best quality, 1girl, silver-white hair blending with snow, ice blue eyes, standing in light snowfall in traditional garden, wearing warm coat and scarf, white gloves, looking at snowflakes, peaceful melancholic expression, soft diffused winter light, monochrome blue-white palette with skin as only warm tone, anime style, poetic atmosphere",
+            "negative": "lowres, bad anatomy, bad hands, summer, flowers, bright colors, multiple people"
+          },
+          "close_up_eyes": {
+            "prompt": "masterpiece, best quality, 1girl, extreme close-up, face focus, silver-white bangs, ice blue eyes with snowflake pattern barely visible, pale skin with slight frost on eyelashes, cold breath visible, soft lighting reflecting in eyes, emotional depth, delicate features, anime style, detailed eyes, beautiful lighting, bokeh background",
+            "negative": "lowres, bad anatomy, bad hands, deformed eyes, asymmetrical eyes, ugly"
+          },
+          "moe_moments": {
+            "puffy_cheeks": {
+              "prompt": "masterpiece, best quality, 1girl, silver-white bob hair, ice blue eyes, pouting, puffy cheeks, slightly angry but adorable, looking away, crossed arms, middle school uniform, white gloves, cute sulking expression, anime style, moe, chibi-like expression on normal body, soft pastel lighting",
+              "negative": "lowres, bad anatomy, bad hands, actually angry, scary, dark, crying"
+            },
+            "sleepy_on_sofa": {
+              "prompt": "masterpiece, best quality, 1girl, silver-white bob hair messy, half-closed ice blue eyes, sleepy expression, lying on sofa, wrapped in blanket, night time, dim warm lamp light, waiting for someone, drowsy cute, yawning, anime style, cozy night atmosphere, moe, peaceful",
+              "negative": "lowres, bad anatomy, bad hands, day, bright, standing, awake"
+            },
+            "eating_sweets": {
+              "prompt": "masterpiece, best quality, 1girl, silver-white bob hair, ice blue eyes sparkling, eating strawberry daifuku, cheeks slightly puffed with food, extremely happy expression, sweet shop or home setting, soft warm lighting, cute messy eating, blissful smile, anime style, food moe, heartwarming",
+              "negative": "lowres, bad anatomy, bad hands, sad, dark, messy"
+            },
+            "surprised_hiccup": {
+              "prompt": "masterpiece, best quality, 1girl, silver-white bob hair, ice blue eyes wide open, surprised expression, small hands covering mouth, slight blush, tiny jump pose, exclamation mark feeling, middle school uniform, white gloves, anime style, cute reaction, bouncy feeling, soft background",
+              "negative": "lowres, bad anatomy, bad hands, calm, serious, dark"
+            },
+            "bento_message": {
+              "prompt": "masterpiece, best quality, 1girl, silver-white bob hair, ice blue eyes looking down lovingly, gentle warm smile, holding small handwritten note over bento box, morning light through window, kitchen setting, white apron, tender moment, love in details, anime style, warmth, moe, domestic bliss",
+              "negative": "lowres, bad anatomy, bad hands, sad, dark, empty"
+            },
+            "tiptoe_reach": {
+              "prompt": "masterpiece, best quality, 1girl, silver-white bob hair, ice blue eyes looking up, standing on tiptoes reaching upward, slight strain but determined expression, petite 151cm frame emphasized, trying to reach something high, cute posture, anime style, moe, everyday cuteness, soft lighting",
+              "negative": "lowres, bad anatomy, bad hands, tall, easy reach, dark"
+            }
+          }
+        },
+        "style_notes": "小雪のビジュアルコアは「銀白の髪」と「氷青の瞳」。全体的に青白い色調だが、完全なモノクロではなく、肌だけがわずかに暖かみを持つコントラストが美しい。萌え表現の要は「小動物感」——小さくて（151cm）、ふわふわしていて、守ってあげたくなる存在感。表情バリエーションは「照れ」「寝ぼけ」「膨れっ面」「無垢な笑顔」が四大萌えポイント。おすすめLoRA: 「Silver Hair」「Snow & Ice Effects」「Soft Girl Expression」「Moe Blush」。目の雪の結晶模様は「瞳孔の中に幾何学模様」と指定するのがコツ。"
       }
     },
 
@@ -425,9 +480,9 @@
       "name_kana": "くろがね まや",
       "name_romaji": "Kurogane Maya",
       "name_cn": "黑铁真夜",
-      "aliases": ["真夜", "深夜の独行者"],
+      "aliases": ["真夜", "深夜の小悪魔（自称しないが零が内心で命名）", "まやや（ひより専用）", "黒鉄の守護者（魔族内での称号）"],
       "role": "フォースヒロイン",
-      "archetype": "謎の転校生·寡黙な戦士",
+      "archetype": "小悪魔·高攻低防の魔族転校生",
       "first_appearance": "Chapter 02（予定）",
       "chapter_introduced": "CH03",
       "status": "未登場",
@@ -449,30 +504,31 @@
           "style": "耳にかかる程度の短めショート。無造作だが清潔感はある。"
         },
         "eyes": {
-          "color_jp": "オッドアイ——左目·深紅（しんく）、右目·金色（きんいろ）。魔族の血統の証。",
-          "color_en": "Heterochromia — left eye deep crimson, right eye gold. Mark of demon bloodline."
+          "color_jp": "オッドアイ——左目·深紅（しんく）、右目·金色（きんいろ）。魔族の血統の証。感情が高ぶると両目とも微妙に輝度が上がる（怒りで赤が濃く、照れで金色がふわっと柔らかくなる）。",
+          "color_en": "Heterochromia — left eye deep crimson, right eye gold. Mark of demon bloodline. Brightness subtly shifts with emotion."
         },
-        "horns": "頭頂部に極小の二本の角（通常は前髪で隠している）。",
-        "build": "細身だが筋肉質。動作に獣のような無駄のない鋭さがある。",
-        "scar": "背中に右肩から左腰にかけての古い傷跡（守護者の責務の中で負ったもの）。",
+        "horns": "頭頂部に極小の二本の角（約2cm、通常は前髪で隠れている）。感情が動くと無意識に角先が前髪からチラリと覗く——本人は気づいていない。これが彼女の「無自覚な殺し文句」ポーズになる。",
+        "build": "細身だが筋肉質。動きに猫科動物のような無駄のない鋭さがある。身長157cmと小柄だが、戦闘時の存在感は倍以上。",
+        "scar": "背中に右肩から左腰にかけての古い傷跡（12歳のとき、封印の裂け目を自分の体で塞いだ）。普段は服で完全に隠れている。この傷について尋ねられると、いつもの小悪魔モードが一瞬で止まる。",
+        "moe_details": "小悪魔モード時の特徴的な表情——片方の口角だけを上げる「ニヤリ」。目の前まで近づいて上目遣いで覗き込む「近距離観察」。照れると角の先が前髪からピョコンと出る「角バロメーター」。全力で照れると異色の両目がうるうるして視線が定まらなくなる「処理落ち顔」。",
         "clothing": {
-          "uniform": "星導学園女子制服——だが着こなしはややラフ。リボンをしないことが多い。",
-          "casual": "黒や濃紫を基調とした動きやすい服。スカートよりパンツスタイルが多い。",
-          "night_attire": "暗色の軽装鎧＋マント。影に溶け込むための装備。"
+          "uniform": "星導学園女子制服——だが着こなしはややラフ。リボンをしないことが多い。ボタンがたまに掛け違っている（朝が弱いため）。",
+          "casual": "黒や濃紫を基調とした動きやすい服。パンツスタイルが多い（スカートは「落ち着かない」）。",
+          "night_attire": "暗色の軽装鎧＋マント。影に溶け込むための装備。月明かりの下でこの姿になると、昼間の小悪魔キャラが影を潜め、守護者としての静かな威厳が現れる。"
         }
       },
 
       "personality": {
         "traits": [
-          "寡黙——必要なこと以外は口にしない。沈黙は彼女の鎧でもある",
-          "観察者——常に静かに周囲を観察し、情報を収集している",
-          "偏見への敏感さ——魔族として差別を受けてきた経験から、他者の「裏の顔」を見抜くのが上手い",
-          "戦闘本能——戦闘時には普段の静けさが嘘のような鋭さを見せる",
-          "隠れた優しさ——同じく排斥されている者には、声をかけずとも手を差し伸べる",
-          "夜行性——夜に強く、日中は授業中に眠そうにしていることが多い"
+          "小悪魔（高攻モード）——興味を持った相手（特に零）に対しては、自ら近づいて辛辣にからかう。含み笑いで相手の反応を楽しみ、挑発的な言動でどこまで踏み込めるか試す。ぴったりと近距離まで寄る物理的距離感の近さも小悪魔の武器",
+          "高攻低防——攻めているときは大胆不敵だが、相手が本気で返してくると即座に防御崩壊。耳の先から首筋まで真っ赤になり、声が裏返り、視線を合わせられなくなる。猫が自分からスリスリしておいて、撫でられると飛び上がって逃げるような反応。『な、なに言ってるんだ急に……』",
+          "夜行性の浪漫——夜は誰よりも元気で、日中は授業中にこっくりこっくり船を漕いでいる。深夜の学園の屋上や時計塔が彼女の城。月明かりの下で零と二人きりになると、昼間より素直な言葉が出る",
+          "ツン→デレの振り幅——信用していない相手には完全な無表情·無言·冷たい視線（これはこれで防御装甲）。心を許した相手には小悪魔モード全開→さらに打ち解けると、不意打ちの優しさや恥ずかしがり屋の素顔が漏れる。そのギャップが最大の魅力",
+          "偏見センサー——魔族として差別を受け続けてきた経験から、人間の本音と建前を嗅ぎ分ける嗅覚が鋭い。差別的な人間には氷のような視線を返すが、ひよりのような無垢な善意には完全に不意を突かれて処理落ちする",
+          "隠された使命感——小悪魔モードは素の性格であると同時に、重すぎる使命（封印の守護者）からの精神的な避難所でもある。背中の傷跡は12歳のとき封印の裂け目を自分の体で塞いだ勲章。この傷の話になると、冗談が全部止まる"
         ],
-        "speech_style": "言葉数が少ない。短く、省略が多い。だが行動は雄弁。信用した相手には不器用な笑顔を見せるようになる。",
-        "inner_conflict": "帝国への不信と、人間の中にも「違う」存在がいることへの気づき。任務と個人の感情の板挟み。"
+        "speech_style": "零に対しては「——ふぅん」「——へぇ」と含み笑いから始まる小悪魔口調。からかうときは断定形、照れるときは語尾が小さくなって早口になり、最終的に「……なんでもない」で強制終了する。信用した相手には不器用な笑顔を見せるようになり、言葉数は少ないままでも行動が雄弁になる。",
+        "inner_conflict": "封印の守護者としての重責と、一人の少女としての自分の間で揺れている。からかいや冗談で本当の気持ちを隠す癖がある——なぜなら、本気の感情を表に出すのは怖いから。人間不信と、それでも誰かを信じたい気持ちの狭間。零に対しては特にそれが顕著で、「ただの遊び」「協力関係」と言い訳しながら、実際には彼と過ごす時間を心のどこかで大切にしている。"
       },
 
       "abilities_public": {
@@ -513,6 +569,113 @@
           }
         },
         "style_notes": "オッドアイ（左·深紅／右·金色）は絶対条件。小さな角を忘れずに（誇張しすぎない）。全体の色調は紫と黒を基調に、目だけが異色で浮かび上がるコントラスト。おすすめLoRA: 「Heterochromia」「Demon Girl」「Dark & Shadow Effects」。"
+      }
+    },
+
+    {
+      "id": "H005",
+      "name_jp": "七瀬 ひより",
+      "name_kana": "ななせ ひより",
+      "name_romaji": "Nanase Hiyori",
+      "name_cn": "七濑日和",
+      "aliases": ["ひより", "学園の天使", "ひよちゃん（同級生から）", "まよちゃん（ひよりが真夜を呼ぶときの愛称）"],
+      "role": "DLC角色（配角·非攻略对象）",
+      "archetype": "天使系·天然呆·癒し系·DLC",
+      "first_appearance": "Chapter 01 Part 2（予定）",
+      "chapter_introduced": "CH01",
+      "status": "未登場",
+
+      "profile": {
+        "age": 15,
+        "birthday": "星暦303年 光月10日",
+        "gender": "女性",
+        "height_cm": 150,
+        "blood_type": "O",
+        "magic_rank": "B+級（光属性·治癒魔法専精）",
+        "occupation": "星導学園高等部 一年生·特待科壱組 / 学園医務室常駐助手",
+        "family_background": "星京最古の薬局「七瀬薬局」の一人娘。祖母は星京で名高い薬剤師·治癒術師。両親は薬局を切り盛りしつつ、平民向けの無料診療所を運営している。家族全員が何かしらの形で「人を癒すこと」に携わっている。"
+      },
+
+      "appearance": {
+        "hair": {
+          "color_jp": "亜麻色（あまいろ）——やわらかな茶色がかったブロンド。腰まで届くロング。",
+          "color_en": "Soft ash-brown / light brunette blonde, reaching to waist",
+          "style": "ふんわりと緩くウェーブしたロングヘアを、二本の低い三つ編みにして胸の前に垂らしている。編み終わりに白い小花の髪飾り。一番の特徴は頭頂部の長いアホ毛——感情で自由に動く（嬉しい→ピンと立つ、困惑→クエスチョンマーク形に曲がる、落ち込み→しおしおと倒れる）。"
+        },
+        "eyes": {
+          "color_jp": "浅葱色（あさぎいろ）——春の空のような柔らかい青緑。大きくて丸い。",
+          "color_en": "Soft spring-sky blue-green, large and round"
+        },
+        "build": "小柄でふんわりとしたシルエット。痩せているのではなく、全体的に柔らかく丸みを帯びた体型。同級生から「綿菓子みたい」と評される。",
+        "skin": "健康的なクリーム色。笑うと両頬に小さなえくぼが浮かぶ。",
+        "ahoge": "頭頂部の長いアホ毛（約10cm）——ひよりの感情バロメーター。喜怒哀楽に応じて自在に動く。これを見ればひよりの気持ちが一目でわかる。",
+        "clothing": {
+          "uniform": "星導学園女子制服——他の生徒と同じものを着ているはずなのに、なぜか彼女が着ると全体的に「ふんわり」した印象になる。動作がゆっくりで、スカートのプリーツの揺れ方もワンテンポ遅いせいかもしれない。",
+          "casual": "白や暖色系のゆったりした服。マフラーや手袋が好き（「やわらかくて落ち着くから」）。可愛い柄の靴下を集める趣味がある。",
+          "accessories": "常に携帯している小さな救急ポーチ（祖母手作りの治癒薬と包帯入り）。ポケットの中の飴玉（「低血糖はよくないから」という建前で、実は誰かにあげるのが好き）。"
+        }
+      },
+
+      "personality": {
+        "traits": [
+          "天使系·無償の善意——誰に対しても分け隔てなく優しい。相手の身分·種族·魔力等級で態度を変えるという概念自体を持っていない。真夜の異色瞳を初めて見たときの第一声は「わあ、きれいな目……！」だった。この一言で真夜の防御壁が一度に半壊した",
+          "天然呆——方向音痴で学園内をしょっちゅう迷子になる（最長記録：図書館に行こうとして円形闘技場に到着）。平地で何もないところで転ぶ（ただし不思議と怪我はしない——柔らかくて軽いからか、光属性の加護か）。人の話を途中から別の解釈で聞いていて会話がずれる",
+          "癒しのカリスマ——彼女の光魔法は攻撃ではなく治癒に特化。骨折3分、重度の魔力消耗も15分で回復させる学園一の治癒術師。医務室で彼女が笑顔で迎えるだけで患者の回復率が上がると校医が言っている。治療中に小さく自作の鼻歌を歌う癖がある（「元気になる魔法」と本人は呼んでいる）",
+          "意外な鋭さ——ぼんやりしているようで、人の「痛み」には驚くほど敏感。零のことを「いつも何かと戦ってるみたいな顔してる」と最初に見抜いた。理論や魔力ではなく、「人」を見ているからこそ気づけること",
+          "飴玉外交——ポケットに常に飴玉が入っている。人にあげるときの名目が毎回ユニーク：「今日はがんばったで賞」「朝ごはん少なめだったで賞」「なんとなくで賞」。小雪と校門で並んで飴玉をなめたのがきっかけで、二人は「甘味友達」に",
+          "怒らない——怒っているところを誰も見たことがない。ただ、悲しそうな顔は見たことがある。誰かが傷つけられるのを見ると、いつもの笑顔が消えて、静かに、本当に静かになる"
+        ],
+        "speech_style": "柔らかくてゆっくりした話し方。句尾に「〜ね」「〜だよ」が多く、全体的にふんわりした印象。相手の名前は必ず「〜くん」「〜ちゃん」付け。真夜のことも初日から「まやちゃん」と呼んで周囲を驚かせた。困ると「あう……」と言ってアホ毛がクエスチョンマークになる。",
+        "inner_conflict": "表面的には無邪気な天使そのものだが、彼女には一つの確固たる信念がある——「誰も傷つかない世界になってほしい」。戦闘ばかりの魔法学院で治癒魔法だけを選んだのは、その意思表示でもある。しかし、誰かを守るために誰かと戦わなければならない時が来たら、自分はどうするのか——それはまだ、彼女自身も答えを出せていない。"
+      },
+
+      "abilities_public": {
+        "magic_rank": "B+級",
+        "magic_type": "光属性（超高周波魔力粒子操作）——治癒魔法専精",
+        "style": "攻撃魔法は一切使わず、治癒·浄化·結界に特化した極めて珍しいスタイル。彼女の治癒魔法は単なる「治療」ではなく、相手の魔力の流れを整え自然治癒力を最大限に引き出すもの。祖母から受け継いだ薬学の知識と組み合わせることで、通常の治癒魔法では対処できない慢性的な魔力障害にも一定の効果を発揮する。",
+        "signature_techniques": [
+          { "name_jp": "癒しの光", "name_cn": "治愈之光", "description": "基本的な治癒魔法。外傷·打撲·軽度の骨折まで対応。光の温かさが痛みを和らげる。" },
+          { "name_jp": "清めの結界", "name_cn": "净化结界", "description": "小規模な結界を張り、範囲内の魔力汚染や異常状態を徐々に浄化する。持続型。" },
+          { "name_jp": "光の羽衣", "name_cn": "光之羽衣", "description": "対象に光の膜を纏わせ、一時的に防御力と回復力を高める支援魔法。ひよりはこれを「おまもり」と呼ぶ。" }
+        ]
+      },
+
+      "relationships_public": [],
+
+      "image_prompts": {
+        "description": "天使系·天然呆の癒し系ヒロイン。ふんわりした雰囲気と、頭頂部の感情豊かなアホ毛が最大の特徴。",
+        "base": {
+          "prompt": "masterpiece, best quality, 1girl, solo, 15 years old, soft ash-brown long hair in twin low braids with small white flower hair ties, prominent ahoge (emotional antenna hair), light green-blue gentle round eyes, petite 150cm, soft round face with faint dimples when smiling, sweet angelic smile, wearing dark blue sailor uniform, healing gentle atmosphere, anime style, moe, warm and soft lighting, cotton candy soft impression",
+          "negative": "lowres, bad anatomy, bad hands, tall, sharp features, angular face, dark, aggressive, angry, large breasts, revealing, mature, scary, gothic, cold colors",
+          "recommended_models": ["Anything V5/V7", "NovelAI v3/v4", "Animagine XL", "AOMO"],
+          "resolution": "832x1216 (portrait)",
+          "cfg_scale": 7,
+          "sampler": "DPM++ 2M Karras",
+          "steps": 30
+        },
+        "variations": {
+          "healing_moment": {
+            "prompt": "masterpiece, best quality, 1girl, ash-brown hair twin braids, ahoge standing straight (focused), gentle green-blue eyes, hands glowing with warm golden healing light, soft smile, nursing someone with care, infirmary setting, warm afternoon light through window, peaceful healing atmosphere, anime style, heartwarming, angelic, dust particles in sunlight",
+            "negative": "lowres, bad anatomy, bad hands, dark, blood, injury visible, scary, sad"
+          },
+          "lost_in_hallway": {
+            "prompt": "masterpiece, best quality, 1girl, ash-brown hair, ahoge bent into question mark shape, confused gentle expression, looking around in school hallway, holding map upside down, tilt head, slightly lost, cute helpless pose, school uniform, afternoon lighting, slice of life comedy, anime style, moe, adorable confusion",
+            "negative": "lowres, bad anatomy, bad hands, dark, scary, sad, crying"
+          },
+          "offering_candy": {
+            "prompt": "masterpiece, best quality, 1girl, ash-brown hair, ahoge perked up happily, warm smile with dimples, reaching hand forward offering colorful candies, gentle sparkling eyes, soft warm lighting, kind gesture, school uniform, anime style, heartwarming, sweet atmosphere, moe, friendship",
+            "negative": "lowres, bad anatomy, bad hands, dark, sad, multiple people"
+          },
+          "spring_day_casual": {
+            "prompt": "masterpiece, best quality, 1girl, ash-brown long hair, ahoge relaxed, wearing soft white loose dress, standing in flower garden, spring cherry blossoms, gentle breeze, looking at flowers with peaceful smile, warm sunlight, soft focus background, anime style, angelic, natural beauty, healing",
+            "negative": "lowres, bad anatomy, bad hands, dark, winter, snow, urban, school uniform"
+          },
+          "serious_rare_moment": {
+            "prompt": "masterpiece, best quality, 1girl, ash-brown hair, ahoge slightly drooping (concerned), serious gentle expression, hands clasped in front of chest, soft golden light aura, determined yet kind eyes, wind blowing hair gently, dramatic but warm lighting, anime style, emotional depth, rare serious mode, still angelic",
+            "negative": "lowres, bad anatomy, bad hands, angry, scary, dark, cold, sharp expression"
+          }
+        },
+        "style_notes": "ひよりのビジュアルコアは「アホ毛（感情アンテナ）」と「浅葱色の大きな瞳」。全体的にふんわり·やわらか·あたたかい印象が命。可愛い系だが「萌え萌え」ではなく「自然な愛らしさ」。おすすめLoRA: 「Ahoge」「Soft Girl Expression」「Healing Light Effects」「Spring Atmosphere」。アホ毛の形状変化（通常→ピン→クエスチョンマーク→しおしお）を差分として楽しめる。"
       }
     },
 
@@ -598,8 +761,9 @@
 
   "character_appearance_schedule": {
     "EP00": ["P001", "H001", "H002", "A001"],
-    "CH01": ["P001", "H001", "H002", "H003", "A001"],
-    "CH02": ["P001", "H001", "H002", "H003", "H004", "A001"],
-    "CH05": ["H005 (？？？)"]
+    "CH01_Part1": ["P001", "H001", "H002", "H003", "A001"],
+    "CH01_Part2_3": ["P001", "H001", "H002", "H003", "H005(DLC)", "A001"],
+    "CH02": ["P001", "H001", "H002", "H003", "H004", "H005(DLC)", "A001"],
+    "CH03": ["P001", "H001", "H002", "H003", "H004", "H005(DLC)", "A001", "栞(初登場)"]
   }
 }
