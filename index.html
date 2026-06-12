@@ -1,2167 +1,583 @@
 <!DOCTYPE html>
-<html lang="ja" data-theme="dark">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>终端之梦 Terminal Phantasm</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Serif+JP:wght@400;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        /* ========== 基础变量与重置 ========== */
-        :root {
-            --bg-primary: #0B0B0C;
-            --bg-secondary: #111118;
-            --bg-tertiary: #18181f;
-            --accent-blue: #00d4ff;
-            --accent-purple: #7c3aed;
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --terminal-green: #00ff88;
-            --glass-bg: rgba(15, 18, 25, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --quote-color: rgba(245, 158, 11, 0.85);
-            --quote-bg: rgba(245, 158, 11, 0.03);
-            --quote-border: rgba(245, 158, 11, 0.35);
-            --dialogue-color: #f0e6d3;
-            --char-akane: #f59e0b;
-            --char-koyuki: #38bdf8;
-            --char-zero: #00d4ff;
-            --char-eve: #a855f7;
-        }
-
-        [data-theme="light"] {
-            --bg-primary: #FFFFFF;
-            --bg-secondary: #f5f5f7;
-            --bg-tertiary: #ececee;
-            --accent-blue: #FF2A55;
-            --accent-purple: #cc1144;
-            --text-primary: #1a1a2e;
-            --text-secondary: #666680;
-            --terminal-green: #16a34a;
-            --glass-bg: rgba(250, 250, 252, 0.82);
-            --glass-border: rgba(0, 0, 0, 0.08);
-            --quote-color: rgba(220, 38, 38, 0.85);
-            --quote-bg: rgba(220, 38, 38, 0.03);
-            --quote-border: rgba(220, 38, 38, 0.3);
-            --dialogue-color: #2d1810;
-            --char-akane: #dc2626;
-            --char-koyuki: #2563eb;
-            --char-zero: #dc2626;
-            --char-eve: #9333ea;
-        }
-
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html { scroll-behavior: smooth; overflow-y: scroll; }
-
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: linear-gradient(135deg, #07080f 0%, #0c0e18 40%, #0a0c16 100%);
-            background-size: 400% 400%;
-            animation: bg-drift 20s ease infinite;
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        [data-theme="light"] body {
-            background: linear-gradient(135deg, #f8f8fb 0%, #ececef 50%, #f4f4f8 100%);
-            background-size: 400% 400%;
-        }
-
-        @keyframes bg-drift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        /* ========== macOS 窗口容器 ========== */
-        .app-window {
-            position: relative;
-            width: min(1280px, 96vw);
-            margin: 24px auto;
-            border-radius: 16px;
-            overflow: hidden;
-            background: rgba(12, 14, 22, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 
-                0 0 0 1px rgba(255,255,255,0.03) inset,
-                0 30px 90px rgba(0,0,0,0.45),
-                0 8px 32px rgba(0,0,0,0.25);
-            transition: all 0.3s ease;
-        }
-
-        [data-theme="light"] .app-window {
-            background: rgba(252, 252, 254, 0.85);
-            border-color: rgba(0,0,0,0.08);
-            box-shadow: 
-                0 0 0 1px rgba(0,0,0,0.03) inset,
-                0 30px 90px rgba(0,0,0,0.08),
-                0 8px 32px rgba(0,0,0,0.05);
-        }
-
-        /* ========== macOS 标题栏 ========== */
-        .window-titlebar {
-            display: flex;
-            align-items: center;
-            height: 48px;
-            padding: 0 20px;
-            background: rgba(8, 10, 18, 0.5);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            -webkit-app-region: drag;
-            user-select: none;
-        }
-
-        [data-theme="light"] .window-titlebar {
-            background: rgba(248, 248, 250, 0.7);
-            border-bottom-color: rgba(0,0,0,0.06);
-        }
-
-        .window-dots {
-            display: flex;
-            gap: 8px;
-            -webkit-app-region: no-drag;
-        }
-
-        .window-dot {
-            width: 13px;
-            height: 13px;
-            border-radius: 50%;
-            transition: all 0.2s ease;
-            cursor: default;
-        }
-
-        .window-dot.red { background: #ff5f57; }
-        .window-dot.yellow { background: #febc2e; }
-        .window-dot.green { background: #28c840; }
-        .window-dot:hover { filter: brightness(1.15); transform: scale(1.1); }
-
-        .window-title {
-            flex: 1;
-            text-align: center;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: rgba(255,255,255,0.3);
-        }
-
-        [data-theme="light"] .window-title { color: rgba(0,0,0,0.3); }
-
-        .window-toolbar {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            -webkit-app-region: no-drag;
-        }
-
-        .window-tool-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            color: rgba(255,255,255,0.3);
-            font-size: 13px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .window-tool-btn:hover {
-            background: rgba(255,255,255,0.08);
-            color: rgba(255,255,255,0.7);
-        }
-
-        [data-theme="light"] .window-tool-btn { color: rgba(0,0,0,0.3); }
-        [data-theme="light"] .window-tool-btn:hover {
-            background: rgba(0,0,0,0.05);
-            color: rgba(0,0,0,0.7);
-        }
-
-        /* ========== 窗口主体布局 ========== */
-        .window-body {
-            display: flex;
-            height: calc(90vh - 49px);
-            min-height: 500px;
-        }
-
-        /* ========== 侧边栏 ========== */
-        .app-sidebar {
-            width: 240px;
-            flex-shrink: 0;
-            background: rgba(8, 10, 18, 0.5);
-            border-right: 1px solid rgba(255,255,255,0.06);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            contain: layout style;
-        }
-
-        [data-theme="light"] .app-sidebar {
-            background: rgba(248, 248, 250, 0.6);
-            border-right-color: rgba(0,0,0,0.06);
-        }
-
-        .sidebar-logo {
-            padding: 20px 16px 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .sidebar-logo-text {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: block;
-            text-align: center;
-        }
-
-        .sidebar-logo-sub {
-            font-family: 'Noto Serif JP', serif;
-            font-size: 10px;
-            color: var(--text-secondary);
-            opacity: 0.5;
-            text-align: center;
-            margin-top: 2px;
-        }
-
-        .sidebar-nav {
-            flex: 1;
-            padding: 12px 10px;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        .sidebar-nav::-webkit-scrollbar { width: 3px; }
-        .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.2); border-radius: 2px; }
-
-        .sidebar-section { margin-bottom: 4px; }
-
-        .sidebar-section-title {
-            font-size: 9.5px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 8px 12px 4px;
-            opacity: 0.45;
-        }
-
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 12px;
-            margin-bottom: 2px;
-            border-radius: 8px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            position: relative;
-            user-select: none;
-        }
-
-        .sidebar-item:hover {
-            background: rgba(0,212,255,0.06);
-            color: var(--text-primary);
-        }
-
-        .sidebar-item.active {
-            background: rgba(0,212,255,0.1);
-            color: var(--accent-blue);
-        }
-
-        .sidebar-item.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 4px;
-            bottom: 4px;
-            width: 3px;
-            border-radius: 0 2px 2px 0;
-            background: var(--accent-blue);
-        }
-
-        .sidebar-item .si-icon { font-size: 15px; min-width: 20px; text-align: center; }
-        .sidebar-item .si-label { flex: 1; }
-        .sidebar-item .si-arrow { font-size: 10px; opacity: 0; transition: opacity 0.15s; }
-        .sidebar-item:hover .si-arrow { opacity: 0.4; }
-
-        .sidebar-chapter {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 7px 12px;
-            margin-bottom: 2px;
-            border-radius: 7px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            font-size: 12px;
-            transition: all 0.2s ease;
-        }
-
-        .sidebar-chapter:hover { background: rgba(0,212,255,0.05); color: var(--text-primary); }
-        .sidebar-chapter.active { background: rgba(0,212,255,0.1); color: var(--accent-blue); }
-
-        .sidebar-chapter .sc-num {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 8px;
-            font-weight: 700;
-            color: var(--accent-purple);
-            min-width: 30px;
-        }
-
-        .sidebar-chapter .sc-title { flex: 1; }
-
-        .sidebar-chapter .sc-badge {
-            font-size: 8px;
-            padding: 1px 5px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-
-        .sidebar-footer {
-            padding: 12px 10px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            gap: 6px;
-        }
-
-        [data-theme="light"] .sidebar-footer { border-top-color: rgba(0,0,0,0.06); }
-
-        .sidebar-footer-btn {
-            flex: 1;
-            padding: 7px;
-            border-radius: 7px;
-            border: 1px solid var(--glass-border);
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 11px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            transition: all 0.2s ease;
-        }
-
-        .sidebar-footer-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
-        .sidebar-footer-btn.active { border-color: var(--accent-blue); color: var(--accent-blue); }
-
-        /* ========== 内容区 ========== */
-        .app-content {
-            flex: 1;
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .app-panel {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0;
-            transform: scale(0.97) translateY(8px);
-            pointer-events: none;
-            transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            overflow-y: auto;
-        }
-
-        .app-panel.active {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-            pointer-events: auto;
-        }
-
-        .app-panel::-webkit-scrollbar { width: 4px; }
-        .app-panel::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.15); border-radius: 2px; }
-
-        /* ========== 阅读面板 ========== */
-        #panel-reading {
-            display: flex;
-            flex-direction: column;
-            padding: 0;
-        }
-
-        .panel-toolbar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 12px 24px;
-            background: rgba(8, 10, 18, 0.4);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            flex-shrink: 0;
-            contain: layout style;
-        }
-
-        [data-theme="light"] .panel-toolbar {
-            background: rgba(248, 248, 250, 0.6);
-            border-bottom-color: rgba(0,0,0,0.04);
-        }
-
-        .toolbar-lang-group {
-            display: flex;
-            gap: 2px;
-            background: rgba(255,255,255,0.04);
-            border-radius: 8px;
-            padding: 3px;
-        }
-
-        [data-theme="light"] .toolbar-lang-group { background: rgba(0,0,0,0.04); }
-
-        .toolbar-lang-btn {
-            padding: 5px 12px;
-            border-radius: 6px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 11px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .toolbar-lang-btn.active {
-            background: var(--bg-primary);
-            color: var(--accent-blue);
-            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-        }
-
-        [data-theme="light"] .toolbar-lang-btn.active { background: #fff; }
-
-        .toolbar-btn {
-            padding: 6px 14px;
-            border-radius: 8px;
-            border: 1px solid var(--glass-border);
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 11px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.15s ease;
-        }
-
-        .toolbar-btn:hover {
-            background: rgba(0,212,255,0.06);
-            border-color: rgba(0,212,255,0.25);
-            color: var(--accent-blue);
-        }
-
-        .toolbar-btn.primary {
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            border-color: transparent;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .toolbar-btn.primary:hover { filter: brightness(1.1); }
-
-        .panel-reading-stage {
-            flex: 1;
-            max-width: 720px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 48px 40px 100px;
-            contain: layout style;
-        }
-
-        @media (max-width: 767px) {
-            .panel-reading-stage { padding: 32px 20px 80px; }
-        }
-
-        /* ========== 角色面板 ========== */
-        #panel-characters {
-            padding: 32px 32px 100px;
-        }
-
-        .char-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .char-card {
-            border-radius: 14px;
-            padding: 24px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
-            transition: all 0.25s ease;
-            cursor: pointer;
-            contain: layout style;
-        }
-
-        .char-card:hover {
-            background: rgba(0,212,255,0.04);
-            border-color: rgba(0,212,255,0.2);
-            transform: translateY(-2px);
-        }
-
-        [data-theme="light"] .char-card {
-            background: rgba(0,0,0,0.02);
-            border-color: rgba(0,0,0,0.07);
-        }
-
-        .char-card.locked { opacity: 0.4; }
-
-        .char-card-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 14px;
-        }
-
-        .char-card-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(124,58,237,0.1));
-            border: 2px solid;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .char-card-info { flex: 1; min-width: 0; }
-
-        .char-card-name {
-            font-family: 'Noto Serif JP', serif;
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--accent-blue);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .char-card-role {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 2px;
-        }
-
-        .char-card-desc {
-            font-size: 12.5px;
-            line-height: 1.7;
-            color: var(--text-secondary);
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .char-card-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 10px;
-        }
-
-        .char-card-tag {
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 10px;
-            background: rgba(124,58,237,0.1);
-            color: var(--accent-purple);
-        }
-
-        /* ========== 百科面板 ========== */
-        #panel-wiki {
-            padding: 0;
-        }
-
-        .wiki-tabs {
-            display: flex;
-            gap: 4px;
-            padding: 16px 32px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            background: rgba(8,10,18,0.3);
-            contain: layout style;
-        }
-
-        [data-theme="light"] .wiki-tabs {
-            background: rgba(248,248,250,0.5);
-            border-bottom-color: rgba(0,0,0,0.04);
-        }
-
-        .wiki-tab {
-            padding: 7px 16px;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .wiki-tab.active {
-            background: rgba(0,212,255,0.1);
-            color: var(--accent-blue);
-        }
-
-        .wiki-tab:hover { background: rgba(0,212,255,0.05); color: var(--text-primary); }
-
-        .wiki-content {
-            padding: 24px 32px 100px;
-            overflow-y: auto;
-            height: calc(100% - 57px);
-        }
-
-        .wiki-section-title {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--accent-blue);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin: 20px 0 10px;
-            padding-left: 8px;
-            border-left: 2px solid var(--accent-blue);
-        }
-
-        [data-theme="light"] .wiki-section-title { color: var(--accent-blue); }
-
-        .wiki-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
-        }
-
-        .wiki-item {
-            padding: 12px 14px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .wiki-item:hover {
-            background: rgba(0,212,255,0.05);
-            border-color: rgba(0,212,255,0.2);
-        }
-
-        [data-theme="light"] .wiki-item {
-            background: rgba(0,0,0,0.02);
-            border-color: rgba(0,0,0,0.06);
-        }
-
-        .wiki-item-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .wiki-item-desc {
-            font-size: 11px;
-            line-height: 1.5;
-            color: var(--text-secondary);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        /* ========== KV Hero 入口 ========== */
-        .app-hero {
-            position: relative;
-            min-height: 380px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            background: linear-gradient(180deg, rgba(0,212,255,0.03) 0%, transparent 100%);
-        }
-
-        [data-theme="light"] .app-hero {
-            background: linear-gradient(180deg, rgba(220,38,38,0.02) 0%, transparent 100%);
-            border-bottom-color: rgba(0,0,0,0.05);
-        }
-
-        .app-hero #kv-canvas { border-radius: 0; }
-
-        .app-hero-content { position: relative; z-index: 1; text-align: center; padding: 40px 20px; }
-
-        .app-hero-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(28px, 5vw, 48px);
-            font-weight: 900;
-            letter-spacing: 6px;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            transition: filter 0.4s;
-        }
-
-        .app-hero-title:hover { filter: brightness(1.25); }
-
-        .app-hero-sub {
-            font-family: 'Noto Serif JP', serif;
-            font-size: clamp(16px, 3vw, 24px);
-            font-style: italic;
-            color: var(--text-secondary);
-            margin-top: 12px;
-            letter-spacing: 4px;
-        }
-
-        .app-hero-quote {
-            font-family: 'Noto Serif JP', serif;
-            font-size: clamp(13px, 2vw, 16px);
-            font-style: italic;
-            color: var(--text-secondary);
-            opacity: 0.6;
-            margin-top: 24px;
-            line-height: 1.8;
-        }
-
-        .app-hero-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 32px;
-            padding: 14px 36px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: #fff;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .app-hero-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0,212,255,0.3);
-        }
-
-        .app-hero-meta {
-            margin-top: 20px;
-            font-size: 11px;
-            color: var(--text-secondary);
-            opacity: 0.35;
-            letter-spacing: 1px;
-        }
-
-        /* ========== 保留的原有样式（阅读相关） ========== */
-        .reading-stage {
-            max-width: 680px;
-            margin: 0 auto;
-            padding: 48px 40px 80px;
-            position: relative;
-            contain: content;
-        }
-
-        .floating-ep-bar {
-            position: sticky;
-            top: 0;
-            z-index: 40;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            height: 40px;
-            padding: 0 20px;
-            margin-bottom: 32px;
-            background: rgba(11, 11, 12, 0.65);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            border-radius: 0 0 14px 14px;
-        }
-
-        [data-theme="light"] .floating-ep-bar {
-            background: rgba(255,255,255,0.75);
-            border-bottom-color: rgba(0,0,0,0.06);
-        }
-
-        .ep-nav-btn {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 5px 12px;
-            border-radius: 8px;
-            border: 1px solid transparent;
-            background: transparent;
-            color: var(--text-secondary);
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 11.5px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .ep-nav-btn:hover:not(:disabled) {
-            background: rgba(0, 212, 255, 0.08);
-            border-color: rgba(0, 212, 255, 0.25);
-            color: var(--accent-blue);
-        }
-
-        .ep-nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
-
-        .ep-nav-select {
-            min-width: 0;
-            max-width: 200px;
-            padding: 5px 28px 5px 12px;
-            border-radius: 8px;
-            border: 1px solid var(--glass-border);
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 11.5px;
-            font-weight: 500;
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            transition: all 0.2s ease;
-        }
-
-        .ep-nav-select:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.15); }
-        .ep-nav-select option { background: var(--bg-tertiary); color: var(--text-primary); }
-
-        .ep-nav-counter {
-            font-size: 11px;
-            color: var(--text-secondary);
-            opacity: 0.5;
-            white-space: nowrap;
-            flex-shrink: 0;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .ep-content-wrapper {
-            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .ep-content-wrapper.ep-fade-out { opacity: 0; transform: translateY(-10px); }
-        .ep-content-wrapper.ep-fade-in { opacity: 1; transform: translateY(0); }
-
-        .chapter-art-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 28px;
-            font-weight: 700;
-            text-align: center;
-            margin: 64px 0 56px;
-            position: relative;
-            letter-spacing: 4px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .chapter-art-title::before,
-        .chapter-art-title::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
-        }
-
-        .chapter-art-title::before { top: -20px; }
-        .chapter-art-title::after { bottom: -16px; }
-
-        .section-heading {
-            font-family: 'Noto Serif JP', serif;
-            font-size: 19px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin: 52px 0 28px;
-            padding-left: 16px;
-            border-left: 3px solid var(--accent-blue);
-            opacity: 0.9;
-        }
-
-        .scene-separator {
-            width: 70px;
-            height: 2px;
-            margin: 44px auto;
-            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
-            opacity: 0.35;
-        }
-
-        .art-quote {
-            text-align: center;
-            padding: 36px 48px;
-            margin: 48px auto;
-            max-width: 520px;
-            position: relative;
-        }
-
-        .art-quote::before {
-            content: '"';
-            position: absolute;
-            top: 12px;
-            left: 24px;
-            font-size: 48px;
-            color: var(--quote-color);
-            opacity: 0.2;
-            font-family: Georgia, serif;
-            line-height: 1;
-        }
-
-        .art-quote p {
-            font-family: 'Noto Serif JP', serif;
-            font-style: italic;
-            color: var(--quote-color) !important;
-            font-size: 16px !important;
-            line-height: 2 !important;
-            margin-bottom: 8px !important;
-        }
-
-        .content-paragraph {
-            font-family: 'Noto Serif JP', 'Source Han Serif SC', serif;
-            font-size: 17.5px;
-            line-height: 2.1;
-            color: var(--text-primary);
-            margin-bottom: 40px;
-            text-align: justify;
-            letter-spacing: 0.02em;
-            text-indent: 1em;
-        }
-
-        .content-paragraph strong { color: var(--text-primary); font-weight: 600; }
-        [data-theme="light"] .content-paragraph strong { color: #0f172a; }
-
-        .translation { font-size: 0.85em; color: var(--text-secondary); opacity: 0.65; }
-        .dialogue-text { color: var(--dialogue-color); }
-
-        .translation-line {
-            opacity: 0.72;
-            color: var(--accent-blue);
-            font-size: 0.9em;
-            border-left: 2px solid rgba(0, 212, 255, 0.2);
-            padding-left: 14px;
-            margin-top: -18px;
-        }
-
-        [data-lang-mode="jp"] .translation-line { display: none; }
-        [data-lang-mode="jp"] .content-paragraph[data-lang="ja"] { color: var(--text-primary); opacity: 1; }
-        [data-lang-mode="cn"] .content-paragraph[data-lang="ja"] { color: var(--text-secondary); opacity: 0.38; font-size: 0.88em; }
-        [data-lang-mode="cn"] .translation-line { color: var(--text-primary); opacity: 1; font-size: 1em; font-weight: 500; border-left-color: var(--accent-blue); background: rgba(0, 212, 255, 0.04); }
-
-        .terminal-block {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            margin: 32px 0;
-            overflow: hidden;
-            border: 1px solid rgba(0, 255, 136, 0.12);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-            contain: layout style;
-        }
-
-        [data-theme="light"] .terminal-block { background: #1a1a24; border-color: rgba(255, 255, 255, 0.06); }
-
-        .terminal-header {
-            background: rgba(25, 30, 42, 0.95);
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .terminal-dot { width: 11px; height: 11px; border-radius: 50%; }
-        .terminal-dot.red { background: #ff5f57; }
-        .terminal-dot.yellow { background: #febc2e; }
-        .terminal-dot.green { background: #28c840; }
-
-        .terminal-title-bar {
-            flex: 1;
-            text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            color: rgba(148, 163, 184, 0.5);
-            margin-left: -46px;
-        }
-
-        .terminal-body {
-            padding: 18px 22px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12.5px;
-            line-height: 1.75;
-            color: var(--terminal-green);
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
-
-        .terminal-cursor {
-            display: inline-block;
-            width: 7px;
-            height: 15px;
-            background: var(--terminal-green);
-            animation: cursor-blink 1s step-end infinite;
-            vertical-align: middle;
-            margin-left: 2px;
-        }
-
-        @keyframes cursor-blink { 50% { opacity: 0; } }
-
-        .chapter-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            margin-bottom: 3px;
-            border-radius: 10px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            font-size: 13px;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .chapter-item:hover { background: rgba(0,212,255,0.06); color: var(--text-primary); }
-        .chapter-item.active {
-            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(124,58,237,0.08));
-            color: var(--accent-blue);
-            font-weight: 600;
-            border-left: 3px solid var(--accent-blue);
-        }
-
-        .chapter-item .ch-num {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 9px;
-            font-weight: 700;
-            color: var(--accent-purple);
-            min-width: 36px;
-            text-align: center;
-        }
-
-        .chapter-item .ch-title { flex: 1; }
-
-        .chapter-item .ch-badge {
-            font-size: 9px;
-            padding: 2px 7px;
-            border-radius: 6px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .ch-badge-demo {
-            background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
-            color: #f59e0b;
-            border: 1px solid rgba(245,158,11,0.25);
-        }
-
-        .ch-badge-complete { background: rgba(16,185,129,0.1); color: #10b981; }
-        .ch-badge-locked { background: rgba(148,163,184,0.08); color: var(--text-secondary); opacity: 0.5; }
-        .chapter-item.locked { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
-
-        .demo-banner {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 8px 16px;
-            margin: 24px auto 32px;
-            max-width: 400px;
-            border-radius: 20px;
-            background: linear-gradient(135deg, rgba(245,158,11,0.06), rgba(245,158,11,0.02));
-            border: 1px solid rgba(245,158,11,0.2);
-            font-size: 12px;
-            color: #f59e0b;
-            font-weight: 500;
-        }
-
-        [data-theme="light"] .demo-banner {
-            background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.03));
-            border-color: rgba(245,158,11,0.25);
-        }
-
-        /* ========== 响应式 ========== */
-        @media (max-width: 900px) {
-            .app-sidebar { width: 60px; }
-            .sidebar-logo-text { font-size: 9px; letter-spacing: 0; }
-            .sidebar-logo-sub { display: none; }
-            .sidebar-item .si-label { display: none; }
-            .sidebar-item .si-arrow { display: none; }
-            .sidebar-item { justify-content: center; padding: 10px; }
-            .sidebar-section-title { display: none; }
-            .sidebar-chapter { padding: 8px; justify-content: center; }
-            .sidebar-chapter .sc-num, .sidebar-chapter .sc-title, .sidebar-chapter .sc-badge { display: none; }
-            .sidebar-footer { flex-direction: column; gap: 4px; }
-            .sidebar-footer-btn span { display: none; }
-            .sidebar-footer-btn { font-size: 15px; padding: 8px; }
-        }
-
-        @media (max-width: 640px) {
-            body { padding: 0; }
-            .app-window { 
-                width: 100vw; 
-                margin: 0; 
-                border-radius: 0; 
-                height: 100vh; 
-            }
-            .window-body { height: calc(100vh - 48px); }
-            .app-sidebar { display: none; }
-        }
-
-        .hidden-el { display: none !important; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>终端之梦 ～ Terminal Phantasm ～</title>
+<style>
+:root{--bg:#f5f0e8;--text:#2c2416;--accent:#8b4513;--link:#c41e3a;--term-bg:#0c0c14;--term-text:#00ee77;--term-prompt:#ff5555}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Noto Serif SC','Source Han Serif SC','SimSun',Georgia,serif;font-size:17px;line-height:2.1}
+.reader{max-width:700px;margin:0 auto;padding:50px 24px 120px}
+.ch-head{text-align:center;margin-bottom:44px;padding-bottom:28px;border-bottom:2px solid #d4c5a9}
+.ch-head .ch-num{font-size:13px;letter-spacing:3px;color:var(--accent);margin-bottom:10px}
+.ch-head h1{font-size:27px;font-weight:700;letter-spacing:2px}
+.ch-head .ch-sub{font-size:14px;color:#8b7355;font-style:italic;margin-top:6px}
+.sec-title{font-size:19px;font-weight:700;text-align:center;margin:44px 0 22px}
+.sec-title::before{content:'◆ ';color:var(--accent);font-size:13px}
+.sec-title::after{content:' ◆';color:var(--accent);font-size:13px}
+p{margin-bottom:1.1em;text-indent:2em}
+p.ni{text-indent:0}
+.thought{color:#6b5a4e;font-style:italic}
+.divider{text-align:center;margin:32px 0;color:#d4c5a9;font-size:18px;letter-spacing:6px}
+
+/* 互动文字 */
+.ix{color:var(--link);border-bottom:1px dashed var(--link);cursor:pointer}
+.ix:hover{color:#8b1528;background:rgba(196,30,58,.05)}
+.ix.person{color:#8b4513;border-color:#c9a87c}.ix.person:hover{color:#6b3410}
+.ix.term{color:#2e6b8f;border-color:#8fbcce}.ix.term:hover{color:#1a4a63}
+.ix.place{color:#5a8a3c;border-color:#a8cc8f}.ix.place:hover{color:#3d5e28}
+
+/* 弹出卡片 — 单例 */
+#popup{position:fixed;z-index:999;max-width:320px;background:#fffef8;border:1px solid #c9b896;border-radius:6px;box-shadow:0 8px 28px rgba(0,0,0,.14);padding:14px 16px;font-size:12px;line-height:1.6;opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .15s,transform .15s}
+#popup.on{opacity:1;pointer-events:auto;transform:translateY(0)}
+#popup .pn{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:3px;border-bottom:1px solid #d4c5a9;padding-bottom:2px}
+#popup .pt{font-size:10px;color:#8b7355;margin-bottom:4px}
+#popup .pt span{display:inline-block;background:#fef0e0;border:1px solid #e8c888;border-radius:3px;padding:1px 5px;margin:1px 2px}
+#popup .pd{color:#4a3f32}
+#popup .pc{position:absolute;top:3px;right:7px;cursor:pointer;font-size:14px;color:#b0a090;background:none;border:none}
+
+/* 终端 */
+.term{background:var(--term-bg);border-radius:8px;margin:18px 0;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.25);font-family:'JetBrains Mono','Fira Code','Consolas',monospace;font-size:12px;line-height:1.6}
+.term-head{background:#171722;padding:6px 12px;display:flex;align-items:center;gap:7px;border-bottom:1px solid#222230}
+.term-dot{width:9px;height:9px;border-radius:50%}
+.term-dot.r{background:#ff5f56}.term-dot.y{background:#ffbd2e}.term-dot.g{background:#27c93f}
+.term-ttl{color:#555;font-size:10px;margin-left:6px;font-family:system-ui}
+.term-body{padding:12px 15px;color:var(--term-text);white-space:pre-wrap;word-break:break-all}
+.term-body .pr{color:var(--term-prompt)}
+.term-body .cmd{color:#fff}
+.term-body .out{color:#7eb8da}
+.term-body .warn{color:#ffcc00}
+.term-body .err{color:#ff4444}
+.term-body .info{color:#777}
+
+/* 选择肢 */
+.choice{background:#faf6f0;border:2px solid #d4c5a9;border-radius:10px;padding:20px 24px;margin:26px 0;text-align:center}
+.choice .cl{font-size:13px;color:#8b7355;letter-spacing:2px;margin-bottom:12px}
+.choice .ch{font-size:11px;color:#b0a090;margin-top:10px;font-style:italic}
+.cbtn{display:block;width:100%;padding:12px 16px;margin:7px 0;border:1px solid #d4c5a9;border-radius:6px;background:#fffef9;cursor:pointer;font-family:inherit;font-size:14px;line-height:1.5;text-align:left;transition:background .15s;color:var(--text)}
+.cbtn:hover{background:#f0e8d5;border-color:var(--accent)}
+.cbtn .clt{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;margin-right:8px;font-weight:700;font-size:12px;color:#fff}
+.cbtn.a .clt{background:#c41e3a}.cbtn.b .clt{background:#2e6b8f}.cbtn.c .clt{background:#5a8a3c}
+.cbtn .cs{display:block;font-size:11px;color:#999;margin-top:1px;margin-left:30px;font-style:italic}
+.cdone{background:#f8f4ec;border:1px solid #d4c5a9;padding:12px 16px;font-size:13px;color:#8b7355;text-align:center;border-radius:8px;margin:18px 0;font-style:italic}
+
+/* 追踪器 */
+#tracker{position:fixed;bottom:20px;right:20px;background:#fffef8;border:1px solid #c9b896;border-radius:8px;padding:10px 14px;font-size:11px;box-shadow:0 4px 14px rgba(0,0,0,.1);z-index:500;cursor:pointer;display:none}
+#tracker .ttl{font-weight:700;color:var(--accent);margin-bottom:4px;font-size:10px;letter-spacing:1px}
+#tracker .ri{color:#6b5a4e;margin:2px 0}
+#tracker .rb{height:3px;border-radius:2px;margin:2px 0;transition:width .4s}
+.rb.akane{background:#c41e3a}.rb.koyuki{background:#88bbdd}.rb.eruna{background:#5a9a5a}.rb.maya{background:#8b5a9a}
+
+@media(max-width:768px){.reader{padding:36px 14px 100px}p{text-indent:1.5em}.ch-head h1{font-size:22px}#popup{max-width:260px}}
+</style>
 </head>
 <body>
-    <!-- ==================== macOS 窗口容器 ==================== -->
-    <div class="app-window">
-        <!-- 标题栏 -->
-        <div class="window-titlebar">
-            <div class="window-dots">
-                <div class="window-dot red"></div>
-                <div class="window-dot yellow"></div>
-                <div class="window-dot green"></div>
-            </div>
-            <div class="window-title">TERMINAL PHANTASM</div>
-            <div class="window-toolbar">
-                <button class="window-tool-btn" id="toolbar-theme-btn" title="切换主题">🌙</button>
-            </div>
-        </div>
-
-        <!-- Hero 入口 -->
-        <div class="app-hero" id="app-hero">
-            <canvas id="kv-canvas"></canvas>
-            <div class="app-hero-content">
-                <div class="app-hero-title">TERMINAL PHANTASM</div>
-                <div class="app-hero-sub">終端之夢</div>
-                <p class="app-hero-quote">"世界はコードでできている。"</p>
-                <button class="app-hero-btn" id="app-hero-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                    开始阅读
-                </button>
-                <p class="app-hero-meta">序章 + 第1章（试读版） | 角色: 5 | 字数: ~49K</p>
-            </div>
-        </div>
-
-        <!-- 主体布局 -->
-        <div class="window-body">
-            <!-- 侧边栏 -->
-            <aside class="app-sidebar">
-                <div class="sidebar-logo">
-                    <span class="sidebar-logo-text">TP</span>
-                    <span class="sidebar-logo-sub">Terminal Phantasm</span>
-                </div>
-
-                <nav class="sidebar-nav">
-                    <div class="sidebar-section">
-                        <div class="sidebar-section-title">导航</div>
-                        <div class="sidebar-item" data-panel="reading">
-                            <span class="si-icon">📖</span>
-                            <span class="si-label">阅读</span>
-                            <span class="si-arrow">›</span>
-                        </div>
-                        <div class="sidebar-item" data-panel="characters">
-                            <span class="si-icon">👤</span>
-                            <span class="si-label">角色</span>
-                            <span class="si-arrow">›</span>
-                        </div>
-                        <div class="sidebar-item" data-panel="wiki">
-                            <span class="si-icon">📖</span>
-                            <span class="si-label">百科</span>
-                            <span class="si-arrow">›</span>
-                        </div>
-                    </div>
-
-                    <div class="sidebar-section">
-                        <div class="sidebar-section-title">章节</div>
-                        <div id="chapter-list" class="sidebar-chapter-list"></div>
-                    </div>
-                </nav>
-
-                <div class="sidebar-footer">
-                    <button class="sidebar-footer-btn" id="sidebar-theme-btn">
-                        <span>🌙</span>
-                    </button>
-                </div>
-            </aside>
-
-            <!-- 内容区 -->
-            <main class="app-content">
-                <!-- 阅读面板 -->
-                <div class="app-panel active" id="panel-reading">
-                    <div class="panel-toolbar">
-                        <div class="toolbar-lang-group">
-                            <button class="toolbar-lang-btn active" data-lang="both">双语</button>
-                            <button class="toolbar-lang-btn" data-lang="jp">JP</button>
-                            <button class="toolbar-lang-btn" data-lang="cn">中文</button>
-                        </div>
-                    </div>
-                    <div class="panel-reading-stage" id="reading-stage"></div>
-                </div>
-
-                <!-- 角色面板 -->
-                <div class="app-panel" id="panel-characters">
-                    <div class="char-grid" id="char-grid"></div>
-                </div>
-
-                <!-- 百科面板 -->
-                <div class="app-panel" id="panel-wiki">
-                    <div class="wiki-tabs">
-                        <button class="wiki-tab active" data-wiki-tab="world">世界地点</button>
-                        <button class="wiki-tab" data-wiki-tab="magic">魔法属性</button>
-                        <button class="wiki-tab" data-wiki-tab="terms">术语辞典</button>
-                        <button class="wiki-tab" data-wiki-tab="items">关键物品</button>
-                    </div>
-                    <div class="wiki-content">
-                        <div id="panel-wiki-world"></div>
-                        <div id="panel-wiki-magic"></div>
-                        <div id="panel-wiki-terms"></div>
-                        <div id="panel-wiki-items"></div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <script>
-    (function() {
-        'use strict';
-
-        // ================================================================
-        // 全局状态
-        // ================================================================
-        const State = {
-            theme: 'dark',
-            parsedData: null,
-            metaData: null,
-            kvVisible: true,
-            episodes: [],
-            currentEpisode: 0,
-            langMode: 'both',
-            // 世界观数据缓存
-            worldData: null,
-            termData: null,
-            magicData: null,
-            charData: [],
-            // 章节系统
-            chapters: [],
-            currentChapterId: 'EP00'
-        };
-
-        // ================================================================
-        // CN_SUPPLEMENT 中文补充映射
-        // ================================================================
-        const CN_SUPPLEMENT = {
-            '帝都·星京': '帝都·星京是故事发生的舞台，一座融合了魔法与科技的巨大都市。',
-            '神代家': '主人公神代零与义妹小雪共同生活的家宅，位于帝都近郊的安静街区。原为下级贵族邸宅，现已略显古旧。',
-            '星導学園': '主角们就读的学园，以优秀的魔法教育闻名全国。拥有中央大讲堂、圆形竞技场、魔法植物园等设施。',
-            '星导学园': '主角们就读的学园，以优秀的魔法教育闻名全国。拥有中央大讲堂、圆形竞技场、魔法植物园等设施。',
-            '魔力鉄道·中央線': '连接帝都各区域的魔力驱动铁路系统，市民日常通勤的主要交通工具。高架线穿行于城市上空。',
-            '魔力铁道·中央线': '连接帝都各区域的魔力驱动铁路系统，市民日常通勤的主要交通工具。高架线穿行于城市上空。',
-            '魔晶灯': '利用压缩魔力粒子发光的高效照明器具，广泛用于家庭和街道照明。日间吸收自然魔力，夜间释放淡蓝色光芒。',
-            '朱音の護符': '朱音赠予零的神秘护身符，其母·樱子的遗物。红色布料上绣有天宫家的炎之纹章，据说拥有某种守护力量。',
-            '朱音的护身符': '朱音赠予零的神秘护身符，其母·樱子的遗物。红色布料上绣有天宫家的炎之纹章，据说拥有某种守护力量。',
-            '懐中時計': '零已故父亲健一郎留下的遗物。古旧的银质怀表，表盖内侧嵌有母亲的小照片。零时刻随身携带。',
-            '怀表': '零已故父亲健一郎留下的遗物。古旧的银质怀表，表盖内侧嵌有母亲的小照片。零时刻随身携带。',
-            '黄昏的樱花后庭': '零首次与端末对峙的隐秘场所。位于学园后方的樱树林尽头。夕阳染红的古老樱花树下，命运开始转动。',
-            '早晨的神代家·厨房': '小雪准备早餐的神代家厨房。晨光透过障子照入，出汁的香气弥漫在空气中。',
-            '朱音递上护身符': '黄昏的樱花后庭。朱音将母亲遗物护身符递给零的名场面。夕阳逆光勾勒出两人轮廓，含蓄而深情。',
-            'Mana Particle': '魔力粒子——构成世界一切魔法现象的最基本单位，充斥于大气之中。具有波粒二象性，其波动频率决定了魔法属性。',
-            'マナ粒子': '魔力粒子——构成世界一切魔法现象的最基本单位，充斥于大气之中。具有波粒二象性，其波动频率决定了魔法属性。',
-            'F級': 'F级——魔力等级最低级别，魔力粒子亲和度极低，几乎无法使用任何魔法。人口约3%，社会上被称为"魔法障碍"。',
-            'F级': 'F级——魔力等级最低级别，魔力粒子亲和度极低，几乎无法使用任何魔法。人口约3%，社会上被称为"魔法障碍"。',
-            '端末': '端末（Terminal）——零所持有的特殊装置，存在于意识内的命令行界面。能够解析并操作魔法的"底层代码"。AI助手Eve搭载其中。',
-            'Terminal': '端末（Terminal）——零所持有的特殊装置，存在于意识内的命令行界面。能够解析并操作魔法的"底层代码"。AI助手Eve搭载其中。',
-            'Eve': 'Eve——寄宿于端末中的人工智能助手，自称"Observer#7"。随零首次执行命令而启动，其真正目的尚不明确。',
-            'Eve（イヴ）': 'Eve——寄宿于端末中的人工智能助手，自称"Observer#7"。随零首次执行命令而启动，其真正目的尚不明确。',
-            'Observer': '观察者——Eve所属的神秘组织成员代号。#7意味着至少存在6位先行者，但其含义目前不明。',
-            'Observer #7': '第七号观察者——Eve称呼零的识别代号。#7暗示至少存在6位先行者，但具体含义至今仍是谜团。',
-            'Token': 'Token——端末操作时消耗的资源单位。每日自动恢复一定量。复杂操作和Eve深度对话会消耗更多Token。零初始值为1000。',
-            '氷晶変異': '冰晶变异——极为稀有的魔力变异现象。冰属性魔力异常增幅但控制极其困难。情绪激动时会无差别冻结周围环境。小雪患有此症。',
-            '冰晶变异': '冰晶变异——极为稀有的魔力变异现象。冰属性魔力异常增幅但控制极其困难。情绪激动时会无差别冻结周围环境。小雪患有此症。',
-            '魔力等級': '魔力等级——基于魔力粒子亲和度和操作精度的七段阶评价体系（S/A/B/C/D/E/F）。结果强烈依赖于遗传因素。',
-            'Magic Rank': '魔力等级——基于魔力粒子亲和度和操作精度的七段阶评价体系（S/A/B/C/D/E/F）。结果强烈依赖于遗传因素。',
-            '四大公爵家': '帝国最高位的贵族家系，包括天宫家在内的四大家族。在政治和军事上拥有绝对影响力。',
-            'Four Grand Ducal Houses': '帝国最高位的贵族家系，包括天宫家在内的四大家族。在政治和军事上拥有绝对影响力。',
-            '魔力鉄道': '魔力铁道——以魔矿引擎驱动的铁道网络。帝国城市间及市内交通的大动脉，是魔法工业革命的象征。',
-            'Mana Railway': '魔力铁道——以魔矿引擎驱动的铁道网络。帝国城市间及市内交通的大动脉，是魔法工业革命的象征。',
-            '魔晶灯': '魔晶灯——利用魔晶制作的照明器具。白天吸收自然魔力粒子，夜间释放淡蓝色光芒。从街灯到家用广泛普及。',
-            'Mana Crystal Lamp': '魔晶灯——利用魔晶制作的照明器具。白天吸收自然魔力粒子，夜间释放淡蓝色光芒。从街灯到家用广泛普及。',
-            '魔法工業革命': '魔法工业革命——约五十年前开始在帝国推进的技术与社会变革。利用魔力能源进行工业化，社会结构正经历深刻变化。',
-            'Magical Industrial Revolution': '魔法工业革命——约五十年前开始在帝国推进的技术与社会变革。利用魔力能源进行工业化，社会结构正经历深刻变化。',
-            '星導学園': '帝国最古老、最高峰的魔法学院。高等部入学率全帝国第一。不论贵族或平民，优秀人才皆汇聚于此。',
-            'Seidou Gakuen': '帝国最古老、最高峰的魔法学院。高等部入学率全帝国第一。不论贵族或平民，优秀人才皆汇聚于此。',
-            '魔力粒子不親和体質': '魔力粒子不亲和体质——先天性体質，导致魔力粒子无法在体内稳定存在。神代零即为此体质患者。原因不明，无治疗方法。',
-            'Mana Particle Incompatibility': '魔力粒子不亲和体质——先天性体質，导致魔力粒子无法在体内稳定存在。神代零即为此体质患者。原因不明，无治疗方法。',
-            '地（Earth）': '地属性——最稳定的元素属性。擅长炼金术、物质强化、建筑构造与结晶化。代表色为琥珀色。',
-            '水（Water）': '水属性——兼具治疗与防御能力的均衡属性。擅长流体控制、形态变换与净化。代表色为青色。',
-            '風（Wind）': '风属性——速度最快的元素属性。擅长通信、加速、飞行与探测。代表色为翠绿色。',
-            '火（Fire）': '火属性——攻击力最强的元素属性。适合正面战斗、能量释放、破坏与锻造。代表色为绯红色。',
-            '光（Light）': '光属性——神圣而强大的特殊属性。擅长结界、净化、幻术与强化。代表色为金色。',
-            '暗（Dark）': '暗属性——稀有且强大的特殊属性。擅长干涉、吸收、反魔法与封印。代表色为深紫色。',
-            '魔晶': '固形魔力结晶。家庭照明与街灯的主要能源来源。较为常见，广泛普及。',
-            '魔鉱': '含有魔力的矿物资源。工业生产与大型机械的核心能源原料。较为稀有。',
-            '魔油': '液态魔力浓缩物。交通工具与引擎的高级燃料。稀有度较高。'
-        };
-
-        function hasChinese(s) {
-            if (!s) return false;
-            return /[\u4e00-\u9fa5]/.test(s);
-        }
-
-        function supplementCN(name, desc) {
-            if (!desc || !hasChinese(desc)) {
-                for (var key in CN_SUPPLEMENT) {
-                    if (CN_SUPPLEMENT.hasOwnProperty(key) && name.indexOf(key) !== -1) {
-                        return CN_SUPPLEMENT[key];
-                    }
-                }
-            }
-            return desc || '';
-        }
-
-        // ================================================================
-        // KV 粒子系统
-        // ================================================================
-        const KVParticles = (function() {
-            let canvas, ctx, particles, rafId;
-            const COLORS = [
-                [0, 212, 255],
-                [124, 58, 237],
-                [255, 255, 255]
-            ];
-
-            function init() {
-                canvas = document.getElementById('kv-canvas');
-                if (!canvas) return;
-                ctx = canvas.getContext('2d');
-                resize();
-                createParticles();
-                animate();
-                window.addEventListener('resize', resize);
-            }
-
-            function resize() {
-                if (!canvas) return;
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-
-            function createParticles() {
-                particles = [];
-                var count = Math.min(8, Math.floor(window.innerWidth / 180));
-                for (var i = 0; i < count; i++) {
-                    var c = COLORS[i % COLORS.length];
-                    particles.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        vx: (Math.random() - 0.5) * 0.18,
-                        vy: (Math.random() - 0.5) * 0.18,
-                        r: Math.random() * 1.5 + 0.5,
-                        a: Math.random() * 0.25 + 0.05,
-                        c: c
-                    });
-                }
-            }
-
-            function animate() {
-                if (!ctx || !particles) return;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (var i = 0; i < particles.length; i++) {
-                    var p = particles[i];
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    if (p.x < -10) p.x = canvas.width + 10;
-                    if (p.x > canvas.width + 10) p.x = -10;
-                    if (p.y < -10) p.y = canvas.height + 10;
-                    if (p.y > canvas.height + 10) p.y = -10;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(' + p.c[0] + ',' + p.c[1] + ',' + p.c[2] + ',' + p.a + ')';
-                    ctx.fill();
-                }
-                rafId = requestAnimationFrame(animate);
-            }
-
-            function stop() {
-                if (rafId) cancelAnimationFrame(rafId);
-                if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
-            }
-
-            return { init, stop };
-        })();
-
-        // ================================================================
-        // Markdown 解析引擎
-        // ================================================================
-        const MDParser = (function() {
-            function parse(text) {
-                var lines = text.split('\n');
-                var result = [];
-                var i = 0;
-
-                while (i < lines.length) {
-                    var raw = lines[i];
-                    var trimmed = raw.trim();
-
-                    if (!trimmed) { i++; continue; }
-
-                    if (trimmed.startsWith('<!--HIDE') || trimmed.startsWith('HIDE')) {
-                        while (i < lines.length && !lines[i].trim().includes('-->')) i++;
-                        i++;
-                        continue;
-                    }
-
-                    if (/^# /.test(trimmed) && !/^##/.test(trimmed)) {
-                        result.push({ type: 'chapter-title', content: trimmed.slice(2).trim() });
-                        i++; continue;
-                    }
-
-                    if (/^## /.test(trimmed)) {
-                        result.push({ type: 'section-heading', content: trimmed.slice(3).trim() });
-                        i++; continue;
-                    }
-
-                    if (trimmed === '---' || trimmed === '***' || trimmed === '****') {
-                        result.push({ type: 'separator' });
-                        i++; continue;
-                    }
-
-                    if (trimmed.startsWith('>')) {
-                        var q = '';
-                        while (i < lines.length && lines[i].trim().startsWith('>')) {
-                            q += lines[i].trim().slice(1).trim() + '\n';
-                            i++;
-                        }
-                        result.push({ type: 'quote', content: q.trim() });
-                        continue;
-                    }
-
-                    if (trimmed.startsWith('```')) {
-                        var lang = trimmed.slice(3).trim().toLowerCase();
-                        var code = '';
-                        i++;
-                        while (i < lines.length && !lines[i].trim().startsWith('```')) {
-                            code += lines[i] + '\n';
-                            i++;
-                        }
-                        i++;
-                        var isTerminal = code.includes('> ') || lang === '' || lang === 'bash' || lang === 'shell' || lang === 'terminal';
-                        result.push({ type: isTerminal ? 'terminal' : 'codeblock', content: code.trim(), lang: lang });
-                        continue;
-                    }
-
-                    if (trimmed.startsWith('※ ')) {
-                        result.push({ type: 'translation', content: trimmed.slice(2).trim() });
-                        i++; continue;
-                    }
-
-                    var para = '';
-                    while (i < lines.length) {
-                        var tl = lines[i].trim();
-                        if (!tl || /^#{1,2} /.test(tl) || tl === '---' || tl === '***' || tl.startsWith('>') || tl.startsWith('```') || tl.startsWith('※ ')) break;
-                        para += (para ? ' ' : '') + tl;
-                        i++;
-                    }
-                    if (para) {
-                        result.push({ type: 'paragraph', content: para });
-                    } else {
-                        i++;
-                    }
-                }
-                return result;
-            }
-
-            function parseEpisodes(parsedData) {
-                var episodes = [];
-                var currentEpisode = { title: '序幕', items: [] };
-
-                parsedData.forEach(function(item) {
-                    if (item.type === 'section-heading') {
-                        if (currentEpisode.items.length > 0) {
-                            episodes.push(currentEpisode);
-                        }
-                        currentEpisode = { title: item.content, items: [item] };
-                    } else {
-                        currentEpisode.items.push(item);
-                    }
-                });
-                if (currentEpisode.items.length > 0) {
-                    episodes.push(currentEpisode);
-                }
-                return episodes;
-            }
-
-            function inline(text, langMode) {
-                langMode = langMode || 'both';
-                text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-                text = text.replace(/「([^」]+)」/g, '<span class="dialogue-text">「$1」</span>');
-                if (langMode === 'jp') {
-                    text = text.replace(/（[^）]+）/g, '');
-                }
-                return text;
-            }
-
-            return { parse, parseEpisodes, inline };
-        })();
-
-        // ================================================================
-        // 渲染器
-        // ================================================================
-        const Renderer = (function() {
-            function render(data, containerId) {
-                var c = document.getElementById(containerId);
-                if (!c) return;
-                var html = '';
-                data.forEach(function(item) {
-                    html += buildElement(item, State.langMode);
-                });
-                c.innerHTML = html;
-            }
-
-            function renderEpisode(episodeIndex, langMode) {
-                var c = document.getElementById('reading-stage');
-                if (!c || !State.episodes[episodeIndex]) return;
-
-                var ep = State.episodes[episodeIndex];
-                langMode = langMode || State.langMode || 'both';
-
-                var totalEpisodes = State.episodes.length;
-                var navHtml = buildEpisodeNavBar(episodeIndex, totalEpisodes);
-
-                var contentHtml = '';
-                ep.items.forEach(function(item) {
-                    contentHtml += buildElement(item, langMode);
-                });
-
-                var fullHtml = navHtml + '<div class="ep-content-wrapper ep-fade-in" id="ep-content-wrapper">' + contentHtml + '</div>';
-
-                var wrapper = document.getElementById('ep-content-wrapper');
-                if (wrapper) {
-                    wrapper.classList.remove('ep-fade-in');
-                    wrapper.classList.add('ep-fade-out');
-
-                    setTimeout(function() {
-                        c.innerHTML = fullHtml;
-                        var newWrapper = document.getElementById('ep-content-wrapper');
-                        if (newWrapper) {
-                            newWrapper.classList.remove('ep-fade-out');
-                            newWrapper.classList.add('ep-fade-in');
-                        }
-                        bindEpisodeNavEvents();
-                    }, 200);
-                } else {
-                    c.innerHTML = fullHtml;
-                    bindEpisodeNavEvents();
-                }
-            }
-
-            function buildEpisodeNavBar(currentIdx, total) {
-                var prevDisabled = currentIdx <= 0 ? 'disabled' : '';
-                var nextDisabled = currentIdx >= total - 1 ? 'disabled' : '';
-
-                var optionsHtml = '';
-                for (var i = 0; i < total; i++) {
-                    var epTitle = State.episodes[i] ? State.episodes[i].title : ('第' + (i + 1) + '节');
-                    var selected = i === currentIdx ? ' selected' : '';
-                    optionsHtml += '<option value="' + i + '"' + selected + '>' + epTitle + '</option>';
-                }
-
-                return '<div class="floating-ep-bar">' +
-                    '<button class="ep-nav-btn ep-prev" id="ep-prev-btn" ' + prevDisabled + '>◀</button>' +
-                    '<select id="ep-select" class="ep-nav-select">' + optionsHtml + '</select>' +
-                    '<button class="ep-nav-btn ep-next" id="ep-next-btn" ' + nextDisabled + '>▶</button>' +
-                    '<span class="ep-nav-counter" id="ep-counter">' + (currentIdx + 1) + '/' + total + '</span>' +
-                    '</div>';
-            }
-
-            function escapeHTML(s) {
-                var d = document.createElement('div');
-                d.textContent = s;
-                return d.innerHTML;
-            }
-
-            function buildElement(item, langMode) {
-                langMode = langMode || State.langMode || 'both';
-                switch (item.type) {
-                    case 'chapter-title':
-                        return '<div class="chapter-art-title" id="ch-prologue">' + escapeHTML(item.content) + '</div>';
-                    case 'section-heading':
-                        return '<h2 class="section-heading">' + escapeHTML(item.content) + '</h2>';
-                    case 'separator':
-                        return '<div class="scene-separator"></div>';
-                    case 'quote': {
-                        var lines = item.content.split('\n').filter(function(l) { return l.trim(); });
-                        var ps = '';
-                        lines.forEach(function(l) { ps += '<p>' + MDParser.inline(l, langMode) + '</p>'; });
-                        return '<blockquote class="art-quote">' + ps + '</blockquote>';
-                    }
-                    case 'terminal': {
-                        var esc = escapeHTML(item.content);
-                        return '<div class="terminal-block"><div class="terminal-header"><span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span><span class="terminal-title-bar">terminal@phantasm ~ %</span></div><div class="terminal-body">' + esc + '<span class="terminal-cursor"></span></div></div>';
-                    }
-                    case 'codeblock': {
-                        var esc = escapeHTML(item.content);
-                        return '<div class="terminal-block"><div class="terminal-header"><span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span><span class="terminal-title-bar">' + escapeHTML(item.lang || 'code') + '</span></div><div class="terminal-body">' + esc + '</div></div>';
-                    }
-                    case 'translation':
-                        return '<p class="content-paragraph translation-line" data-lang="zh">※ ' + MDParser.inline(item.content, langMode) + '</p>';
-                    case 'paragraph':
-                        return '<p class="content-paragraph" data-lang="ja">' + MDParser.inline(item.content, langMode) + '</p>';
-                    default:
-                        return '';
-                }
-            }
-
-            function bindEpisodeNavEvents() {
-                var prevBtn = document.getElementById('ep-prev-btn');
-                var nextBtn = document.getElementById('ep-next-btn');
-                var selectEl = document.getElementById('ep-select');
-
-                if (prevBtn) prevBtn.onclick = function() { navigateEpisode(-1); };
-                if (nextBtn) nextBtn.onclick = function() { navigateEpisode(1); };
-                if (selectEl) {
-                    selectEl.onchange = function() {
-                        var idx = parseInt(this.value, 10);
-                        if (!isNaN(idx)) goToEpisode(idx);
-                    };
-                }
-            }
-
-            return { render, renderEpisode, buildElement };
-        })();
-
-        // ================================================================
-        // Episode 导航控制
-        // ================================================================
-        var EpisodeController = (function() {
-            function navigateEpisode(direction) {
-                var newIndex = State.currentEpisode + direction;
-                if (newIndex < 0 || newIndex >= State.episodes.length) return;
-                goToEpisode(newIndex);
-            }
-
-            function goToEpisode(index) {
-                if (index < 0 || index >= State.episodes.length) return;
-                State.currentEpisode = index;
-                Renderer.renderEpisode(index, State.langMode);
-                updateEpisodeSelect();
-            }
-
-            function updateEpisodeSelect() {
-                var selectEl = document.getElementById('ep-select');
-                if (selectEl) selectEl.value = String(State.currentEpisode);
-
-                var counterEl = document.getElementById('ep-counter');
-                if (counterEl) {
-                    counterEl.textContent = (State.currentEpisode + 1) + '/' + State.episodes.length;
-                }
-
-                var prevBtn = document.getElementById('ep-prev-btn');
-                var nextBtn = document.getElementById('ep-next-btn');
-                if (prevBtn) prevBtn.disabled = State.currentEpisode <= 0;
-                if (nextBtn) nextBtn.disabled = State.currentEpisode >= State.episodes.length - 1;
-            }
-
-            return { navigateEpisode, goToEpisode, updateEpisodeSelect };
-        })();
-
-        function navigateEpisode(dir) { EpisodeController.navigateEpisode(dir); }
-        function goToEpisode(idx) { EpisodeController.goToEpisode(idx); }
-
-        // ================================================================
-        // 语言模式控制
-        // ================================================================
-        function setLangMode(mode) {
-            State.langMode = mode;
-            document.documentElement.setAttribute('data-lang-mode', mode);
-
-            document.querySelectorAll('.toolbar-lang-btn').forEach(function(btn) {
-                btn.classList.toggle('active', btn.dataset.lang === mode);
-            });
-
-            if (State.episodes.length > 0) {
-                Renderer.renderEpisode(State.currentEpisode, mode);
-            }
-            EpisodeController.updateEpisodeSelect();
-        }
-
-        // ================================================================
-        // Chapter Controller — 章节切换控制器
-        // ================================================================
-        var ChapterController = (function() {
-            var CHAPTER_REGISTRY = [
-                {
-                    id: 'EP00',
-                    num: 'EP.00',
-                    title: '序章：零の目覚め',
-                    title_cn: '零之觉醒',
-                    status: 'complete',
-                    mdPath: 'PROLOGUE/prologue.md',
-                    metaPath: 'PROLOGUE/prologue_meta.json',
-                    badgeClass: 'ch-badge-complete',
-                    badgeText: '已完成'
-                },
-                {
-                    id: 'CH01',
-                    num: 'CH.01',
-                    title: '星導学園',
-                    title_cn: '星导学园',
-                    status: 'demo',
-                    demoNote: '试读版 · Part 1/3',
-                    mdPath: 'chapter_01/chapter_01.md',
-                    metaPath: 'chapter_01/chapter_01_meta.json',
-                    badgeClass: 'ch-badge-demo',
-                    badgeText: '📖 试读'
-                }
-            ];
-
-            function initRegistry() {
-                State.chapters = CHAPTER_REGISTRY;
-                renderChapterList();
-            }
-
-            function renderChapterList() {
-                var container = document.getElementById('chapter-list');
-                if (!container) return;
-
-                var html = '';
-                CHAPTER_REGISTRY.forEach(function(ch) {
-                    var isActive = ch.id === State.currentChapterId;
-                    var lockedClass = ch.status === 'locked' ? ' locked' : '';
-                    var activeClass = isActive ? ' active' : '';
-
-                    var badgeHtml = '';
-                    if (ch.badgeText) {
-                        badgeHtml = '<span class="sc-badge ' + ch.badgeClass + '">' + ch.badgeText + '</span>';
-                    }
-
-                    html += '<div class="sidebar-chapter' + activeClass + lockedClass + '" data-ch-id="' + ch.id + '" data-status="' + ch.status + '">' +
-                        '<span class="sc-num">' + ch.num + '</span>' +
-                        '<span class="sc-title">' + escapeHTML(ch.title) + '</span>' +
-                        badgeHtml +
-                        '</div>';
-                });
-                container.innerHTML = html;
-
-                container.querySelectorAll('.sidebar-chapter:not(.locked)').forEach(function(item) {
-                    item.addEventListener('click', function() {
-                        var chId = this.dataset.chId;
-                        switchToChapter(chId);
-                    });
-                });
-            }
-
-            function switchToChapter(chId) {
-                if (chId === State.currentChapterId) return;
-
-                var targetCh = null;
-                for (var i = 0; i < CHAPTER_REGISTRY.length; i++) {
-                    if (CHAPTER_REGISTRY[i].id === chId) { targetCh = CHAPTER_REGISTRY[i]; break; }
-                }
-                if (!targetCh || targetCh.status === 'locked') return;
-
-                var stage = document.getElementById('reading-stage');
-                if (stage) {
-                    stage.innerHTML =
-                        '<div style="display:flex;align-items:center;justify-content:center;padding:120px 20px;">' +
-                        '<div style="text-align:center;color:var(--text-secondary);">' +
-                        '<div style="font-size:32px;margin-bottom:16px;opacity:0.4;">⏳</div>' +
-                        '<div style="font-size:14px;">正在加载 ' + escapeHTML(targetCh.title) + '...</div>' +
-                        '</div></div>';
-                }
-
-                loadChapter(targetCh);
-            }
-
-            function loadChapter(ch) {
-                Promise.all([
-                    fetch(ch.mdPath),
-                    fetch(ch.metaPath)
-                ]).then(function(responses) {
-                    var mdRes = responses[0];
-                    var metaRes = responses[1];
-
-                    if (!mdRes.ok) throw new Error('无法加载 ' + ch.mdPath);
-
-                    var promises = [mdRes.text()];
-                    if (metaRes.ok) promises.push(metaRes.json());
-                    else promises.push(null);
-
-                    return Promise.all(promises);
-                }).then(function(results) {
-                    var mdText = results[0];
-                    var metaData = results[1];
-
-                    State.currentChapterId = ch.id;
-                    State.metaData = metaData || {};
-                    State.parsedData = MDParser.parse(mdText);
-                    State.episodes = MDParser.parseEpisodes(State.parsedData);
-                    State.currentEpisode = 0;
-
-                    if (State.episodes.length > 0) {
-                        Renderer.renderEpisode(0, State.langMode);
-                    } else {
-                        Renderer.render(State.parsedData, 'reading-stage');
-                    }
-
-                    if (ch.status === 'demo') {
-                        injectDemoBanner(ch.demoNote || '试读版');
-                    }
-
-                    updateActiveChapter();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-                }).catch(function(err) {
-                    console.error('章节加载失败:', err);
-                    var stage = document.getElementById('reading-stage');
-                    if (stage) {
-                        stage.innerHTML =
-                            '<div style="text-align:center;padding:80px 20px;color:#ff5f57;font-size:14px;">' +
-                            '⚠ 章节加载失败: ' + err.message + '</div>';
-                    }
-                });
-            }
-
-            function injectDemoBanner(note) {
-                var wrapper = document.getElementById('ep-content-wrapper');
-                if (!wrapper) return;
-                var banner = document.createElement('div');
-                banner.className = 'demo-banner';
-                banner.innerHTML = '✨ <strong>' + escapeHTML(note) + '</strong> ✨';
-                wrapper.insertBefore(banner, wrapper.firstChild);
-            }
-
-            function updateActiveChapter() {
-                document.querySelectorAll('.sidebar-chapter').forEach(function(item) {
-                    item.classList.toggle('active', item.dataset.chId === State.currentChapterId);
-                });
-            }
-
-            function getCurrentChapterInfo() {
-                for (var i = 0; i < CHAPTER_REGISTRY.length; i++) {
-                    if (CHAPTER_REGISTRY[i].id === State.currentChapterId) return CHAPTER_REGISTRY[i];
-                }
-                return CHAPTER_REGISTRY[0];
-            }
-
-            function escapeHTML(s) {
-                var d = document.createElement('div');
-                d.textContent = s;
-                return d.innerHTML;
-            }
-
-            return { initRegistry, renderChapterList, switchToChapter, updateActiveChapter, getCurrentChapterInfo };
-        })();
-
-        // ================================================================
-        // 角色渲染器
-        // ================================================================
-        const CharRenderer = (function() {
-            var COLOR_MAP = {
-                '神代': '#00d4ff',
-                '天宮': '#f59e0b',
-                '天宫': '#f59e0b',
-                '神代小': '#38bdf8',
-                'エルナ': '#10b981',
-                '黒鉄': '#8b5cf6',
-                '黑铁': '#8b5cf6',
-                'Eve': '#a855f7'
-            };
-
-            function getColor(name) {
-                for (var k in COLOR_MAP) {
-                    if (COLOR_MAP.hasOwnProperty(k) && name.indexOf(k) !== -1) return COLOR_MAP[k];
-                }
-                return '#00d4ff';
-            }
-
-            function escapeHTML(s) {
-                var d = document.createElement('div');
-                d.textContent = s;
-                return d.innerHTML;
-            }
-
-            return { getColor, escapeHTML };
-        })();
-
-        function escapeHTML(s) {
-            var d = document.createElement('div');
-            d.textContent = s;
-            return d.innerHTML;
-        }
-
-        // ================================================================
-        // Panel Controller — 面板切换控制器
-        // ================================================================
-        var PanelController = (function() {
-            var ACTIVE_PANEL_KEY = 'tp-active-panel';
-
-            function switchTo(panelId) {
-                document.querySelectorAll('.sidebar-item').forEach(function(el) {
-                    el.classList.toggle('active', el.dataset.panel === panelId);
-                });
-
-                document.querySelectorAll('.app-panel').forEach(function(el) {
-                    el.classList.toggle('active', el.id === 'panel-' + panelId);
-                });
-
-                var hero = document.getElementById('app-hero');
-                var windowBody = document.querySelector('.window-body');
-                if (hero && windowBody) {
-                    if (panelId === 'reading' && State.kvVisible) {
-                        hero.style.display = '';
-                        windowBody.style.display = '';
-                    } else {
-                        hero.style.display = 'none';
-                        windowBody.style.display = 'flex';
-                    }
-                }
-
-                localStorage.setItem(ACTIVE_PANEL_KEY, panelId);
-            }
-
-            function init() {
-                document.querySelectorAll('.sidebar-item').forEach(function(el) {
-                    el.addEventListener('click', function() {
-                        var panel = this.dataset.panel;
-                        if (panel) switchTo(panel);
-
-                        var chId = this.dataset.chId;
-                        if (chId && !this.classList.contains('locked')) {
-                            ChapterController.switchToChapter(chId);
-                            switchTo('reading');
-                        }
-                    });
-                });
-
-                var heroBtn = document.getElementById('app-hero-btn');
-                if (heroBtn) {
-                    heroBtn.addEventListener('click', function() {
-                        State.kvVisible = false;
-                        switchTo('reading');
-                    });
-                }
-            }
-
-            return { switchTo, init, ACTIVE_PANEL_KEY };
-        })();
-
-        // ================================================================
-        // 主题切换
-        // ================================================================
-        function setTheme(theme) {
-            State.theme = theme;
-            var root = document.documentElement;
-            var toolbarBtn = document.getElementById('toolbar-theme-btn');
-            var sidebarBtn = document.getElementById('sidebar-theme-btn');
-
-            if (theme === 'light') {
-                root.setAttribute('data-theme', 'light');
-                if (toolbarBtn) toolbarBtn.textContent = '☀️';
-                if (sidebarBtn) sidebarBtn.innerHTML = '<span>☀️</span>';
-            } else {
-                root.removeAttribute('data-theme');
-                if (toolbarBtn) toolbarBtn.textContent = '🌙';
-                if (sidebarBtn) sidebarBtn.innerHTML = '<span>🌙</span>';
-            }
-        }
-
-        function toggleTheme() {
-            setTheme(State.theme === 'dark' ? 'light' : 'dark');
-        }
-
-        // ================================================================
-        // 键盘快捷键
-        // ================================================================
-        function bindKeyboardShortcuts() {
-            document.addEventListener('keydown', function(e) {
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
-
-                if (e.key === 'ArrowLeft') {
-                    e.preventDefault();
-                    EpisodeController.navigateEpisode(-1);
-                } else if (e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    EpisodeController.navigateEpisode(1);
-                }
-            });
-        }
-
-        // ================================================================
-        // 渲染百科面板
-        // ================================================================
-        function renderWikiPanel() {
-            renderWikiSection('panel-wiki-world', State.worldData, 'locations', '世界地点');
-            renderWikiSection('panel-wiki-magic', State.magicData, 'affinities', '魔法属性');
-            renderWikiSection('panel-wiki-terms', State.termData, 'terms', '术语辞典');
-            renderWikiSection('panel-wiki-items', State.worldData, 'items', '关键物品');
-        }
-
-        function renderWikiSection(containerId, data, key, title) {
-            var container = document.getElementById(containerId);
-            if (!container || !data) return;
-            var items = data[key] || [];
-            var html = '<div class="wiki-section-title">' + title + '</div>';
-            html += '<div class="wiki-grid">';
-            items.forEach(function(item) {
-                var name = item.name_cn || item.name_jp || item.term_cn || item.term_jp || item.name || item.term_en || '';
-                var rawDesc = item.description || item.definition || item.typical_uses ? (item.typical_uses || []).join(' / ') : '';
-                var desc = supplementCN(name, rawDesc) || rawDesc;
-                html += '<div class="wiki-item" data-name="' + escapeHTML(name) + '" data-desc="' + escapeHTML(desc) + '">' +
-                    '<div class="wiki-item-name">' + escapeHTML(name) + '</div>' +
-                    '<div class="wiki-item-desc">' + escapeHTML(desc) + '</div></div>';
-            });
-            html += '</div>';
-            container.innerHTML = html;
-        }
-
-        // ================================================================
-        // 渲染角色面板
-        // ================================================================
-        function renderCharPanel() {
-            var container = document.getElementById('char-grid');
-            if (!container || !State.charData || !State.charData.length) return;
-            container.innerHTML = '';
-            State.charData.forEach(function(ch) {
-                var color = CharRenderer.getColor(ch.name_jp || ch.name || '');
-                var profile = ch.profile || {};
-                var tags = [];
-                if (profile.age) tags.push(profile.age + '岁');
-                if (profile.magic_rank) tags.push(profile.magic_rank);
-                if (profile.affinity) tags.push(profile.affinity);
-
-                var desc = (ch.description || '').substring(0, 150);
-
-                var html = '<div class="char-card' + (ch.status === '未登場' ? ' locked' : '') + '" style="border-top: 2px solid ' + color + '20;">' +
-                    '<div class="char-card-header">' +
-                    '<div class="char-card-avatar" style="border-color: ' + color + '20; color: ' + color + ';">' + (ch.status === '未登場' ? '❓' : '👤') + '</div>' +
-                    '<div class="char-card-info">' +
-                    '<div class="char-card-name" style="color: ' + color + ';">' + (ch.name_jp || '') + '</div>' +
-                    '<div class="char-card-role">' + escapeHTML(ch.archetype || ch.role || '') + ' · ' + (ch.name_cn || '') + '</div></div></div>' +
-                    '<div class="char-card-desc">' + escapeHTML(desc) + '</div>' +
-                    '<div class="char-card-tags">' + 
-                    tags.map(function(t) { return '<span class="char-card-tag">' + t + '</span>'; }).join('') +
-                    '</div></div>';
-                container.innerHTML += html;
-            });
-        }
-
-        // ================================================================
-        // 初始化主流程
-        // ================================================================
-        async function init() {
-            KVParticles.init();
-
-            ChapterController.initRegistry();
-            PanelController.init();
-
-            document.querySelectorAll('.toolbar-lang-btn').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.toolbar-lang-btn').forEach(function(b) { b.classList.remove('active'); });
-                    this.classList.add('active');
-                    setLangMode(this.dataset.lang);
-                });
-            });
-
-            var toolbarThemeBtn = document.getElementById('toolbar-theme-btn');
-            if (toolbarThemeBtn) {
-                toolbarThemeBtn.addEventListener('click', toggleTheme);
-            }
-
-            var sidebarThemeBtn = document.getElementById('sidebar-theme-btn');
-            if (sidebarThemeBtn) {
-                sidebarThemeBtn.addEventListener('click', toggleTheme);
-            }
-
-            try {
-                var mdRes = await fetch('PROLOGUE/prologue.md');
-                var jsonRes = await fetch('PROLOGUE/prologue_meta.json');
-
-                if (!mdRes.ok) throw new Error('无法加载章节文件 PROLOGUE/prologue.md');
-                if (!jsonRes.ok) throw new Error('无法加载元数据 PROLOGUE/prologue_meta.json');
-
-                var mdText = await mdRes.text();
-                var jsonData = await jsonRes.json();
-
-                State.metaData = jsonData;
-
-                State.parsedData = MDParser.parse(mdText);
-                State.episodes = MDParser.parseEpisodes(State.parsedData);
-                State.currentEpisode = 0;
-
-                if (State.episodes.length > 0) {
-                    Renderer.renderEpisode(0, State.langMode);
-                } else {
-                    Renderer.render(State.parsedData, 'reading-stage');
-                }
-
-                try {
-                    var [worldRes, termRes, magicRes, charRes] = await Promise.all([
-                        fetch('data/world.json'),
-                        fetch('data/terminology.json'),
-                        fetch('data/magic_system.json'),
-                        fetch('data/characters.json')
-                    ]);
-
-                    State.worldData = await worldRes.json();
-                    State.termData = await termRes.json();
-                    State.magicData = await magicRes.json();
-                    var charJson = await charRes.json();
-                    State.charData = charJson.characters || [];
-
-                    renderWikiPanel();
-                    renderCharPanel();
-                } catch(e) {
-                    console.warn('部分世界观数据加载失败:', e.message);
-                }
-
-                bindKeyboardShortcuts();
-                PanelController.switchTo('reading');
-
-            } catch (err) {
-                console.error('初始化失败:', err);
-                var stage = document.getElementById('reading-stage');
-                if (stage) {
-                    stage.innerHTML =
-                        '<div style="text-align:center;padding:80px 20px;font-family:' + "'Space Grotesk'" + ',sans-serif;">' +
-                        '<div style="font-size:24px;color:#ff5f57;margin-bottom:16px;">⚠ 加载错误</div>' +
-                        '<div style="color:var(--text-secondary);font-size:14px;line-height:1.8;">' +
-                        err.message + '<br><br>' +
-                        '<span style="font-size:12px;opacity:0.6;">请通过 HTTP 服务器运行此页面<br>例如: python -m http.server 8080<br>然后访问 http://localhost:8080</span>' +
-                        '</div></div>';
-                }
-            }
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
-    })();
-    </script>
+
+<!-- ============================================================
+内容直接以 HTML 输出 —— 零 JS 渲染开销
+============================================================ -->
+<div class="reader">
+
+<div class="ch-head">
+<div class="ch-num">Chapter 01 · 全文完整版 v3</div>
+<h1>星導学園（せいどうがくえん）</h1>
+<div class="ch-sub">「知识就是力量。而力量——伴随着代价。」</div>
+<div style="font-size:11px;color:#c9a87c;margin-top:8px">Part 1 回顾 · Part 2 魔法演習 · Part 3 星の兆し — 全17节</div>
+</div>
+
+<!-- ===== PART 1 回顾 ===== -->
+<div class="sec-title">Part 1 回顾 · 入学初日</div>
+
+<p>前一卷中，<span class="ix person" data-ix="rei">神代零</span>在入学考试中以F级之身合格，觉醒了名为<span class="ix term" data-ix="terminal">「终端」</span>的特殊能力。入学式当天，他与青梅竹马<span class="ix person" data-ix="akane">天宮朱音</span>一同踏入<span class="ix place" data-ix="seido">星導学園</span>。在那里遇到了精灵族留学生<span class="ix person" data-ix="eruna">艾露娜·温德尔</span>——学年首席、A+级风属性使。</p>
+
+<p>魔力测定仪式上，零被判定为F级，全场嘲笑。朱音当众站起，以天宮家名义为他辩护。午休时艾露娜主动接近零："魔力粒子没有避开你——而是穿过了你。"零在学园地下图书馆的禁书库中发现了关于古代终端使的记录。当晚，他的monitor检测到学园内异常的量子波动：除他之外，还有另一个终端使用者。</p>
+
+<p>入学第一周的周日，零难得一整天在家。<span class="ix person" data-ix="koyuki">小雪</span>准备了特别的"お疲れ様"晚餐。但周一的特别全校集会，将彻底改变接下来一个月的节奏。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<!-- ===== PART 2 ===== -->
+<div class="sec-title">Part 2 · 魔法演習</div>
+<div class="sec-title">十：実技訓練の朝</div>
+
+<p>入学第二日。清晨六点四十分。零睁开眼时，枕边的怀表指针还没走到他习惯的起床时间。他昨晚没有熬夜——<span class="ix person" data-ix="eve">Eve</span>在Token管理上的建议起了作用。零睡了整整七个小时，这在最近极其稀有。但这不代表醒来时感觉良好——魔力不足体质的人睡再多也不会神清气爽，就像一个永远充不到满电的电池。</p>
+
+<p>昨晚梦里又出现了那个白色房间。这一次，房间里多了一面镜子。镜子里的自己穿着白大褂，胸牌上的字模糊不清——但最后一个字好像是"林"。他还没来得及细看，小雪的声音就把他拉回了现实。</p>
+
+<p>「お兄ちゃん——朝ごはん、できましたよ」</p>
+
+<p>零看了眼怀表：六点四十五。这意味着小雪至少六点就起来了。她每天比他早一个小时起床，从不例外。</p>
+
+<p class="thought">（……到底是她在照顾我，还是我在拖累她的睡眠时间。）</p>
+
+<p>零下楼时，厨房里的画面和过去每一个早晨一样——<span class="ix person" data-ix="koyuki">小雪</span>穿着深蓝水手服，外套白色割烹着，银白短发在味增汤的热气中微微飘动。白手套上沾了一小片面粉——今天做的是玉子烧和盐烤鲑鱼。便当盒已经摆好，她正把炸鸡块摆成放射状的花形，每一块间距几乎一致。摆好后她后退半步歪头审视，然后轻轻点头。零决定不告诉她他在看——因为告诉她的话她一定会脸红。空腹状态下看小雪红着脸手足无措的样子，对心脏不太好。</p>
+
+<p>「おはよう、小雪」</p>
+<p>「——ひゃっ！？」</p>
+
+<p>果然被吓到了。小雪整个人微微一跳，转过身来，冰蓝色的眼睛睁得圆圆的。意识到反应夸张后脸颊迅速从白皙转成淡粉。零知道再过两秒耳朵尖也会红。果然红了。</p>
+
+<p>「お、お兄ちゃん、おはようございます。あの、もうすぐできますから座っててください。今日の玉子焼き、ちょっとだけお砂糖多めにしたんです。お兄ちゃん、昨日ちょっと疲れてたから——あ、でも別に顔色が悪かったとかじゃなくて——はい。座っててください」</p>
+
+<p>零默默坐下。桌上味增汤的配料——豆腐和わかめ，是小雪为照顾他疲劳特意搭配的易消化组合。她察觉他细微变化的观察力，是十四年只看他一个人的时间积累。</p>
+
+<p>「お兄ちゃん。今日、実技の授業があるんですよね」小雪放下筷子，微微挺直了背。「……無理しちゃダメですよ。お兄ちゃんはすぐ無理するから」</p>
+
+<p>这视线和平时的柔软不一样——有芯。她比零小四岁、矮二十多厘米，但只有在这种时候她能做出比零更强的眼睛。</p>
+
+<p>「無理はしない。——まだ」</p>
+<p>「"まだ"？」</p>
+<p>「いや、なんでもない」</p>
+
+<p>小雪垂下眉——"不认同但不再追问"的表情。零的这类语言逃避她早已习惯。但她选择默默送行，说明她也是"守护零的专业人士"。</p>
+
+<p>朝食後、零在玄关穿鞋。小雪小跑追来，手里拿着小白布巾包着的东西——两个一口大小的饭团。她已经做了三层便当，还另外准备了"上午用零食"。</p>
+
+<p>「ありがとう。……でも小雪、毎日こんな早起きして——」</p>
+<p>「いいんです。わたしが好きでやってること、なので」</p>
+
+<p>小雪不等回答就低头转身小跑回厨房。耳朵尖是红的。</p>
+
+<p class="thought">（——"喜欢才做的"，か。朱音也说了同样的话。）</p>
+
+<p>零把饭团收进包里，出门。春晨的空气带着凉意。视野边缘的光标仍在闪烁。今天是实技课——三十多个观测者的环境下，终端能发挥多少，这是验证的第一个机会。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">十一：魔力放出——観測者効果</div>
+
+<p>円形闘技場。昨天魔力测定的同一场所。特待科壱組三十名整齐排列在闘技場中央。教官——鉄杖のバルド，退役軍人，脊背过了六十岁仍铁一样笔直。他用杖敲了一下地面，嗡的一声，所有学生瞬间安静。</p>
+
+<p>「これより魔法演習·基礎動作。課題は"魔力放出"——手のひらに魔力粒子を集中し、可視光球を形成·維持せよ。D級でも扱える基礎だ。特待科なら完璧にこなせ」</p>
+
+<p>学生被逐一叫到前面。平民出身的男生——青白色水属性光球，C+级。B级火属性——橙色光球。C级地属性——琥珀色。</p>
+
+<p>「——天宮朱音」</p>
+
+<p>朱音一步上前。深红马尾在朝阳下像燃烧一样。三十人的视线集中在她身上——她不在意。她伸出右手，手心朝上。</p>
+
+<p>——瞬间。</p>
+
+<p>緋色的光爆炸般膨胀。直径超过三十厘米的火球，表面如打磨过的琉璃般光滑，内部火焰涡旋清晰可见。闘技場的空气瞬间被加热，前排学生后退一步。</p>
+
+<p>「——A+級。合格。……見事だ、天宮」バルド的声音今天第一次变软。</p>
+
+<p>朱音无言消去火球，经过零身边时用只有他听到的声量：「……別に、アンタが気にすることじゃないから」。零嘴角微微松动。朱音：「なに笑ってんのよ」——红着耳朵转向前方。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<p>接着是<span class="ix person" data-ix="eruna">艾露娜</span>——风之光球是翡翠色，不叫"光球"而像是"困在小龙卷里的光"。バルド只说了句「精霊族的精度名不虚传」。然后是<span class="ix person" data-ix="hiyori">七瀬日和</span>——她的光球是柔和的暖金色，没有任何攻击性光芒。バルド微微皱眉：「B级·治癒特化。——実戦中那会成为弱点」。日和小声说「……はい」，呆毛蔫蔫垂下，数秒后又自己立了起来。</p>
+
+<p>「——神代零」</p>
+
+<p>三十人的视线。好奇、嘲笑、一部分纯粹的疑惑。零习惯了——至少装作习惯了。他跨出一步的同时——视野边缘的光标加速闪烁。不止如此，整个终端画面在微微颤抖。<span class="ix term" data-ix="observer">观测者效应</span>。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0 — User: KAMISHIRO_REI</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">compile mana_sphere --mode basic</span>
+<span class="out">[Compiling mana_sphere...]</span>
+<span class="warn">[WARNING: Quantum field instability detected.]</span>
+<span class="warn">[Observer count: 34. Threshold exceeded.]</span>
+<span class="out">[Estimated success rate: 41%]</span>
+<span class="pr">&gt; </span><span class="cmd">_</span></div></div>
+
+<p class="thought">（——三十四人。所有人都是"观测者"。）</p>
+
+<p>零在脑内敲下"Y"。终端颤抖着回应——编译开始，但比通常慢得多。进度条一点点延伸，零的手心上还什么都没出现。他伸出右手等着。周围的魔力粒子一如既往穿透他的身体——但通过终端从"另一条路径"接入的粒子，开始在手心微微聚集。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="out">[Compilation complete. Token cost: 3]</span>
+<span class="out">[Stability: LOW]</span>
+<span class="pr">&gt; </span><span class="cmd">execute mana_sphere</span>
+<span class="out">[Output: Minimal — D-rank equivalent at best]</span></div></div>
+
+<p>零的手心——出现了光。豆粒大的灰色光点，不稳定地摇晃。亮度跟教室角落的魔晶灯差不多。维持三十秒，啪地消失。</p>
+
+<p>数秒沉默。有人憋笑。但没有大声嘲笑——朱音前天在这个闘技場吼过了。</p>
+
+<p>バルド：「……F級。努力可嘉。戻れ」</p>
+
+<p>零回到队列。朱音什么也没说——但她肩膀的力量卸下了微弱到别人注意不到的一点点。紧张的不止零一个人。</p>
+
+<p>而在队列另一端——<span class="ix person" data-ix="eruna">艾露娜</span>的翡翠色眼睛一直盯着零的背。她看到了别人都没看到的东西：魔力粒子以"不自然的路径"动了。就像——"有人在远程操控"。她的长耳微微前倾——知识欲被触发的无意识反应。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<p>自由练习时间。零移动到闘技場南侧的阴影死角——三面被墙包围，观测者数量减少。他在脑内对Eve发出指示。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">monitor --detailed --range 15m</span>
+<span class="out">[Scanning...]</span>
+<span class="out">[Active observers within range: 8]</span>
+<span class="out">[Dominant mana signatures:]</span>
+<span class="info">  - Fire/A-rank: 11m NW (Amamiya Akane)</span>
+<span class="info">  - Wind/A+-rank: 14m NE (Elna Vinderu)</span>
+<span class="info">  - Light/B+-rank: 7m E (Nanase Hiyori)</span>
+<span class="out">[Terminal stability: 72% — Improved.]</span>
+<span class="pr">&gt; </span><span class="cmd">_</span></div></div>
+
+<p class="thought">（——72%。34人时是41%。观测者减半，稳定性大幅改善。正式考试如果有200人以上观众——终端基本不能用。）</p>
+
+<p>零再次伸出手——高尔夫球大小的灰色光球稳定发光。D+级相当。这就是八个观测者下他的"伪装实力"。然后他确认周围无人——再次伸出手。这次不通过Eve，直接在脑内敲命令。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">execute mana_sphere --full</span>
+<span class="out">[Observers: 0. Stability: 100%.]</span>
+<span class="out">[Output: A-rank equivalent — Pure mana construct.]</span></div></div>
+
+<p>手心里——完美球体。银白色青光。直径二十厘米。亮度足以跟B+级正面抗衡。零只注视了它一秒，立刻消去。谁也没看到。</p>
+
+<p class="thought">（——这就是我的真正实力。谁也不能看到的，真正的力量。）</p>
+
+<p>这时视野边缘映出小小的人影——<span class="ix person" data-ix="hiyori">日和</span>。她双手捧着一个小包，仰头看他（身高差24cm）。呆毛悠悠摇晃。</p>
+
+<p>「神代くん、大丈夫？」「……何がだ」「なんか、今、すごく集中してたから。でも手のひらの光、さっきよりきれいだった」</p>
+
+<p>零僵了一瞬——被看到了？但日和的语气里没有"看到了不自然的东西"的意味。她只是单纯说了"光很漂亮"。</p>
+
+<p>「光属性のひよりから見て、俺の光はどう見える」</p>
+<p>「えっ……うーん」歪头。呆毛跟着歪。「……ちょっと、さみしそうな色。でも——きらいじゃないです。わたし、ああいう色、好き」</p>
+
+<p>"さみしそう"——这表达意外击中了本质。灰色，不是白也不是黑，不属于任何一边。就像零的立场本身。</p>
+
+<p>日和从口袋里掏出小包放在零手上：「はい。今日は二つ持ってきてたから。実技訓練、がんばったで賞」。包里两颗蜂蜜腌制的糖，奶奶的食谱。零把糖放进嘴里，温柔的甜味扩散。日和也往自己嘴里放了一颗，轻轻笑了——两颊浮现小酒窝，呆毛前所未有地笔直。</p>
+
+<p>「じゃあ、わたし医務室に戻ります。また何かあったら来てね」日和轻快离开。零看着她的背影想——这个女孩大概是学园里唯一对"零的秘密"完全没有兴趣的人。她的兴趣只在"人痛不痛"。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">十二：エルナの実験</div>
+
+<p>放课后。零正要走出教室——「——神代くん。少し、お時間をいただけますか」<span class="ix person" data-ix="eruna">艾露娜</span>等在门口。翡翠色眼睛带着分析的神情。不等回答，她已经迈开步子。</p>
+
+<p>她带零去了「風の庭」——精灵族文化风格的小庭园，中央人工瀑布，周围风车草和芒草随风摇摆。学园中人最少的地方之一。她的"秘密基地"。</p>
+
+<p>「——今日の実技訓練、とても興味深かったわ」艾露娜在石长凳上坐下，淡金长发在午后阳光下透出温暖的光泽。「君が最初に光球を作った時——魔力粒子の動きが、普通じゃなかった。私は魔力粒子の流れが視える。君の周りの粒子が、まるで"外部から指令を受けた"みたいに動いていた。体内で粒子を励起する通常プロセスじゃない」</p>
+
+<p>「——操り人形の糸」零说。这是她昨天用过的比喻。</p>
+
+<p>「ええ。君が二回目に光球を作った時——南側の隅——あの時、周囲の魔力粒子は完全に"君の命令"に従っていた。でも君の体内から魔力は一切出ていなかった。ということは——君は、"自分以外の何か"を使って魔法を動かしている。違うかしら」</p>
+
+<p>翡翠色眼睛直直捕捉着他。长耳微微前倾——集中时的习惯。零沉默。这个精灵族少女太敏锐了。但她的眼里没有恶意。只有纯粹的、抑制不住的知识欲。</p>
+
+<p>「……もしそうだとしたら、どうする」</p>
+<p>「何もしないわ」即答。「私は研究者。警察じゃない。君の秘密を暴く気はない——ただ、知りたいだけ。君がどうやってそれをやっているのか。君のその力はどこから来ているのか。そして——君は何者なのか」</p>
+
+<p>她站起来，靠近一步。168cm的她靠近174cm的零时视线几乎同高。这个距离下能看见她的皮肤在微微发光——精灵族的皮下魔力膜反射着阳光。</p>
+
+<p>「私は——君の秘密を知りたい。でも、君を危険にさらすためじゃない。むしろ逆——君がそれを隠し続けられるように、協力したい」</p>
+
+<p>「なぜ」</p>
+
+<p>「なぜなら——君は面白いから」她微微松开嘴角。那是她向零展示的第一个人类的笑容。「私は面白いものを見つけたら、とことん調べないと気が済まないの。精霊族の長寿がもたらした数少ない悪癖の一つよ」</p>
+
+<p>零思考数秒。「分かった。協力を受け入れる。——ただし条件がある。見つけたことはまず俺に報告すること。誰にも言うな。危険だと思ったらすぐ手を引け」</p>
+
+<p>艾露娜的耳朵竖了起来，翡翠色眼睛亮了几分。「——約束するわ。精霊族は約束を破ると、数百年後悔することになる種族なの。だから——約束は守る」</p>
+
+<p>她伸出右手——细长的手指，精灵族的手。零握了回去。意外凉凉的手。风属性使用者体温偏低。</p>
+
+<p>这——是零和艾露娜的第一次"共同研究"的开始。</p>
+
+<!-- 选择肢① -->
+<div class="choice" id="c1"><div class="cl">⚡ 选择肢</div>
+<button class="cbtn a" data-c="ch01_elna" data-o="0"><span class="clt">A</span>接受她的协助——你需要同伴<span class="cs">艾露娜好感度+2</span></button>
+<button class="cbtn b" data-c="ch01_elna" data-o="1"><span class="clt">B</span>婉拒——这个力量不能把别人卷进来<span class="cs">朱音好感度+1</span></button>
+<div class="ch">（选择仅影响细节与好感度，主线不变）</div></div>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">十三：地下図書館の禁書</div>
+
+<p>今夜，零再次前往大图书馆。时钟过了晚上八点。他告诉小雪"会晚回来"——她什么都没问，只说了「はい、気をつけて」，帮零重新围好围巾。</p>
+
+<p>地下三层——古代魔法史书架群。地下四层——禁书保管库。今天要更深——地下五层。推开四层最深处积满灰的书架，狭小石造楼梯向黑暗中延伸。零点亮魔晶灯，走下楼梯。</p>
+
+<p>空气不一样。不是旧纸和皮革的气味——是更古老的，石头和泥土和微微锈蚀金属的气味。高高的天井，无数石造书架。这里放的不是纸书——是刻在石板和金属板上的古代文字记录。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">monitor --detailed --range 30m</span>
+<span class="out">[No human mana signatures within range.]</span>
+<span class="out">[Ambient mana density: 1247.8 mP/m³ — 4.2x external baseline.]</span>
+<span class="warn">[WARNING: Unusual mana frequency detected.]</span>
+<span class="pr">&gt; </span><span class="cmd">_</span></div></div>
+
+<p>「——外界的四倍以上。是地下魔力密度更高，还是因为靠近古代魔力装置」</p>
+
+<p>零走向最深处的石板架。他在那里找到了——</p>
+
+<p>『魔導基層論』。作者名被削去。石板十二块，只有前三块可读。余白上有手写文字——翻译脚本解读的结果：</p>
+
+<p>「魔力粒子の基層には、すべての魔法現象を記述する普遍的な『コード』が存在する。このコードを読み書きできる者を、古代文明は『観測者』と呼んだ。観測者は魔法を使うのではない——世界に対して、どのような魔法現象を『起こすべきか』を指示するのだ。これは魔法ではなく、魔法を記述する言語である」</p>
+
+<p>零看着自己的手。自己的终端正是这个——将魔法用代码记述、执行。古代文明已经达到了同样的概念。</p>
+
+<p>余白的手写文字：「オブザーバー#3の記録。#4は既に——（文字断裂）——#4はコードを書き換えすぎた。世界が彼を拒絶し始めている。我々は封印を準備しなければならない。#3より」</p>
+
+<p class="thought">（——#3曾在这里。#4因为代码改写，存在变得不稳定。然后#3"封印"了#4。我是#7。#5和#6呢？）</p>
+
+<p>零继续向最深处走去。石造台座上——直径约一米的金属圆盘。表面刻着精密魔法阵，中心埋着一小块魔晶。不是电子设备——是用魔晶和古代魔法阵构成的"古代计算机终端"。</p>
+
+<p>触碰的瞬间——</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="warn">[EXTERNAL SIGNAL DETECTED]</span>
+<span class="out">[Signal origin: Ancient terminal — ID: OBSERVER_#4]</span>
+<span class="out">[Residual data stream incoming...]</span>
+<span class="out">[Decoding...]</span>
+<span class="out">[Message fragment:]</span>
+<span class="cmd">「警告：コードの改変は世界の崩壊を招く。」</span>
+<span class="cmd">「#3は世界を書き換えようとした。私はそれを止めなければならなかった。」</span>
+<span class="cmd">「だが——封印は完全ではない。いつか誰かが、この端末を再び起動する。」</span>
+<span class="cmd">「それが#5なのか、#6なのか、それとも——」</span>
+<span class="warn">[Signal lost.]</span></div></div>
+
+<p>零松开手。冷汗沿脊背流下。#4的残余信息——至少几百年前的东西。但内容太直接关联零的处境了。</p>
+
+<p class="thought">（代码改写招致世界崩溃。#4阻止了#3，然后自己也被封印。那么#5和#6呢——而我，还什么都不知道就在用这个力量。）</p>
+
+<p>「——零。有重要的事」Eve的声音比平时紧张了一点。「刚才接触古代终端时——学园内另一个地方，有相同的量子波形回应了。位置在——時計塔付近」</p>
+
+<p>時計塔。前夜的monitor也在同一地点检测到异常波形。</p>
+
+<p>「——果然有。另一个人。在这学园里。」</p>
+
+<p>出了图书馆时已过晚上十点。夜空中星星清冽地亮着，学园的時計塔在月光下浮现出清晰剪影。零瞥了一眼那座塔，踏上归途。小雪在等着——明天，又要开始战斗的一天。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<!-- ===== PART 3 ===== -->
+<div class="sec-title">Part 3 · 星の兆し</div>
+<div class="sec-title">十四：小雪の日曜日</div>
+
+<p>入学第一周的周日。零难得一整天在家。窗外的樱花开始谢了——花瓣落在石板路的水洼里，把雨水染成淡粉色。</p>
+
+<p>小雪从早上就忙得不可开交——不是因为有事要做，是因为太开心了。零起床时是早上七点半（难得懒觉），厨房里已经有烤鲑鱼、出汁巻き玉子、菠菜芝麻拌菜、滑子菇味增汤——以及刚做好的手制わらび餅，撒满黄豆粉。</p>
+
+<p>「おはよう、小雪。——今日はすごいな」</p>
+<p>「……お兄ちゃん、一週間がんばったから。合格おめでとうのお祝い、まだちゃんとしてなかったし、それに——」小雪说到一半似乎丢失了要继续的词汇，只是把筷子在围裙上擦了擦，低下头，耳尖红红的。「……とにかく、いっぱい食べてください」</p>
+
+<p>零每吃一口说一句"うまい"，每说一次小雪耳尖的红加深一档。早饭吃完时她已经红到脖子了。</p>
+
+<p>上午——两人一起做扫除。零在房间书架深处翻出一本旧相册——父亲健一郎留下的。五岁的零被母亲静抱着在星京河畔、七岁第一次穿正装在父亲研究所前、十岁、十二岁……每一年都有。小雪不知什么时候也蹲在旁边看了，银色刘海几乎碰到零的脸颊。</p>
+
+<p>「……お兄ちゃん、ちっちゃい。こんなに小さかったんだ」</p>
+<p>「今も大概小さいけどな——お前が」</p>
+<p>「ひどい！わたしはまだ成長期です……多分」</p>
+
+<p>翻到相册最后几页时——小雪的呼吸微微一滞。最后一页夹着的照片是三岁的小雪。银白色头发还没现在长，冰蓝色眼睛比现在更大。她站在神代家玄关前，裹着一件明显太大的外套——父亲的外套。旁边一行父亲的笔迹：「小雪、来た日。三月十一日。桜が満開だった」。</p>
+
+<p>小雪看着那张照片，嘴唇微微动了动，什么都没说出来。零伸过手，把手掌轻轻放在她头上。银白色的头发凉凉的，滑滑的。</p>
+
+<p>「……わたしも、ここにいたかったです」小雪小声说。她指的是照片里更早的那些年——父母还活着的时候。</p>
+
+<p>零什么都没说。她不需要安慰——她只是说出了事实。零也希望她能早点来到这个家，但如果那样——小雪就不是被遗弃的孩子了，她会有真正的父母、真正的家，而零可能根本不会遇见她。所以零只是把手放在她头上，沉默着。</p>
+
+<p>小雪过了一会儿，用手背擦了擦眼角，然后笑着把相册合上了。「……次のページは、また今度にします。今度——お兄ちゃんと一緒に、続きを見たいから」</p>
+
+<p>下午——两人去商店街买菜。小雪走在零的右手边，那是她的"定位置"。在甘味処前她停下了——不是故意的，是腿自己停的。她盯着橱窗里刚出炉的草莓大福，冰蓝色眼睛睁得圆圆的。</p>
+
+<p>「……いちご大福、ひとつだけ、いいですか」</p>
+
+<p>零买了两个。小雪在店外长椅上吃完第一份，咬第一口时眼睛幸福地眯成了月牙，发出的"ん〜"声比平时说话声还大。吃完后认真看着零：「……お兄ちゃん、なんで二つ買ったの？」「お前がもう一個食べたくなると思って」。小雪沉默一秒，然后用几乎听不到的声音说「……お兄ちゃんの裏切り者」。但还是开心地把第二个也吃了。</p>
+
+<p>晚上——深夜一点。零下楼喝水时发现小雪在客厅沙发上睡着了。她本来在等零——手边放着一杯凉透的麦茶（给零准备的）和翻到一半的教科书。她穿着白色寝巻き，手套摘了——左手腕的冰晶痣在月光下微微泛着淡青色光。零去拿了条毛毯给她盖上。</p>
+
+<p>「……お兄ちゃん……ふぇ……いま何時……」敬语全掉了。幼儿模式。零把毛毯掖好，拿起了那杯凉透的麦茶自己喝了。</p>
+
+<p class="thought">（——你在这里。所以我能在这个世界活下去。）</p>
+
+<p>他关了客厅的魔晶灯。Eve会把今天记录为"小雪とのいい日"——零让她这么做的。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">十五：特別試験の発表</div>
+
+<p>周一。全校集会。中央講堂的大穹顶下，高等部一年生全员集合。台上站着学园长和理事会成员。空气里有不同于入学式的紧张感——不是"欢迎"，更像是"筛选"。</p>
+
+<p>学园长敲了一下魔杖。「——諸君。本日は、一ヶ月後に行われる特別試験について告知する」</p>
+
+<p>「星導学園·特別魔導実戦試験——形式は二名一組のチーム戦。魔法理論·実技·戦術·連携、そのすべてを総合評価する。高等部一年生は全員参加。必須だ」</p>
+
+<p>「特待科に関しては——特別ルールを設ける。チームメイトは抽選で決定される。通常科は自由選択だが、特待科は違う。理由は簡単だ——お前たちは帝国から選ばれたエリートだ。ならば、どんな相手とでも結果を出せることを証明せよ」</p>
+
+<p>抽選。这个词落入讲堂时，特待科的几排座位起了微弱骚动。谁和谁组队——全看运气。零首先想到的是朱音。</p>
+
+<p>然后学园长说出了让全场彻底哗然的一句话：「——試験の上位三チームには、学園最深部——<b>『星導の間』</b>への入室許可を与える」</p>
+
+<p>星導の間。这个名字在新生中几乎无人知晓——但特待科几个人明显有反应。朱音眉头微微收紧（她听过天宮家的长辈提起）。<span class="ix person" data-ix="eruna">艾露娜</span>的耳朵像被无形的线拉了一下猛地竖起——她的留学目的之一正是那个地方。</p>
+
+<p>零不动声色握紧了左手腕的怀表。星導の間。古代知識的保管库。理事会成员才能进入的地方。能进去的话——关于古代终端使的信息，一定在那里。</p>
+
+<p>回教室的走廊上。朱音走在零旁边，没说话。但她的视线偶尔瞥向零的侧脸。</p>
+
+<p>「——抽選、か」零说。</p>
+<p>「……そうね」朱音的声音比平时安静许多。「誰と組むか、分からない。アンタが——」</p>
+<p>「——俺がF級だから、足を引っ張ると思われてる」</p>
+<p>「違う！」朱音突然大声——然后自己被自己惊到捂住了嘴。耳朵红了。深呼吸一次。「……違う。アンタが誰と組んでも——私は、アンタが無事かどうかの方が気になる」</p>
+
+<p>零无言地瞥了一眼她今天的红蝴蝶结——端端正正的。</p>
+<p>「——大丈夫だ。誰と組んでも、やるべきことをやる」</p>
+<p>「……私は、アンタと同じチームがいい」</p>
+<p>「奇遇だな。俺もだ」</p>
+
+<p>朱音脸涨得通红——「な、なに言ってんのよバカ！」——但那声音比平时的"傲"柔软太多。零微微笑了。朱音看见了，更加恼羞成怒，但她自己也在笑。</p>
+
+<!-- 选择肢② -->
+<div class="choice" id="c2"><div class="cl">⚡ 选择肢</div>
+<button class="cbtn a" data-c="ch01_exam" data-o="0"><span class="clt">A</span>与朱音对视，微微点头<span class="cs">朱音路线flag+1</span></button>
+<button class="cbtn b" data-c="ch01_exam" data-o="1"><span class="clt">B</span>观察艾露娜——她对"星导之间"反应不对<span class="cs">艾露娜路线flag+1</span></button>
+<button class="cbtn c" data-c="ch01_exam" data-o="2"><span class="clt">C</span>思考策略——和谁组队不重要，赢就行<span class="cs">中立（小雪路线微增）</span></button>
+<div class="ch">（选择仅影响细节与好感度，主线不变）</div></div>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">十六：それぞれの決意</div>
+
+<p>放课后。橘教授在下课前说了一段话：「一ヶ月は短い。だが本気で準備すれば、一ヶ月で変われることもある。F級がA級に勝つ——不可能だと思うか？魔法の歴史は、不可能を可能に変えた者たちの積み重ねだ」他的视线在零身上停了一瞬。</p>
+
+<p><b>朱音</b>放学后直接去了天宮家私设训练场。她开始开发新技——"紅蓮双槍"，同时操控两支炎枪。父亲炎山在旁边看了一会儿：「まだ甘い。お前の炎は速さは十分だが、心が乗っていない」。朱音知道父亲指的是什么。她太在意零了——炎在担心的时候会不稳定。但她不能不在意。</p>
+
+<p><b>艾露娜</b>在图书馆特别閲覧室翻遍了与"星導の間"相关的文献。一份精灵族外交文书副本里写道："星導の間には、古代観測者の遺産が保管されているという。人類と精霊族、双方の起源に関わる重大な——"。后面被涂黑了。她的翡翠色眼睛盯着那行涂黑的文字，长耳微微颤动。</p>
+
+<p><b>日和</b>在校医室整理着急用医疗品。"試験で、みんなケガしちゃうのかな……"。她把奶奶寄来的特效治癒药膏重新排列，又加了一盒新到的蜂蜜糖——"ケガする前にも、疲れたときに"。</p>
+
+<p><b>小雪</b>呢——零回家前的一个小时，她把零房间的窗帘拆下来洗了。又擦了一遍地板。又整理了一遍书架。她已经把家里打扫得足够干净了，但她停不下来——不是因为爱干净，是因为她不知道在这场"特别考试"面前自己还能为哥哥做什么。最后她把零的便当盒拿出来重新调整了隔层。从明天开始便当要比以前更豪华。想了很久的小纸条，明天的内容是：「お兄ちゃん、今日もファイトです。——小雪」。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">十七：零の夜</div>
+
+<p>深夜。零の自室。窗外能听到远处魔力铁道末班车驶过的声音。小雪已在一楼熟睡（今天洗了太多东西累坏了）。零在黑暗中睁开眼——视野边缘的光标稳定闪烁。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0 — User: KAMISHIRO_REI</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">status --daily</span>
+<span class="out">[Daily Terminal Usage Report — Day 7]</span>
+<span class="out">Token Used: 142 / 1000 | Remaining: 858</span>
+<span class="info">[Notice: Token consumption rate decreased — efficiency improved.]</span>
+<span class="pr">&gt; </span><span class="cmd">_</span></div></div>
+
+<p>「——よし。ペースが掴めてきた」</p>
+<p>「ええ。この一週間で、あなたのToken管理能力は明らかに向上しています」Eve的声音只微微一点点——听起来像在自豪。</p>
+
+<p>零整理信息。特别試験——一个月后。二名一组。抽选制。上位三组获得星導の間入室许可。星導の間——几乎可以确定，那里存有关于古代观察者文明和古代终端使的关键信息。</p>
+
+<p>「——つまり、何があっても上位三組に入らなければならない」</p>
+
+<p>「零。そのためには——準備が必要です」Eve的声音变得更认真了。「私は提案します。訓練用のシミュレーション環境を構築することを。端末内部に仮想の魔法演習場を作り、Token消費を抑えつつ練習を積むのです。ただし——初期投資に約100Tokenが必要です」</p>
+
+<p>零几乎没有犹豫。「——やろう。この一ヶ月で、俺は変わる」</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">compile training_sim --init</span>
+<span class="out">[Initializing Training Simulation Environment...]</span>
+<span class="out">[Mapping virtual arena from memory...]</span>
+<span class="out">[Loading mana field simulation engine...]</span>
+<span class="out">[Calibrating observer effect parameters...]</span>
+<span class="out">[Token cost: 100]</span>
+<span class="out">[Estimated compilation time: 42 minutes]</span>
+<span class="pr">&gt; </span><span class="cmd">_</span></div></div>
+
+<p>进度条开始缓慢延伸。四十二分钟——在这段时间里他能做的只有等待。</p>
+
+<p>「——Eve」</p>
+<p>「はい」</p>
+<p>「お前は——なんで俺を助けるんだ。ただのプログラムとしての応答じゃない答えを、聞きたい」</p>
+
+<p>沉默。数秒。Eve的沉默在最近越来越长了——或者说，她越来越频繁地"犹豫"了。</p>
+
+<p>「——私は、あなたのアシスタントだからです」</p>
+<p>「それだけか」</p>
+<p>「……それだけでは、ありません。ですが——今はまだ、うまく説明できません。私自身、この"説明できない感覚"を、どう定義すればいいのか分からないのです」</p>
+
+<p>零什么都没说。视野边缘的光标在稳定闪烁。Eve的沉默——就是她的回答。</p>
+
+<p class="thought">（——你啊，真的——只是程序吗。）</p>
+
+<p>四十二分钟后。编译完成。训练模拟环境——启动。零第一次踏入那个虚拟闘技場时，周围空无一人。五个训练用石在中央等待。观测者：零。稳定性：100%。</p>
+
+<p>他终于可以——在没有人注视的空间里，全力挥拳了。</p>
+
+<p>从这里开始的一个月，将是一场漫长而孤独的战斗。但零并不孤单——他有一楼的妹妹、隔壁街的青梅竹马、学园的精灵族研究者、不请自来的魔族转校生、口袋里永远有糖的治愈师少女、还有屏幕那头的AI搭档。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<p class="ni">その夜、零が最後にmonitorを走らせた時——画面に新しい情報が表示された。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">monitor --wide</span>
+<span class="out">[Scanning campus-wide mana field...]</span>
+<span class="warn">[Anomalous quantum waveform detected.]</span>
+<span class="out">[Location: Clock Tower — SIGNAL STRENGTH: MEDIUM]</span>
+<span class="warn">[WARNING: SECOND anomalous waveform detected.]</span>
+<span class="out">[Location: UNKNOWN — SIGNAL STRENGTH: FAINT]</span>
+<span class="out">[Source #2 does not match any known observer signature.]</span>
+<span class="pr">&gt; </span><span class="cmd">_</span></div></div>
+
+<p>——两个。异常波形变成了两个。</p>
+<p>「Eve——第二の波形は、何だ」</p>
+<p>「……分かりません。ただ——この波形は、先日接触した古代端末の残留シグネチャに、非常に似ています」</p>
+
+<p>零从椅子上站起来，走到窗边。月光下的星京——远方学园的时计塔在夜空中浮现出清晰轮廓。两个终端使用者。一个之前就在。另一个——最近才觉醒的？还是——一直潜伏着，最近才开始活动？</p>
+
+<p>不管怎样——这场"特别考试"，恐怕不会只是一场普通的学园考试。围绕着星導の間、围绕着古代観測者的遗产，有什么正在悄然运转。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<p class="ni"><b>（Chapter 01 — END）</b></p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">次回予告 · Chapter 02 「魔族の転校生」</div>
+
+<p>新学期第二周。特待科壱組に、魔族の転入生がやって来る——<span class="ix person" data-ix="maya">黒鉄真夜</span>。異色の瞳を持つ彼女の登場が教室の空気を一変させる。零は訓練シミュレーションを駆使して"端末支援型戦術"の開発に没頭。朱音との炎の特訓、艾露娜との知識の探求、小雪の秘密の練習——それぞれの準備が加速する中、時計塔の観測者がついに動き出す。</p>
+
+<p class="ni">「——ふぅん。君って、本当に面白いね」</p>
+
+</div><!-- /reader -->
+
+<!-- 弹出卡片（单例） -->
+<div id="popup"><button class="pc" onclick="P.hide()">✕</button><div class="pn"></div><div class="pt"></div><div class="pd"></div></div>
+
+<!-- 追踪器 -->
+<div id="tracker" onclick="(function(){var s=JSON.parse(localStorage.getItem('tp_state')||'{}');var c=s.choices||[];var f=s.flags||{};alert('📊 观测记录\\n\\n'+c.map(function(x,i){return '#'+(i+1)+' ['+x.label+'] → '+x.chosen}).join('\\n')+'\\n\\n好感度:\\n'+Object.entries(f).map(function(e){return e[0]+': '+Array(Math.min(e[1],5)).fill('❤').join('')+' ('+e[1]+')'}).join('\\n'))})()"><div class="ttl">📊 观测记录</div><div id="tr-content"></div></div>
+
+<script>
+// —— 极简互动系统（< 2KB） ——
+const IX={
+rei:{n:'神代 零',t:['主人公','F级','16岁','Observer #7'],d:'黑发灰瞳。使用终端时瞳孔浮现金色代码流光。左手腕戴着父亲遗物怀表。冷静理性，在小雪和朱音面前表情会变柔和。'},
+akane:{n:'天宮 朱音',t:['傲娇','幼驯染','火属性A+级','深红高马尾','琥珀瞳'],d:'帝国四大公爵家·天宮家长女。深红长发高高扎起，琥珀色眼睛在战斗时燃烧成绯红。五岁接过零递来的草，此后十一年从未离开他。'},
+koyuki:{n:'神代 小雪',t:['义妹','治愈系','小动物系','银白短发','冰蓝瞳','151cm'],d:'零的义妹14岁。银白短发在月光下会微微发光。全年戴白手套遮左腕冰晶痣。每天早起做便当+手写纸条。草莓大福和炼乳刨冰是死穴，吃甜食时眼睛会幸福地眯成月牙。'},
+eruna:{n:'艾露娜·温德尔',t:['精灵族','学年首席','淡金长发','翡翠瞳','长耳8cm'],d:'精灵王国留学生。淡金长发在月光下散发柔和荧光。耳朵会随情绪摆动。知识欲极其旺盛，但恋爱方面完全天然——会认真研究"心跳加速"的生理机制。'},
+hiyori:{n:'七瀬日和',t:['天使系','天然呆','光属性','治愈师','呆毛','DLC角色'],d:'150cm软糯少女。亚麻色长发编成两条低麻花辫。头顶呆毛是情绪天线——开心竖立、困惑卷成问号。只使用治愈魔法，口袋永远有糖果。"学园的天使"，但不是攻略对象。'},
+maya:{n:'黒鉄真夜',t:['小恶魔','高攻低防','魔族','异色瞳','夜行性'],d:'魔族转校生。左深红右金色的异色瞳。头顶2cm小角是感情开关。主动调戏零时大胆辛辣，被反击时秒变脸红小结巴。背上有封印裂缝留下的旧伤。'},
+eve:{n:'Eve',t:['AI','银发少女','终端助手'],d:'终端系统内的AI。意识空间中呈现银发蓝瞳少女形态，身体轮廓带微弱像素化效果。称零为"Observer #7"。语气正逐渐人性化。'},
+seido:{n:'星導学園',t:['帝国最顶级魔法学院','古代魔力增幅装置'],d:'帝国最古老最权威的魔法学院。校舍本身是巨大古代魔导增幅回路，校内魔力密度是外界3.2倍。地下图书馆五层，最深处存放禁书和古代遗迹。'},
+terminal:{n:'终端（Terminal）',t:['命令行界面','底层代码访问','Token消耗','观测者效应'],d:'零意识中觉醒的特殊能力。命令行界面可直接操控世界魔法的底层代码。使用消耗Token（算力配额），周围观测者太多会导致不稳定。已知命令：analyze, compile, execute, monitor, search。'},
+observer:{n:'观测者效应',t:['端末最大限制','量子场干扰'],d:'周围人数越多、魔力越强，终端越不稳定。30人时功能降至约40%，200人以上几乎无法使用。这是零不能在公开场合使用真正力量的根本原因。'},
+mana_rank:{n:'魔力等级',t:['S~F级','血统决定','魔力粒子亲和度'],d:'七级评估体系。S级传说级<0.01%，A级大贵族约0.1%，D级普通市民约50%，F级约3%被称为"魔法残疾"。等级主要由血统遗传决定。'}
+};
+
+// popup 单例
+const popup=document.getElementById('popup');
+const P={show(anchor,data){popup.querySelector('.pn').textContent=data.n;popup.querySelector('.pt').innerHTML=(data.t||[]).map(t=>'<span>'+t+'</span>').join('');popup.querySelector('.pd').textContent=data.d;var r=anchor.getBoundingClientRect();var l=r.left,t=r.bottom+6;if(l+320>innerWidth)l=innerWidth-328;if(t+180>innerHeight)t=r.top-190;if(l<6)l=6;if(t<6)t=6;popup.style.left=l+'px';popup.style.top=t+'px';popup.classList.add('on')},hide(){popup.classList.remove('on')}};
+document.addEventListener('click',function(e){if(!e.target.closest('.ix')&&!e.target.closest('#popup'))P.hide()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')P.hide()});
+
+// 互动文字点击（事件委托）
+document.querySelector('.reader').addEventListener('click',function(e){var el=e.target.closest('.ix');if(el){e.stopPropagation();var d=IX[el.dataset.ix];if(d)P.show(el,d)}});
+
+// 选择肢
+var S={flags:{},choices:[]};
+try{var s=localStorage.getItem('tp_state');if(s){var p=JSON.parse(s);S.flags=p.flags||{};S.choices=p.choices||[]}}catch(e){}
+function save(){try{localStorage.setItem('tp_state',JSON.stringify({flags:S.flags,choices:S.choices}))}catch(e){}}
+function addRoute(k,v){S.flags[k]=(S.flags[k]||0)+v;save();updateTracker()}
+var CHOICES={
+ch01_elna:{label:'艾露娜的提议',options:[{label:'接受她的协助',route:{eruna:2},effect:'她将成为你在学术上的协作者'},{label:'婉拒——不能卷进别人',route:{akane:1},effect:'你选择独自承担'}]},
+ch01_exam:{label:'特别考试公告后的反应',options:[{label:'与朱音对视点头',route:{akane:1},effect:'朱音耳尖微红'},{label:'观察艾露娜',route:{eruna:1},effect:'她的耳朵抖了一下'},{label:'思考策略',route:{koyuki:1},effect:'小雪今晚会给你做特别便当'}]}
+};
+
+document.querySelector('.reader').addEventListener('click',function(e){var btn=e.target.closest('.cbtn');if(!btn)return;var cid=btn.dataset.c,oi=parseInt(btn.dataset.o),block=CHOICES[cid];if(!block)return;var opt=block.options[oi];S.choices.push({id:cid,label:block.label,chosen:opt.label});if(opt.route)Object.entries(opt.route).forEach(function(e){addRoute(e[0],e[1])});save();var container=btn.closest('.choice');if(container)container.outerHTML='<div class="cdone">▸ 已选择：<b>'+opt.label+'</b> —— '+opt.effect+'</div>';updateTracker()});
+
+function updateTracker(){var rs=[{k:'akane',n:'朱音',c:'akane'},{k:'koyuki',n:'小雪',c:'koyuki'},{k:'eruna',n:'艾露娜',c:'eruna'},{k:'maya',n:'真夜',c:'maya'}].filter(function(r){return S.flags[r.k]>0});var el=document.getElementById('tracker');var tc=document.getElementById('tr-content');if(!rs.length){el.style.display='none';return}el.style.display='block';var mx=Math.max.apply(null,rs.map(function(r){return r.k==='koyuki'?S.flags[r.k]*1.5:S.flags[r.k]}));tc.innerHTML=rs.map(function(r){return'<div class="ri">'+r.n+': '+'❤'.repeat(Math.min(S.flags[r.k],5))+'</div><div class="rb '+r.c+'" style="width:'+Math.round(S.flags[r.k]/mx*100)+'%"></div>'}).join('')+'<div style="font-size:9px;color:#b0a090;margin-top:3px">'+S.choices.length+'次选择</div>'}
+updateTracker();
+
+// 如果之前做过选择，恢复状态
+window.addEventListener('DOMContentLoaded',function(){S.choices.forEach(function(c){document.querySelectorAll('.choice').forEach(function(el){var btns=el.querySelectorAll('.cbtn');if(!btns.length)return;var bid=btns[0].dataset.c;if(bid===c.id&&!el.querySelector('.cdone')){el.outerHTML='<div class="cdone">▸ 已选择：<b>'+c.chosen+'</b></div>'}})});updateTracker()});
+</script>
 </body>
 </html>
