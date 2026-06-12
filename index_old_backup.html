@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>终端之梦 Terminal Phantasm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Serif+JP:wght@400;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* ========== 基础变量与重置 ========== */
+        :root {
+            --bg-primary: #0B0B0C;
+            --bg-secondary: #111118;
+            --bg-tertiary: #18181f;
+            --accent-blue: #00d4ff;
+            --accent-purple: #7c3aed;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --terminal-green: #00ff88;
+            --glass-bg: rgba(15, 18, 25, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --quote-color: rgba(245, 158, 11, 0.85);
+            --quote-bg: rgba(245, 158, 11, 0.03);
+            --quote-border: rgba(245, 158, 11, 0.35);
+            --dialogue-color: #f0e6d3;
+            --char-akane: #f59e0b;
+            --char-koyuki: #38bdf8;
+            --char-zero: #00d4ff;
+            --char-eve: #a855f7;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #f5f5f7;
+            --bg-tertiary: #ececee;
+            --accent-blue: #FF2A55;
+            --accent-purple: #cc1144;
+            --text-primary: #1a1a2e;
+            --text-secondary: #666680;
+            --terminal-green: #16a34a;
+            --glass-bg: rgba(250, 250, 252, 0.82);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --quote-color: rgba(220, 38, 38, 0.85);
+            --quote-bg: rgba(220, 38, 38, 0.03);
+            --quote-border: rgba(220, 38, 38, 0.3);
+            --dialogue-color: #2d1810;
+            --char-akane: #dc2626;
+            --char-koyuki: #2563eb;
+            --char-zero: #dc2626;
+            --char-eve: #9333ea;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; overflow-y: scroll; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #07080f 0%, #0c0e18 40%, #0a0c16 100%);
+            background-size: 400% 400%;
+            animation: bg-drift 20s ease infinite;
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        [data-theme="light"] body {
+            background: linear-gradient(135deg, #f8f8fb 0%, #ececef 50%, #f4f4f8 100%);
+            background-size: 400% 400%;
+        }
+
+        @keyframes bg-drift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* ========== macOS 窗口容器 ========== */
+        .app-window {
+            position: relative;
+            width: min(1280px, 96vw);
+            margin: 24px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(12, 14, 22, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 
+                0 0 0 1px rgba(255,255,255,0.03) inset,
+                0 30px 90px rgba(0,0,0,0.45),
+                0 8px 32px rgba(0,0,0,0.25);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .app-window {
+            background: rgba(252, 252, 254, 0.85);
+            border-color: rgba(0,0,0,0.08);
+            box-shadow: 
+                0 0 0 1px rgba(0,0,0,0.03) inset,
+                0 30px 90px rgba(0,0,0,0.08),
+                0 8px 32px rgba(0,0,0,0.05);
+        }
+
+        /* ========== macOS 标题栏 ========== */
+        .window-titlebar {
+            display: flex;
+            align-items: center;
+            height: 48px;
+            padding: 0 20px;
+            background: rgba(8, 10, 18, 0.5);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            -webkit-app-region: drag;
+            user-select: none;
+        }
+
+        [data-theme="light"] .window-titlebar {
+            background: rgba(248, 248, 250, 0.7);
+            border-bottom-color: rgba(0,0,0,0.06);
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 8px;
+            -webkit-app-region: no-drag;
+        }
+
+        .window-dot {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            cursor: default;
+        }
+
+        .window-dot.red { background: #ff5f57; }
+        .window-dot.yellow { background: #febc2e; }
+        .window-dot.green { background: #28c840; }
+        .window-dot:hover { filter: brightness(1.15); transform: scale(1.1); }
+
+        .window-title {
+            flex: 1;
+            text-align: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.3);
+        }
+
+        [data-theme="light"] .window-title { color: rgba(0,0,0,0.3); }
+
+        .window-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            -webkit-app-region: no-drag;
+        }
+
+        .window-tool-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.3);
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .window-tool-btn:hover {
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.7);
+        }
+
+        [data-theme="light"] .window-tool-btn { color: rgba(0,0,0,0.3); }
+        [data-theme="light"] .window-tool-btn:hover {
+            background: rgba(0,0,0,0.05);
+            color: rgba(0,0,0,0.7);
+        }
+
+        /* ========== 窗口主体布局 ========== */
+        .window-body {
+            display: flex;
+            height: calc(90vh - 49px);
+            min-height: 500px;
+        }
+
+        /* ========== 侧边栏 ========== */
+        .app-sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            background: rgba(8, 10, 18, 0.5);
+            border-right: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            contain: layout style;
+        }
+
+        [data-theme="light"] .app-sidebar {
+            background: rgba(248, 248, 250, 0.6);
+            border-right-color: rgba(0,0,0,0.06);
+        }
+
+        .sidebar-logo {
+            padding: 20px 16px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .sidebar-logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            text-align: center;
+        }
+
+        .sidebar-logo-sub {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 10px;
+            color: var(--text-secondary);
+            opacity: 0.5;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 10px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar-nav::-webkit-scrollbar { width: 3px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.2); border-radius: 2px; }
+
+        .sidebar-section { margin-bottom: 4px; }
+
+        .sidebar-section-title {
+            font-size: 9.5px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 8px 12px 4px;
+            opacity: 0.45;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            margin-bottom: 2px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            position: relative;
+            user-select: none;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(0,212,255,0.06);
+            color: var(--text-primary);
+        }
+
+        .sidebar-item.active {
+            background: rgba(0,212,255,0.1);
+            color: var(--accent-blue);
+        }
+
+        .sidebar-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 3px;
+            border-radius: 0 2px 2px 0;
+            background: var(--accent-blue);
+        }
+
+        .sidebar-item .si-icon { font-size: 15px; min-width: 20px; text-align: center; }
+        .sidebar-item .si-label { flex: 1; }
+        .sidebar-item .si-arrow { font-size: 10px; opacity: 0; transition: opacity 0.15s; }
+        .sidebar-item:hover .si-arrow { opacity: 0.4; }
+
+        .sidebar-chapter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            margin-bottom: 2px;
+            border-radius: 7px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-chapter:hover { background: rgba(0,212,255,0.05); color: var(--text-primary); }
+        .sidebar-chapter.active { background: rgba(0,212,255,0.1); color: var(--accent-blue); }
+
+        .sidebar-chapter .sc-num {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--accent-purple);
+            min-width: 30px;
+        }
+
+        .sidebar-chapter .sc-title { flex: 1; }
+
+        .sidebar-chapter .sc-badge {
+            font-size: 8px;
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            padding: 12px 10px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            gap: 6px;
+        }
+
+        [data-theme="light"] .sidebar-footer { border-top-color: rgba(0,0,0,0.06); }
+
+        .sidebar-footer-btn {
+            flex: 1;
+            padding: 7px;
+            border-radius: 7px;
+            border: 1px solid var(--glass-border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-footer-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+        .sidebar-footer-btn.active { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+        /* ========== 内容区 ========== */
+        .app-content {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transform: scale(0.97) translateY(8px);
+            pointer-events: none;
+            transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            overflow-y: auto;
+        }
+
+        .app-panel.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        .app-panel::-webkit-scrollbar { width: 4px; }
+        .app-panel::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.15); border-radius: 2px; }
+
+        /* ========== 阅读面板 ========== */
+        #panel-reading {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .panel-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px 24px;
+            background: rgba(8, 10, 18, 0.4);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0;
+            contain: layout style;
+        }
+
+        [data-theme="light"] .panel-toolbar {
+            background: rgba(248, 248, 250, 0.6);
+            border-bottom-color: rgba(0,0,0,0.04);
+        }
+
+        .toolbar-lang-group {
+            display: flex;
+            gap: 2px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 8px;
+            padding: 3px;
+        }
+
+        [data-theme="light"] .toolbar-lang-group { background: rgba(0,0,0,0.04); }
+
+        .toolbar-lang-btn {
+            padding: 5px 12px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .toolbar-lang-btn.active {
+            background: var(--bg-primary);
+            color: var(--accent-blue);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+
+        [data-theme="light"] .toolbar-lang-btn.active { background: #fff; }
+
+        .toolbar-btn {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+
+        .toolbar-btn:hover {
+            background: rgba(0,212,255,0.06);
+            border-color: rgba(0,212,255,0.25);
+            color: var(--accent-blue);
+        }
+
+        .toolbar-btn.primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-color: transparent;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .toolbar-btn.primary:hover { filter: brightness(1.1); }
+
+        .panel-reading-stage {
+            flex: 1;
+            max-width: 720px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 48px 40px 100px;
+            contain: layout style;
+        }
+
+        @media (max-width: 767px) {
+            .panel-reading-stage { padding: 32px 20px 80px; }
+        }
+
+        /* ========== 角色面板 ========== */
+        #panel-characters {
+            padding: 32px 32px 100px;
+        }
+
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .char-card {
+            border-radius: 14px;
+            padding: 24px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            contain: layout style;
+        }
+
+        .char-card:hover {
+            background: rgba(0,212,255,0.04);
+            border-color: rgba(0,212,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        [data-theme="light"] .char-card {
+            background: rgba(0,0,0,0.02);
+            border-color: rgba(0,0,0,0.07);
+        }
+
+        .char-card.locked { opacity: 0.4; }
+
+        .char-card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .char-card-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(124,58,237,0.1));
+            border: 2px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .char-card-info { flex: 1; min-width: 0; }
+
+        .char-card-name {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .char-card-role {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .char-card-desc {
+            font-size: 12.5px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .char-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .char-card-tag {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(124,58,237,0.1);
+            color: var(--accent-purple);
+        }
+
+        /* ========== 百科面板 ========== */
+        #panel-wiki {
+            padding: 0;
+        }
+
+        .wiki-tabs {
+            display: flex;
+            gap: 4px;
+            padding: 16px 32px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(8,10,18,0.3);
+            contain: layout style;
+        }
+
+        [data-theme="light"] .wiki-tabs {
+            background: rgba(248,248,250,0.5);
+            border-bottom-color: rgba(0,0,0,0.04);
+        }
+
+        .wiki-tab {
+            padding: 7px 16px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .wiki-tab.active {
+            background: rgba(0,212,255,0.1);
+            color: var(--accent-blue);
+        }
+
+        .wiki-tab:hover { background: rgba(0,212,255,0.05); color: var(--text-primary); }
+
+        .wiki-content {
+            padding: 24px 32px 100px;
+            overflow-y: auto;
+            height: calc(100% - 57px);
+        }
+
+        .wiki-section-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 20px 0 10px;
+            padding-left: 8px;
+            border-left: 2px solid var(--accent-blue);
+        }
+
+        [data-theme="light"] .wiki-section-title { color: var(--accent-blue); }
+
+        .wiki-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .wiki-item {
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .wiki-item:hover {
+            background: rgba(0,212,255,0.05);
+            border-color: rgba(0,212,255,0.2);
+        }
+
+        [data-theme="light"] .wiki-item {
+            background: rgba(0,0,0,0.02);
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        .wiki-item-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .wiki-item-desc {
+            font-size: 11px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* ========== KV Hero 入口 ========== */
+        .app-hero {
+            position: relative;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: linear-gradient(180deg, rgba(0,212,255,0.03) 0%, transparent 100%);
+        }
+
+        [data-theme="light"] .app-hero {
+            background: linear-gradient(180deg, rgba(220,38,38,0.02) 0%, transparent 100%);
+            border-bottom-color: rgba(0,0,0,0.05);
+        }
+
+        .app-hero #kv-canvas { border-radius: 0; }
+
+        .app-hero-content { position: relative; z-index: 1; text-align: center; padding: 40px 20px; }
+
+        .app-hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(28px, 5vw, 48px);
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: filter 0.4s;
+        }
+
+        .app-hero-title:hover { filter: brightness(1.25); }
+
+        .app-hero-sub {
+            font-family: 'Noto Serif JP', serif;
+            font-size: clamp(16px, 3vw, 24px);
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-top: 12px;
+            letter-spacing: 4px;
+        }
+
+        .app-hero-quote {
+            font-family: 'Noto Serif JP', serif;
+            font-size: clamp(13px, 2vw, 16px);
+            font-style: italic;
+            color: var(--text-secondary);
+            opacity: 0.6;
+            margin-top: 24px;
+            line-height: 1.8;
+        }
+
+        .app-hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 32px;
+            padding: 14px 36px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .app-hero-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,212,255,0.3);
+        }
+
+        .app-hero-meta {
+            margin-top: 20px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            opacity: 0.35;
+            letter-spacing: 1px;
+        }
+
+        /* ========== 保留的原有样式（阅读相关） ========== */
+        .reading-stage {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 48px 40px 80px;
+            position: relative;
+            contain: content;
+        }
+
+        .floating-ep-bar {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            height: 40px;
+            padding: 0 20px;
+            margin-bottom: 32px;
+            background: rgba(11, 11, 12, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            border-radius: 0 0 14px 14px;
+        }
+
+        [data-theme="light"] .floating-ep-bar {
+            background: rgba(255,255,255,0.75);
+            border-bottom-color: rgba(0,0,0,0.06);
+        }
+
+        .ep-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 12px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11.5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .ep-nav-btn:hover:not(:disabled) {
+            background: rgba(0, 212, 255, 0.08);
+            border-color: rgba(0, 212, 255, 0.25);
+            color: var(--accent-blue);
+        }
+
+        .ep-nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+        .ep-nav-select {
+            min-width: 0;
+            max-width: 200px;
+            padding: 5px 28px 5px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11.5px;
+            font-weight: 500;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            transition: all 0.2s ease;
+        }
+
+        .ep-nav-select:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.15); }
+        .ep-nav-select option { background: var(--bg-tertiary); color: var(--text-primary); }
+
+        .ep-nav-counter {
+            font-size: 11px;
+            color: var(--text-secondary);
+            opacity: 0.5;
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .ep-content-wrapper {
+            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ep-content-wrapper.ep-fade-out { opacity: 0; transform: translateY(-10px); }
+        .ep-content-wrapper.ep-fade-in { opacity: 1; transform: translateY(0); }
+
+        .chapter-art-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin: 64px 0 56px;
+            position: relative;
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .chapter-art-title::before,
+        .chapter-art-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+        }
+
+        .chapter-art-title::before { top: -20px; }
+        .chapter-art-title::after { bottom: -16px; }
+
+        .section-heading {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 19px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 52px 0 28px;
+            padding-left: 16px;
+            border-left: 3px solid var(--accent-blue);
+            opacity: 0.9;
+        }
+
+        .scene-separator {
+            width: 70px;
+            height: 2px;
+            margin: 44px auto;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            opacity: 0.35;
+        }
+
+        .art-quote {
+            text-align: center;
+            padding: 36px 48px;
+            margin: 48px auto;
+            max-width: 520px;
+            position: relative;
+        }
+
+        .art-quote::before {
+            content: '"';
+            position: absolute;
+            top: 12px;
+            left: 24px;
+            font-size: 48px;
+            color: var(--quote-color);
+            opacity: 0.2;
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .art-quote p {
+            font-family: 'Noto Serif JP', serif;
+            font-style: italic;
+            color: var(--quote-color) !important;
+            font-size: 16px !important;
+            line-height: 2 !important;
+            margin-bottom: 8px !important;
+        }
+
+        .content-paragraph {
+            font-family: 'Noto Serif JP', 'Source Han Serif SC', serif;
+            font-size: 17.5px;
+            line-height: 2.1;
+            color: var(--text-primary);
+            margin-bottom: 40px;
+            text-align: justify;
+            letter-spacing: 0.02em;
+            text-indent: 1em;
+        }
+
+        .content-paragraph strong { color: var(--text-primary); font-weight: 600; }
+        [data-theme="light"] .content-paragraph strong { color: #0f172a; }
+
+        .translation { font-size: 0.85em; color: var(--text-secondary); opacity: 0.65; }
+        .dialogue-text { color: var(--dialogue-color); }
+
+        .translation-line {
+            opacity: 0.72;
+            color: var(--accent-blue);
+            font-size: 0.9em;
+            border-left: 2px solid rgba(0, 212, 255, 0.2);
+            padding-left: 14px;
+            margin-top: -18px;
+        }
+
+        [data-lang-mode="jp"] .translation-line { display: none; }
+        [data-lang-mode="jp"] .content-paragraph[data-lang="ja"] { color: var(--text-primary); opacity: 1; }
+        [data-lang-mode="cn"] .content-paragraph[data-lang="ja"] { color: var(--text-secondary); opacity: 0.38; font-size: 0.88em; }
+        [data-lang-mode="cn"] .translation-line { color: var(--text-primary); opacity: 1; font-size: 1em; font-weight: 500; border-left-color: var(--accent-blue); background: rgba(0, 212, 255, 0.04); }
+
+        .terminal-block {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            margin: 32px 0;
+            overflow: hidden;
+            border: 1px solid rgba(0, 255, 136, 0.12);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            contain: layout style;
+        }
+
+        [data-theme="light"] .terminal-block { background: #1a1a24; border-color: rgba(255, 255, 255, 0.06); }
+
+        .terminal-header {
+            background: rgba(25, 30, 42, 0.95);
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .terminal-dot { width: 11px; height: 11px; border-radius: 50%; }
+        .terminal-dot.red { background: #ff5f57; }
+        .terminal-dot.yellow { background: #febc2e; }
+        .terminal-dot.green { background: #28c840; }
+
+        .terminal-title-bar {
+            flex: 1;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: rgba(148, 163, 184, 0.5);
+            margin-left: -46px;
+        }
+
+        .terminal-body {
+            padding: 18px 22px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            line-height: 1.75;
+            color: var(--terminal-green);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 7px;
+            height: 15px;
+            background: var(--terminal-green);
+            animation: cursor-blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        @keyframes cursor-blink { 50% { opacity: 0; } }
+
+        .chapter-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            margin-bottom: 3px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 13px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .chapter-item:hover { background: rgba(0,212,255,0.06); color: var(--text-primary); }
+        .chapter-item.active {
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(124,58,237,0.08));
+            color: var(--accent-blue);
+            font-weight: 600;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .chapter-item .ch-num {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--accent-purple);
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .chapter-item .ch-title { flex: 1; }
+
+        .chapter-item .ch-badge {
+            font-size: 9px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .ch-badge-demo {
+            background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
+            color: #f59e0b;
+            border: 1px solid rgba(245,158,11,0.25);
+        }
+
+        .ch-badge-complete { background: rgba(16,185,129,0.1); color: #10b981; }
+        .ch-badge-locked { background: rgba(148,163,184,0.08); color: var(--text-secondary); opacity: 0.5; }
+        .chapter-item.locked { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+        .demo-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 16px;
+            margin: 24px auto 32px;
+            max-width: 400px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(245,158,11,0.06), rgba(245,158,11,0.02));
+            border: 1px solid rgba(245,158,11,0.2);
+            font-size: 12px;
+            color: #f59e0b;
+            font-weight: 500;
+        }
+
+        [data-theme="light"] .demo-banner {
+            background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.03));
+            border-color: rgba(245,158,11,0.25);
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 900px) {
+            .app-sidebar { width: 60px; }
+            .sidebar-logo-text { font-size: 9px; letter-spacing: 0; }
+            .sidebar-logo-sub { display: none; }
+            .sidebar-item .si-label { display: none; }
+            .sidebar-item .si-arrow { display: none; }
+            .sidebar-item { justify-content: center; padding: 10px; }
+            .sidebar-section-title { display: none; }
+            .sidebar-chapter { padding: 8px; justify-content: center; }
+            .sidebar-chapter .sc-num, .sidebar-chapter .sc-title, .sidebar-chapter .sc-badge { display: none; }
+            .sidebar-footer { flex-direction: column; gap: 4px; }
+            .sidebar-footer-btn span { display: none; }
+            .sidebar-footer-btn { font-size: 15px; padding: 8px; }
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 0; }
+            .app-window { 
+                width: 100vw; 
+                margin: 0; 
+                border-radius: 0; 
+                height: 100vh; 
+            }
+            .window-body { height: calc(100vh - 48px); }
+            .app-sidebar { display: none; }
+        }
+
+        .hidden-el { display: none !important; }
+    </style>
+</head>
+<body>
+    <!-- ==================== macOS 窗口容器 ==================== -->
+    <div class="app-window">
+        <!-- 标题栏 -->
+        <div class="window-titlebar">
+            <div class="window-dots">
+                <div class="window-dot red"></div>
+                <div class="window-dot yellow"></div>
+                <div class="window-dot green"></div>
+            </div>
+            <div class="window-title">TERMINAL PHANTASM</div>
+            <div class="window-toolbar">
+                <button class="window-tool-btn" id="toolbar-theme-btn" title="切换主题">🌙</button>
+            </div>
+        </div>
+
+        <!-- Hero 入口 -->
+        <div class="app-hero" id="app-hero">
+            <canvas id="kv-canvas"></canvas>
+            <div class="app-hero-content">
+                <div class="app-hero-title">TERMINAL PHANTASM</div>
+                <div class="app-hero-sub">終端之夢</div>
+                <p class="app-hero-quote">"世界はコードでできている。"</p>
+                <button class="app-hero-btn" id="app-hero-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    开始阅读
+                </button>
+                <p class="app-hero-meta">序章 + 第1章（试读版） | 角色: 5 | 字数: ~49K</p>
+            </div>
+        </div>
+
+        <!-- 主体布局 -->
+        <div class="window-body">
+            <!-- 侧边栏 -->
+            <aside class="app-sidebar">
+                <div class="sidebar-logo">
+                    <span class="sidebar-logo-text">TP</span>
+                    <span class="sidebar-logo-sub">Terminal Phantasm</span>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">导航</div>
+                        <div class="sidebar-item" data-panel="reading">
+                            <span class="si-icon">📖</span>
+                            <span class="si-label">阅读</span>
+                            <span class="si-arrow">›</span>
+                        </div>
+                        <div class="sidebar-item" data-panel="characters">
+                            <span class="si-icon">👤</span>
+                            <span class="si-label">角色</span>
+                            <span class="si-arrow">›</span>
+                        </div>
+                        <div class="sidebar-item" data-panel="wiki">
+                            <span class="si-icon">📖</span>
+                            <span class="si-label">百科</span>
+                            <span class="si-arrow">›</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">章节</div>
+                        <div id="chapter-list" class="sidebar-chapter-list"></div>
+                    </div>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <button class="sidebar-footer-btn" id="sidebar-theme-btn">
+                        <span>🌙</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- 内容区 -->
+            <main class="app-content">
+                <!-- 阅读面板 -->
+                <div class="app-panel active" id="panel-reading">
+                    <div class="panel-toolbar">
+                        <div class="toolbar-lang-group">
+                            <button class="toolbar-lang-btn active" data-lang="both">双语</button>
+                            <button class="toolbar-lang-btn" data-lang="jp">JP</button>
+                            <button class="toolbar-lang-btn" data-lang="cn">中文</button>
+                        </div>
+                    </div>
+                    <div class="panel-reading-stage" id="reading-stage"></div>
+                </div>
+
+                <!-- 角色面板 -->
+                <div class="app-panel" id="panel-characters">
+                    <div class="char-grid" id="char-grid"></div>
+                </div>
+
+                <!-- 百科面板 -->
+                <div class="app-panel" id="panel-wiki">
+                    <div class="wiki-tabs">
+                        <button class="wiki-tab active" data-wiki-tab="world">世界地点</button>
+                        <button class="wiki-tab" data-wiki-tab="magic">魔法属性</button>
+                        <button class="wiki-tab" data-wiki-tab="terms">术语辞典</button>
+                        <button class="wiki-tab" data-wiki-tab="items">关键物品</button>
+                    </div>
+                    <div class="wiki-content">
+                        <div id="panel-wiki-world"></div>
+                        <div id="panel-wiki-magic"></div>
+                        <div id="panel-wiki-terms"></div>
+                        <div id="panel-wiki-items"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // ================================================================
+        // 全局状态
+        // ================================================================
+        const State = {
+            theme: 'dark',
+            parsedData: null,
+            metaData: null,
+            kvVisible: true,
+            episodes: [],
+            currentEpisode: 0,
+            langMode: 'both',
+            // 世界观数据缓存
+            worldData: null,
+            termData: null,
+            magicData: null,
+            charData: [],
+            // 章节系统
+            chapters: [],
+            currentChapterId: 'EP00'
+        };
+
+        // ================================================================
+        // CN_SUPPLEMENT 中文补充映射
+        // ================================================================
+        const CN_SUPPLEMENT = {
+            '帝都·星京': '帝都·星京是故事发生的舞台，一座融合了魔法与科技的巨大都市。',
+            '神代家': '主人公神代零与义妹小雪共同生活的家宅，位于帝都近郊的安静街区。原为下级贵族邸宅，现已略显古旧。',
+            '星導学園': '主角们就读的学园，以优秀的魔法教育闻名全国。拥有中央大讲堂、圆形竞技场、魔法植物园等设施。',
+            '星导学园': '主角们就读的学园，以优秀的魔法教育闻名全国。拥有中央大讲堂、圆形竞技场、魔法植物园等设施。',
+            '魔力鉄道·中央線': '连接帝都各区域的魔力驱动铁路系统，市民日常通勤的主要交通工具。高架线穿行于城市上空。',
+            '魔力铁道·中央线': '连接帝都各区域的魔力驱动铁路系统，市民日常通勤的主要交通工具。高架线穿行于城市上空。',
+            '魔晶灯': '利用压缩魔力粒子发光的高效照明器具，广泛用于家庭和街道照明。日间吸收自然魔力，夜间释放淡蓝色光芒。',
+            '朱音の護符': '朱音赠予零的神秘护身符，其母·樱子的遗物。红色布料上绣有天宫家的炎之纹章，据说拥有某种守护力量。',
+            '朱音的护身符': '朱音赠予零的神秘护身符，其母·樱子的遗物。红色布料上绣有天宫家的炎之纹章，据说拥有某种守护力量。',
+            '懐中時計': '零已故父亲健一郎留下的遗物。古旧的银质怀表，表盖内侧嵌有母亲的小照片。零时刻随身携带。',
+            '怀表': '零已故父亲健一郎留下的遗物。古旧的银质怀表，表盖内侧嵌有母亲的小照片。零时刻随身携带。',
+            '黄昏的樱花后庭': '零首次与端末对峙的隐秘场所。位于学园后方的樱树林尽头。夕阳染红的古老樱花树下，命运开始转动。',
+            '早晨的神代家·厨房': '小雪准备早餐的神代家厨房。晨光透过障子照入，出汁的香气弥漫在空气中。',
+            '朱音递上护身符': '黄昏的樱花后庭。朱音将母亲遗物护身符递给零的名场面。夕阳逆光勾勒出两人轮廓，含蓄而深情。',
+            'Mana Particle': '魔力粒子——构成世界一切魔法现象的最基本单位，充斥于大气之中。具有波粒二象性，其波动频率决定了魔法属性。',
+            'マナ粒子': '魔力粒子——构成世界一切魔法现象的最基本单位，充斥于大气之中。具有波粒二象性，其波动频率决定了魔法属性。',
+            'F級': 'F级——魔力等级最低级别，魔力粒子亲和度极低，几乎无法使用任何魔法。人口约3%，社会上被称为"魔法障碍"。',
+            'F级': 'F级——魔力等级最低级别，魔力粒子亲和度极低，几乎无法使用任何魔法。人口约3%，社会上被称为"魔法障碍"。',
+            '端末': '端末（Terminal）——零所持有的特殊装置，存在于意识内的命令行界面。能够解析并操作魔法的"底层代码"。AI助手Eve搭载其中。',
+            'Terminal': '端末（Terminal）——零所持有的特殊装置，存在于意识内的命令行界面。能够解析并操作魔法的"底层代码"。AI助手Eve搭载其中。',
+            'Eve': 'Eve——寄宿于端末中的人工智能助手，自称"Observer#7"。随零首次执行命令而启动，其真正目的尚不明确。',
+            'Eve（イヴ）': 'Eve——寄宿于端末中的人工智能助手，自称"Observer#7"。随零首次执行命令而启动，其真正目的尚不明确。',
+            'Observer': '观察者——Eve所属的神秘组织成员代号。#7意味着至少存在6位先行者，但其含义目前不明。',
+            'Observer #7': '第七号观察者——Eve称呼零的识别代号。#7暗示至少存在6位先行者，但具体含义至今仍是谜团。',
+            'Token': 'Token——端末操作时消耗的资源单位。每日自动恢复一定量。复杂操作和Eve深度对话会消耗更多Token。零初始值为1000。',
+            '氷晶変異': '冰晶变异——极为稀有的魔力变异现象。冰属性魔力异常增幅但控制极其困难。情绪激动时会无差别冻结周围环境。小雪患有此症。',
+            '冰晶变异': '冰晶变异——极为稀有的魔力变异现象。冰属性魔力异常增幅但控制极其困难。情绪激动时会无差别冻结周围环境。小雪患有此症。',
+            '魔力等級': '魔力等级——基于魔力粒子亲和度和操作精度的七段阶评价体系（S/A/B/C/D/E/F）。结果强烈依赖于遗传因素。',
+            'Magic Rank': '魔力等级——基于魔力粒子亲和度和操作精度的七段阶评价体系（S/A/B/C/D/E/F）。结果强烈依赖于遗传因素。',
+            '四大公爵家': '帝国最高位的贵族家系，包括天宫家在内的四大家族。在政治和军事上拥有绝对影响力。',
+            'Four Grand Ducal Houses': '帝国最高位的贵族家系，包括天宫家在内的四大家族。在政治和军事上拥有绝对影响力。',
+            '魔力鉄道': '魔力铁道——以魔矿引擎驱动的铁道网络。帝国城市间及市内交通的大动脉，是魔法工业革命的象征。',
+            'Mana Railway': '魔力铁道——以魔矿引擎驱动的铁道网络。帝国城市间及市内交通的大动脉，是魔法工业革命的象征。',
+            '魔晶灯': '魔晶灯——利用魔晶制作的照明器具。白天吸收自然魔力粒子，夜间释放淡蓝色光芒。从街灯到家用广泛普及。',
+            'Mana Crystal Lamp': '魔晶灯——利用魔晶制作的照明器具。白天吸收自然魔力粒子，夜间释放淡蓝色光芒。从街灯到家用广泛普及。',
+            '魔法工業革命': '魔法工业革命——约五十年前开始在帝国推进的技术与社会变革。利用魔力能源进行工业化，社会结构正经历深刻变化。',
+            'Magical Industrial Revolution': '魔法工业革命——约五十年前开始在帝国推进的技术与社会变革。利用魔力能源进行工业化，社会结构正经历深刻变化。',
+            '星導学園': '帝国最古老、最高峰的魔法学院。高等部入学率全帝国第一。不论贵族或平民，优秀人才皆汇聚于此。',
+            'Seidou Gakuen': '帝国最古老、最高峰的魔法学院。高等部入学率全帝国第一。不论贵族或平民，优秀人才皆汇聚于此。',
+            '魔力粒子不親和体質': '魔力粒子不亲和体质——先天性体質，导致魔力粒子无法在体内稳定存在。神代零即为此体质患者。原因不明，无治疗方法。',
+            'Mana Particle Incompatibility': '魔力粒子不亲和体质——先天性体質，导致魔力粒子无法在体内稳定存在。神代零即为此体质患者。原因不明，无治疗方法。',
+            '地（Earth）': '地属性——最稳定的元素属性。擅长炼金术、物质强化、建筑构造与结晶化。代表色为琥珀色。',
+            '水（Water）': '水属性——兼具治疗与防御能力的均衡属性。擅长流体控制、形态变换与净化。代表色为青色。',
+            '風（Wind）': '风属性——速度最快的元素属性。擅长通信、加速、飞行与探测。代表色为翠绿色。',
+            '火（Fire）': '火属性——攻击力最强的元素属性。适合正面战斗、能量释放、破坏与锻造。代表色为绯红色。',
+            '光（Light）': '光属性——神圣而强大的特殊属性。擅长结界、净化、幻术与强化。代表色为金色。',
+            '暗（Dark）': '暗属性——稀有且强大的特殊属性。擅长干涉、吸收、反魔法与封印。代表色为深紫色。',
+            '魔晶': '固形魔力结晶。家庭照明与街灯的主要能源来源。较为常见，广泛普及。',
+            '魔鉱': '含有魔力的矿物资源。工业生产与大型机械的核心能源原料。较为稀有。',
+            '魔油': '液态魔力浓缩物。交通工具与引擎的高级燃料。稀有度较高。'
+        };
+
+        function hasChinese(s) {
+            if (!s) return false;
+            return /[\u4e00-\u9fa5]/.test(s);
+        }
+
+        function supplementCN(name, desc) {
+            if (!desc || !hasChinese(desc)) {
+                for (var key in CN_SUPPLEMENT) {
+                    if (CN_SUPPLEMENT.hasOwnProperty(key) && name.indexOf(key) !== -1) {
+                        return CN_SUPPLEMENT[key];
+                    }
+                }
+            }
+            return desc || '';
+        }
+
+        // ================================================================
+        // KV 粒子系统
+        // ================================================================
+        const KVParticles = (function() {
+            let canvas, ctx, particles, rafId;
+            const COLORS = [
+                [0, 212, 255],
+                [124, 58, 237],
+                [255, 255, 255]
+            ];
+
+            function init() {
+                canvas = document.getElementById('kv-canvas');
+                if (!canvas) return;
+                ctx = canvas.getContext('2d');
+                resize();
+                createParticles();
+                animate();
+                window.addEventListener('resize', resize);
+            }
+
+            function resize() {
+                if (!canvas) return;
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            function createParticles() {
+                particles = [];
+                var count = Math.min(8, Math.floor(window.innerWidth / 180));
+                for (var i = 0; i < count; i++) {
+                    var c = COLORS[i % COLORS.length];
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 0.18,
+                        vy: (Math.random() - 0.5) * 0.18,
+                        r: Math.random() * 1.5 + 0.5,
+                        a: Math.random() * 0.25 + 0.05,
+                        c: c
+                    });
+                }
+            }
+
+            function animate() {
+                if (!ctx || !particles) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (var i = 0; i < particles.length; i++) {
+                    var p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < -10) p.x = canvas.width + 10;
+                    if (p.x > canvas.width + 10) p.x = -10;
+                    if (p.y < -10) p.y = canvas.height + 10;
+                    if (p.y > canvas.height + 10) p.y = -10;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(' + p.c[0] + ',' + p.c[1] + ',' + p.c[2] + ',' + p.a + ')';
+                    ctx.fill();
+                }
+                rafId = requestAnimationFrame(animate);
+            }
+
+            function stop() {
+                if (rafId) cancelAnimationFrame(rafId);
+                if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+
+            return { init, stop };
+        })();
+
+        // ================================================================
+        // Markdown 解析引擎
+        // ================================================================
+        const MDParser = (function() {
+            function parse(text) {
+                var lines = text.split('\n');
+                var result = [];
+                var i = 0;
+
+                while (i < lines.length) {
+                    var raw = lines[i];
+                    var trimmed = raw.trim();
+
+                    if (!trimmed) { i++; continue; }
+
+                    if (trimmed.startsWith('<!--HIDE') || trimmed.startsWith('HIDE')) {
+                        while (i < lines.length && !lines[i].trim().includes('-->')) i++;
+                        i++;
+                        continue;
+                    }
+
+                    if (/^# /.test(trimmed) && !/^##/.test(trimmed)) {
+                        result.push({ type: 'chapter-title', content: trimmed.slice(2).trim() });
+                        i++; continue;
+                    }
+
+                    if (/^## /.test(trimmed)) {
+                        result.push({ type: 'section-heading', content: trimmed.slice(3).trim() });
+                        i++; continue;
+                    }
+
+                    if (trimmed === '---' || trimmed === '***' || trimmed === '****') {
+                        result.push({ type: 'separator' });
+                        i++; continue;
+                    }
+
+                    if (trimmed.startsWith('>')) {
+                        var q = '';
+                        while (i < lines.length && lines[i].trim().startsWith('>')) {
+                            q += lines[i].trim().slice(1).trim() + '\n';
+                            i++;
+                        }
+                        result.push({ type: 'quote', content: q.trim() });
+                        continue;
+                    }
+
+                    if (trimmed.startsWith('```')) {
+                        var lang = trimmed.slice(3).trim().toLowerCase();
+                        var code = '';
+                        i++;
+                        while (i < lines.length && !lines[i].trim().startsWith('```')) {
+                            code += lines[i] + '\n';
+                            i++;
+                        }
+                        i++;
+                        var isTerminal = code.includes('> ') || lang === '' || lang === 'bash' || lang === 'shell' || lang === 'terminal';
+                        result.push({ type: isTerminal ? 'terminal' : 'codeblock', content: code.trim(), lang: lang });
+                        continue;
+                    }
+
+                    if (trimmed.startsWith('※ ')) {
+                        result.push({ type: 'translation', content: trimmed.slice(2).trim() });
+                        i++; continue;
+                    }
+
+                    var para = '';
+                    while (i < lines.length) {
+                        var tl = lines[i].trim();
+                        if (!tl || /^#{1,2} /.test(tl) || tl === '---' || tl === '***' || tl.startsWith('>') || tl.startsWith('```') || tl.startsWith('※ ')) break;
+                        para += (para ? ' ' : '') + tl;
+                        i++;
+                    }
+                    if (para) {
+                        result.push({ type: 'paragraph', content: para });
+                    } else {
+                        i++;
+                    }
+                }
+                return result;
+            }
+
+            function parseEpisodes(parsedData) {
+                var episodes = [];
+                var currentEpisode = { title: '序幕', items: [] };
+
+                parsedData.forEach(function(item) {
+                    if (item.type === 'section-heading') {
+                        if (currentEpisode.items.length > 0) {
+                            episodes.push(currentEpisode);
+                        }
+                        currentEpisode = { title: item.content, items: [item] };
+                    } else {
+                        currentEpisode.items.push(item);
+                    }
+                });
+                if (currentEpisode.items.length > 0) {
+                    episodes.push(currentEpisode);
+                }
+                return episodes;
+            }
+
+            function inline(text, langMode) {
+                langMode = langMode || 'both';
+                text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                text = text.replace(/「([^」]+)」/g, '<span class="dialogue-text">「$1」</span>');
+                if (langMode === 'jp') {
+                    text = text.replace(/（[^）]+）/g, '');
+                }
+                return text;
+            }
+
+            return { parse, parseEpisodes, inline };
+        })();
+
+        // ================================================================
+        // 渲染器
+        // ================================================================
+        const Renderer = (function() {
+            function render(data, containerId) {
+                var c = document.getElementById(containerId);
+                if (!c) return;
+                var html = '';
+                data.forEach(function(item) {
+                    html += buildElement(item, State.langMode);
+                });
+                c.innerHTML = html;
+            }
+
+            function renderEpisode(episodeIndex, langMode) {
+                var c = document.getElementById('reading-stage');
+                if (!c || !State.episodes[episodeIndex]) return;
+
+                var ep = State.episodes[episodeIndex];
+                langMode = langMode || State.langMode || 'both';
+
+                var totalEpisodes = State.episodes.length;
+                var navHtml = buildEpisodeNavBar(episodeIndex, totalEpisodes);
+
+                var contentHtml = '';
+                ep.items.forEach(function(item) {
+                    contentHtml += buildElement(item, langMode);
+                });
+
+                var fullHtml = navHtml + '<div class="ep-content-wrapper ep-fade-in" id="ep-content-wrapper">' + contentHtml + '</div>';
+
+                var wrapper = document.getElementById('ep-content-wrapper');
+                if (wrapper) {
+                    wrapper.classList.remove('ep-fade-in');
+                    wrapper.classList.add('ep-fade-out');
+
+                    setTimeout(function() {
+                        c.innerHTML = fullHtml;
+                        var newWrapper = document.getElementById('ep-content-wrapper');
+                        if (newWrapper) {
+                            newWrapper.classList.remove('ep-fade-out');
+                            newWrapper.classList.add('ep-fade-in');
+                        }
+                        bindEpisodeNavEvents();
+                    }, 200);
+                } else {
+                    c.innerHTML = fullHtml;
+                    bindEpisodeNavEvents();
+                }
+            }
+
+            function buildEpisodeNavBar(currentIdx, total) {
+                var prevDisabled = currentIdx <= 0 ? 'disabled' : '';
+                var nextDisabled = currentIdx >= total - 1 ? 'disabled' : '';
+
+                var optionsHtml = '';
+                for (var i = 0; i < total; i++) {
+                    var epTitle = State.episodes[i] ? State.episodes[i].title : ('第' + (i + 1) + '节');
+                    var selected = i === currentIdx ? ' selected' : '';
+                    optionsHtml += '<option value="' + i + '"' + selected + '>' + epTitle + '</option>';
+                }
+
+                return '<div class="floating-ep-bar">' +
+                    '<button class="ep-nav-btn ep-prev" id="ep-prev-btn" ' + prevDisabled + '>◀</button>' +
+                    '<select id="ep-select" class="ep-nav-select">' + optionsHtml + '</select>' +
+                    '<button class="ep-nav-btn ep-next" id="ep-next-btn" ' + nextDisabled + '>▶</button>' +
+                    '<span class="ep-nav-counter" id="ep-counter">' + (currentIdx + 1) + '/' + total + '</span>' +
+                    '</div>';
+            }
+
+            function escapeHTML(s) {
+                var d = document.createElement('div');
+                d.textContent = s;
+                return d.innerHTML;
+            }
+
+            function buildElement(item, langMode) {
+                langMode = langMode || State.langMode || 'both';
+                switch (item.type) {
+                    case 'chapter-title':
+                        return '<div class="chapter-art-title" id="ch-prologue">' + escapeHTML(item.content) + '</div>';
+                    case 'section-heading':
+                        return '<h2 class="section-heading">' + escapeHTML(item.content) + '</h2>';
+                    case 'separator':
+                        return '<div class="scene-separator"></div>';
+                    case 'quote': {
+                        var lines = item.content.split('\n').filter(function(l) { return l.trim(); });
+                        var ps = '';
+                        lines.forEach(function(l) { ps += '<p>' + MDParser.inline(l, langMode) + '</p>'; });
+                        return '<blockquote class="art-quote">' + ps + '</blockquote>';
+                    }
+                    case 'terminal': {
+                        var esc = escapeHTML(item.content);
+                        return '<div class="terminal-block"><div class="terminal-header"><span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span><span class="terminal-title-bar">terminal@phantasm ~ %</span></div><div class="terminal-body">' + esc + '<span class="terminal-cursor"></span></div></div>';
+                    }
+                    case 'codeblock': {
+                        var esc = escapeHTML(item.content);
+                        return '<div class="terminal-block"><div class="terminal-header"><span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span><span class="terminal-title-bar">' + escapeHTML(item.lang || 'code') + '</span></div><div class="terminal-body">' + esc + '</div></div>';
+                    }
+                    case 'translation':
+                        return '<p class="content-paragraph translation-line" data-lang="zh">※ ' + MDParser.inline(item.content, langMode) + '</p>';
+                    case 'paragraph':
+                        return '<p class="content-paragraph" data-lang="ja">' + MDParser.inline(item.content, langMode) + '</p>';
+                    default:
+                        return '';
+                }
+            }
+
+            function bindEpisodeNavEvents() {
+                var prevBtn = document.getElementById('ep-prev-btn');
+                var nextBtn = document.getElementById('ep-next-btn');
+                var selectEl = document.getElementById('ep-select');
+
+                if (prevBtn) prevBtn.onclick = function() { navigateEpisode(-1); };
+                if (nextBtn) nextBtn.onclick = function() { navigateEpisode(1); };
+                if (selectEl) {
+                    selectEl.onchange = function() {
+                        var idx = parseInt(this.value, 10);
+                        if (!isNaN(idx)) goToEpisode(idx);
+                    };
+                }
+            }
+
+            return { render, renderEpisode, buildElement };
+        })();
+
+        // ================================================================
+        // Episode 导航控制
+        // ================================================================
+        var EpisodeController = (function() {
+            function navigateEpisode(direction) {
+                var newIndex = State.currentEpisode + direction;
+                if (newIndex < 0 || newIndex >= State.episodes.length) return;
+                goToEpisode(newIndex);
+            }
+
+            function goToEpisode(index) {
+                if (index < 0 || index >= State.episodes.length) return;
+                State.currentEpisode = index;
+                Renderer.renderEpisode(index, State.langMode);
+                updateEpisodeSelect();
+            }
+
+            function updateEpisodeSelect() {
+                var selectEl = document.getElementById('ep-select');
+                if (selectEl) selectEl.value = String(State.currentEpisode);
+
+                var counterEl = document.getElementById('ep-counter');
+                if (counterEl) {
+                    counterEl.textContent = (State.currentEpisode + 1) + '/' + State.episodes.length;
+                }
+
+                var prevBtn = document.getElementById('ep-prev-btn');
+                var nextBtn = document.getElementById('ep-next-btn');
+                if (prevBtn) prevBtn.disabled = State.currentEpisode <= 0;
+                if (nextBtn) nextBtn.disabled = State.currentEpisode >= State.episodes.length - 1;
+            }
+
+            return { navigateEpisode, goToEpisode, updateEpisodeSelect };
+        })();
+
+        function navigateEpisode(dir) { EpisodeController.navigateEpisode(dir); }
+        function goToEpisode(idx) { EpisodeController.goToEpisode(idx); }
+
+        // ================================================================
+        // 语言模式控制
+        // ================================================================
+        function setLangMode(mode) {
+            State.langMode = mode;
+            document.documentElement.setAttribute('data-lang-mode', mode);
+
+            document.querySelectorAll('.toolbar-lang-btn').forEach(function(btn) {
+                btn.classList.toggle('active', btn.dataset.lang === mode);
+            });
+
+            if (State.episodes.length > 0) {
+                Renderer.renderEpisode(State.currentEpisode, mode);
+            }
+            EpisodeController.updateEpisodeSelect();
+        }
+
+        // ================================================================
+        // Chapter Controller — 章节切换控制器
+        // ================================================================
+        var ChapterController = (function() {
+            var CHAPTER_REGISTRY = [
+                {
+                    id: 'EP00',
+                    num: 'EP.00',
+                    title: '序章：零の目覚め',
+                    title_cn: '零之觉醒',
+                    status: 'complete',
+                    mdPath: 'PROLOGUE/prologue.md',
+                    metaPath: 'PROLOGUE/prologue_meta.json',
+                    badgeClass: 'ch-badge-complete',
+                    badgeText: '已完成'
+                },
+                {
+                    id: 'CH01',
+                    num: 'CH.01',
+                    title: '星導学園',
+                    title_cn: '星导学园',
+                    status: 'demo',
+                    demoNote: '试读版 · Part 1/3',
+                    mdPath: 'chapter_01/chapter_01.md',
+                    metaPath: 'chapter_01/chapter_01_meta.json',
+                    badgeClass: 'ch-badge-demo',
+                    badgeText: '📖 试读'
+                }
+            ];
+
+            function initRegistry() {
+                State.chapters = CHAPTER_REGISTRY;
+                renderChapterList();
+            }
+
+            function renderChapterList() {
+                var container = document.getElementById('chapter-list');
+                if (!container) return;
+
+                var html = '';
+                CHAPTER_REGISTRY.forEach(function(ch) {
+                    var isActive = ch.id === State.currentChapterId;
+                    var lockedClass = ch.status === 'locked' ? ' locked' : '';
+                    var activeClass = isActive ? ' active' : '';
+
+                    var badgeHtml = '';
+                    if (ch.badgeText) {
+                        badgeHtml = '<span class="sc-badge ' + ch.badgeClass + '">' + ch.badgeText + '</span>';
+                    }
+
+                    html += '<div class="sidebar-chapter' + activeClass + lockedClass + '" data-ch-id="' + ch.id + '" data-status="' + ch.status + '">' +
+                        '<span class="sc-num">' + ch.num + '</span>' +
+                        '<span class="sc-title">' + escapeHTML(ch.title) + '</span>' +
+                        badgeHtml +
+                        '</div>';
+                });
+                container.innerHTML = html;
+
+                container.querySelectorAll('.sidebar-chapter:not(.locked)').forEach(function(item) {
+                    item.addEventListener('click', function() {
+                        var chId = this.dataset.chId;
+                        switchToChapter(chId);
+                    });
+                });
+            }
+
+            function switchToChapter(chId) {
+                if (chId === State.currentChapterId) return;
+
+                var targetCh = null;
+                for (var i = 0; i < CHAPTER_REGISTRY.length; i++) {
+                    if (CHAPTER_REGISTRY[i].id === chId) { targetCh = CHAPTER_REGISTRY[i]; break; }
+                }
+                if (!targetCh || targetCh.status === 'locked') return;
+
+                var stage = document.getElementById('reading-stage');
+                if (stage) {
+                    stage.innerHTML =
+                        '<div style="display:flex;align-items:center;justify-content:center;padding:120px 20px;">' +
+                        '<div style="text-align:center;color:var(--text-secondary);">' +
+                        '<div style="font-size:32px;margin-bottom:16px;opacity:0.4;">⏳</div>' +
+                        '<div style="font-size:14px;">正在加载 ' + escapeHTML(targetCh.title) + '...</div>' +
+                        '</div></div>';
+                }
+
+                loadChapter(targetCh);
+            }
+
+            function loadChapter(ch) {
+                Promise.all([
+                    fetch(ch.mdPath),
+                    fetch(ch.metaPath)
+                ]).then(function(responses) {
+                    var mdRes = responses[0];
+                    var metaRes = responses[1];
+
+                    if (!mdRes.ok) throw new Error('无法加载 ' + ch.mdPath);
+
+                    var promises = [mdRes.text()];
+                    if (metaRes.ok) promises.push(metaRes.json());
+                    else promises.push(null);
+
+                    return Promise.all(promises);
+                }).then(function(results) {
+                    var mdText = results[0];
+                    var metaData = results[1];
+
+                    State.currentChapterId = ch.id;
+                    State.metaData = metaData || {};
+                    State.parsedData = MDParser.parse(mdText);
+                    State.episodes = MDParser.parseEpisodes(State.parsedData);
+                    State.currentEpisode = 0;
+
+                    if (State.episodes.length > 0) {
+                        Renderer.renderEpisode(0, State.langMode);
+                    } else {
+                        Renderer.render(State.parsedData, 'reading-stage');
+                    }
+
+                    if (ch.status === 'demo') {
+                        injectDemoBanner(ch.demoNote || '试读版');
+                    }
+
+                    updateActiveChapter();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                }).catch(function(err) {
+                    console.error('章节加载失败:', err);
+                    var stage = document.getElementById('reading-stage');
+                    if (stage) {
+                        stage.innerHTML =
+                            '<div style="text-align:center;padding:80px 20px;color:#ff5f57;font-size:14px;">' +
+                            '⚠ 章节加载失败: ' + err.message + '</div>';
+                    }
+                });
+            }
+
+            function injectDemoBanner(note) {
+                var wrapper = document.getElementById('ep-content-wrapper');
+                if (!wrapper) return;
+                var banner = document.createElement('div');
+                banner.className = 'demo-banner';
+                banner.innerHTML = '✨ <strong>' + escapeHTML(note) + '</strong> ✨';
+                wrapper.insertBefore(banner, wrapper.firstChild);
+            }
+
+            function updateActiveChapter() {
+                document.querySelectorAll('.sidebar-chapter').forEach(function(item) {
+                    item.classList.toggle('active', item.dataset.chId === State.currentChapterId);
+                });
+            }
+
+            function getCurrentChapterInfo() {
+                for (var i = 0; i < CHAPTER_REGISTRY.length; i++) {
+                    if (CHAPTER_REGISTRY[i].id === State.currentChapterId) return CHAPTER_REGISTRY[i];
+                }
+                return CHAPTER_REGISTRY[0];
+            }
+
+            function escapeHTML(s) {
+                var d = document.createElement('div');
+                d.textContent = s;
+                return d.innerHTML;
+            }
+
+            return { initRegistry, renderChapterList, switchToChapter, updateActiveChapter, getCurrentChapterInfo };
+        })();
+
+        // ================================================================
+        // 角色渲染器
+        // ================================================================
+        const CharRenderer = (function() {
+            var COLOR_MAP = {
+                '神代': '#00d4ff',
+                '天宮': '#f59e0b',
+                '天宫': '#f59e0b',
+                '神代小': '#38bdf8',
+                'エルナ': '#10b981',
+                '黒鉄': '#8b5cf6',
+                '黑铁': '#8b5cf6',
+                'Eve': '#a855f7'
+            };
+
+            function getColor(name) {
+                for (var k in COLOR_MAP) {
+                    if (COLOR_MAP.hasOwnProperty(k) && name.indexOf(k) !== -1) return COLOR_MAP[k];
+                }
+                return '#00d4ff';
+            }
+
+            function escapeHTML(s) {
+                var d = document.createElement('div');
+                d.textContent = s;
+                return d.innerHTML;
+            }
+
+            return { getColor, escapeHTML };
+        })();
+
+        function escapeHTML(s) {
+            var d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
+        // ================================================================
+        // Panel Controller — 面板切换控制器
+        // ================================================================
+        var PanelController = (function() {
+            var ACTIVE_PANEL_KEY = 'tp-active-panel';
+
+            function switchTo(panelId) {
+                document.querySelectorAll('.sidebar-item').forEach(function(el) {
+                    el.classList.toggle('active', el.dataset.panel === panelId);
+                });
+
+                document.querySelectorAll('.app-panel').forEach(function(el) {
+                    el.classList.toggle('active', el.id === 'panel-' + panelId);
+                });
+
+                var hero = document.getElementById('app-hero');
+                var windowBody = document.querySelector('.window-body');
+                if (hero && windowBody) {
+                    if (panelId === 'reading' && State.kvVisible) {
+                        hero.style.display = '';
+                        windowBody.style.display = '';
+                    } else {
+                        hero.style.display = 'none';
+                        windowBody.style.display = 'flex';
+                    }
+                }
+
+                localStorage.setItem(ACTIVE_PANEL_KEY, panelId);
+            }
+
+            function init() {
+                document.querySelectorAll('.sidebar-item').forEach(function(el) {
+                    el.addEventListener('click', function() {
+                        var panel = this.dataset.panel;
+                        if (panel) switchTo(panel);
+
+                        var chId = this.dataset.chId;
+                        if (chId && !this.classList.contains('locked')) {
+                            ChapterController.switchToChapter(chId);
+                            switchTo('reading');
+                        }
+                    });
+                });
+
+                var heroBtn = document.getElementById('app-hero-btn');
+                if (heroBtn) {
+                    heroBtn.addEventListener('click', function() {
+                        State.kvVisible = false;
+                        switchTo('reading');
+                    });
+                }
+            }
+
+            return { switchTo, init, ACTIVE_PANEL_KEY };
+        })();
+
+        // ================================================================
+        // 主题切换
+        // ================================================================
+        function setTheme(theme) {
+            State.theme = theme;
+            var root = document.documentElement;
+            var toolbarBtn = document.getElementById('toolbar-theme-btn');
+            var sidebarBtn = document.getElementById('sidebar-theme-btn');
+
+            if (theme === 'light') {
+                root.setAttribute('data-theme', 'light');
+                if (toolbarBtn) toolbarBtn.textContent = '☀️';
+                if (sidebarBtn) sidebarBtn.innerHTML = '<span>☀️</span>';
+            } else {
+                root.removeAttribute('data-theme');
+                if (toolbarBtn) toolbarBtn.textContent = '🌙';
+                if (sidebarBtn) sidebarBtn.innerHTML = '<span>🌙</span>';
+            }
+        }
+
+        function toggleTheme() {
+            setTheme(State.theme === 'dark' ? 'light' : 'dark');
+        }
+
+        // ================================================================
+        // 键盘快捷键
+        // ================================================================
+        function bindKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    EpisodeController.navigateEpisode(-1);
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    EpisodeController.navigateEpisode(1);
+                }
+            });
+        }
+
+        // ================================================================
+        // 渲染百科面板
+        // ================================================================
+        function renderWikiPanel() {
+            renderWikiSection('panel-wiki-world', State.worldData, 'locations', '世界地点');
+            renderWikiSection('panel-wiki-magic', State.magicData, 'affinities', '魔法属性');
+            renderWikiSection('panel-wiki-terms', State.termData, 'terms', '术语辞典');
+            renderWikiSection('panel-wiki-items', State.worldData, 'items', '关键物品');
+        }
+
+        function renderWikiSection(containerId, data, key, title) {
+            var container = document.getElementById(containerId);
+            if (!container || !data) return;
+            var items = data[key] || [];
+            var html = '<div class="wiki-section-title">' + title + '</div>';
+            html += '<div class="wiki-grid">';
+            items.forEach(function(item) {
+                var name = item.name_cn || item.name_jp || item.term_cn || item.term_jp || item.name || item.term_en || '';
+                var rawDesc = item.description || item.definition || item.typical_uses ? (item.typical_uses || []).join(' / ') : '';
+                var desc = supplementCN(name, rawDesc) || rawDesc;
+                html += '<div class="wiki-item" data-name="' + escapeHTML(name) + '" data-desc="' + escapeHTML(desc) + '">' +
+                    '<div class="wiki-item-name">' + escapeHTML(name) + '</div>' +
+                    '<div class="wiki-item-desc">' + escapeHTML(desc) + '</div></div>';
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // ================================================================
+        // 渲染角色面板
+        // ================================================================
+        function renderCharPanel() {
+            var container = document.getElementById('char-grid');
+            if (!container || !State.charData || !State.charData.length) return;
+            container.innerHTML = '';
+            State.charData.forEach(function(ch) {
+                var color = CharRenderer.getColor(ch.name_jp || ch.name || '');
+                var profile = ch.profile || {};
+                var tags = [];
+                if (profile.age) tags.push(profile.age + '岁');
+                if (profile.magic_rank) tags.push(profile.magic_rank);
+                if (profile.affinity) tags.push(profile.affinity);
+
+                var desc = (ch.description || '').substring(0, 150);
+
+                var html = '<div class="char-card' + (ch.status === '未登場' ? ' locked' : '') + '" style="border-top: 2px solid ' + color + '20;">' +
+                    '<div class="char-card-header">' +
+                    '<div class="char-card-avatar" style="border-color: ' + color + '20; color: ' + color + ';">' + (ch.status === '未登場' ? '❓' : '👤') + '</div>' +
+                    '<div class="char-card-info">' +
+                    '<div class="char-card-name" style="color: ' + color + ';">' + (ch.name_jp || '') + '</div>' +
+                    '<div class="char-card-role">' + escapeHTML(ch.archetype || ch.role || '') + ' · ' + (ch.name_cn || '') + '</div></div></div>' +
+                    '<div class="char-card-desc">' + escapeHTML(desc) + '</div>' +
+                    '<div class="char-card-tags">' + 
+                    tags.map(function(t) { return '<span class="char-card-tag">' + t + '</span>'; }).join('') +
+                    '</div></div>';
+                container.innerHTML += html;
+            });
+        }
+
+        // ================================================================
+        // 初始化主流程
+        // ================================================================
+        async function init() {
+            KVParticles.init();
+
+            ChapterController.initRegistry();
+            PanelController.init();
+
+            document.querySelectorAll('.toolbar-lang-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.toolbar-lang-btn').forEach(function(b) { b.classList.remove('active'); });
+                    this.classList.add('active');
+                    setLangMode(this.dataset.lang);
+                });
+            });
+
+            var toolbarThemeBtn = document.getElementById('toolbar-theme-btn');
+            if (toolbarThemeBtn) {
+                toolbarThemeBtn.addEventListener('click', toggleTheme);
+            }
+
+            var sidebarThemeBtn = document.getElementById('sidebar-theme-btn');
+            if (sidebarThemeBtn) {
+                sidebarThemeBtn.addEventListener('click', toggleTheme);
+            }
+
+            try {
+                var mdRes = await fetch('PROLOGUE/prologue.md');
+                var jsonRes = await fetch('PROLOGUE/prologue_meta.json');
+
+                if (!mdRes.ok) throw new Error('无法加载章节文件 PROLOGUE/prologue.md');
+                if (!jsonRes.ok) throw new Error('无法加载元数据 PROLOGUE/prologue_meta.json');
+
+                var mdText = await mdRes.text();
+                var jsonData = await jsonRes.json();
+
+                State.metaData = jsonData;
+
+                State.parsedData = MDParser.parse(mdText);
+                State.episodes = MDParser.parseEpisodes(State.parsedData);
+                State.currentEpisode = 0;
+
+                if (State.episodes.length > 0) {
+                    Renderer.renderEpisode(0, State.langMode);
+                } else {
+                    Renderer.render(State.parsedData, 'reading-stage');
+                }
+
+                try {
+                    var [worldRes, termRes, magicRes, charRes] = await Promise.all([
+                        fetch('data/world.json'),
+                        fetch('data/terminology.json'),
+                        fetch('data/magic_system.json'),
+                        fetch('data/characters.json')
+                    ]);
+
+                    State.worldData = await worldRes.json();
+                    State.termData = await termRes.json();
+                    State.magicData = await magicRes.json();
+                    var charJson = await charRes.json();
+                    State.charData = charJson.characters || [];
+
+                    renderWikiPanel();
+                    renderCharPanel();
+                } catch(e) {
+                    console.warn('部分世界观数据加载失败:', e.message);
+                }
+
+                bindKeyboardShortcuts();
+                PanelController.switchTo('reading');
+
+            } catch (err) {
+                console.error('初始化失败:', err);
+                var stage = document.getElementById('reading-stage');
+                if (stage) {
+                    stage.innerHTML =
+                        '<div style="text-align:center;padding:80px 20px;font-family:' + "'Space Grotesk'" + ',sans-serif;">' +
+                        '<div style="font-size:24px;color:#ff5f57;margin-bottom:16px;">⚠ 加载错误</div>' +
+                        '<div style="color:var(--text-secondary);font-size:14px;line-height:1.8;">' +
+                        err.message + '<br><br>' +
+                        '<span style="font-size:12px;opacity:0.6;">请通过 HTTP 服务器运行此页面<br>例如: python -m http.server 8080<br>然后访问 http://localhost:8080</span>' +
+                        '</div></div>';
+                }
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+    </script>
+</body>
+</html>
