@@ -5,651 +5,575 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>终端之梦 ～ Terminal Phantasm ～</title>
 <style>
-:root{
-  --bg:#f5f0e8; --text:#2c2416; --accent:#8b4513; --link:#c41e3a;
-  --term-bg:#0c0c14; --term-text:#00ee77; --term-prompt:#ff5555;
-  --popup-bg:#fffef8; --popup-border:#c9b896; --divider:#d4c5a9;
-}
+:root{--bg:#f5f0e8;--text:#2c2416;--accent:#8b4513;--link:#c41e3a;--term-bg:#0c0c14;--term-text:#00ee77;--term-prompt:#ff5555}
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  background:var(--bg); color:var(--text);
-  font-family:'Noto Serif SC','Source Han Serif SC','SimSun',Georgia,serif;
-  font-size:17px; line-height:2.1; -webkit-font-smoothing:antialiased;
-}
-.reader{
-  max-width:700px; margin:0 auto; padding:50px 24px 120px;
-}
-/* 章节头 */
-.ch-head{text-align:center;margin-bottom:44px;padding-bottom:28px;border-bottom:2px solid var(--divider)}
+body{background:var(--bg);color:var(--text);font-family:'Noto Serif SC','Source Han Serif SC','SimSun',Georgia,serif;font-size:17px;line-height:2.1}
+.reader{max-width:700px;margin:0 auto;padding:50px 24px 120px}
+.ch-head{text-align:center;margin-bottom:44px;padding-bottom:28px;border-bottom:2px solid #d4c5a9}
 .ch-head .ch-num{font-size:13px;letter-spacing:3px;color:var(--accent);margin-bottom:10px}
 .ch-head h1{font-size:27px;font-weight:700;letter-spacing:2px}
 .ch-head .ch-sub{font-size:14px;color:#8b7355;font-style:italic;margin-top:6px}
-/* 小节标题 */
-.sec-title{font-size:19px;font-weight:700;text-align:center;margin:44px 0 22px;letter-spacing:1px}
+.sec-title{font-size:19px;font-weight:700;text-align:center;margin:44px 0 22px}
 .sec-title::before{content:'◆ ';color:var(--accent);font-size:13px}
 .sec-title::after{content:' ◆';color:var(--accent);font-size:13px}
-/* 段落 */
 p{margin-bottom:1.1em;text-indent:2em}
 p.ni{text-indent:0}
 .thought{color:#6b5a4e;font-style:italic}
 .divider{text-align:center;margin:32px 0;color:#d4c5a9;font-size:18px;letter-spacing:6px}
-/* 互动文字 - 使用 will-change 优化 */
-.ix{
-  color:var(--link); border-bottom:1px dashed var(--link);
-  cursor:pointer; transition:color .15s; position:relative;
-}
-.ix:hover{color:#8b1528;background:rgba(196,30,58,.05);border-bottom-style:solid}
-.ix.person{color:#8b4513;border-color:#c9a87c}
-.ix.person:hover{color:#6b3410;background:rgba(139,69,19,.06)}
-.ix.term{color:#2e6b8f;border-color:#8fbcce}
-.ix.term:hover{color:#1a4a63;background:rgba(46,107,143,.06)}
-.ix.place{color:#5a8a3c;border-color:#a8cc8f}
-.ix.place:hover{color:#3d5e28;background:rgba(90,138,60,.06)}
-/* 弹出卡片 — 单例复用 */
-.popup{
-  position:fixed;z-index:999;max-width:340px;
-  background:var(--popup-bg);border:1px solid var(--popup-border);
-  border-radius:6px;box-shadow:0 8px 28px rgba(0,0,0,.14);
-  padding:16px 18px;font-size:13px;line-height:1.7;
-  opacity:0;pointer-events:none;transform:translateY(6px);
-  transition:opacity .18s,transform .18s;
-}
-.popup.on{opacity:1;pointer-events:auto;transform:translateY(0)}
-.popup .pn{font-size:15px;font-weight:700;color:var(--accent);margin-bottom:4px;border-bottom:1px solid var(--divider);padding-bottom:3px}
-.popup .pt{font-size:11px;color:#8b7355;margin-bottom:6px}
-.popup .pt span{display:inline-block;background:#fef0e0;border:1px solid #e8c888;border-radius:3px;padding:1px 6px;margin:1px 2px;font-size:10px}
-.popup .pd{color:#4a3f32;font-size:12px}
-.popup .pc{position:absolute;top:4px;right:8px;cursor:pointer;font-size:15px;color:#b0a090;background:none;border:none;line-height:1}
+
+/* 互动文字 */
+.ix{color:var(--link);border-bottom:1px dashed var(--link);cursor:pointer}
+.ix:hover{color:#8b1528;background:rgba(196,30,58,.05)}
+.ix.person{color:#8b4513;border-color:#c9a87c}.ix.person:hover{color:#6b3410}
+.ix.term{color:#2e6b8f;border-color:#8fbcce}.ix.term:hover{color:#1a4a63}
+.ix.place{color:#5a8a3c;border-color:#a8cc8f}.ix.place:hover{color:#3d5e28}
+
+/* 弹出卡片 — 单例 */
+#popup{position:fixed;z-index:999;max-width:320px;background:#fffef8;border:1px solid #c9b896;border-radius:6px;box-shadow:0 8px 28px rgba(0,0,0,.14);padding:14px 16px;font-size:12px;line-height:1.6;opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .15s,transform .15s}
+#popup.on{opacity:1;pointer-events:auto;transform:translateY(0)}
+#popup .pn{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:3px;border-bottom:1px solid #d4c5a9;padding-bottom:2px}
+#popup .pt{font-size:10px;color:#8b7355;margin-bottom:4px}
+#popup .pt span{display:inline-block;background:#fef0e0;border:1px solid #e8c888;border-radius:3px;padding:1px 5px;margin:1px 2px}
+#popup .pd{color:#4a3f32}
+#popup .pc{position:absolute;top:3px;right:7px;cursor:pointer;font-size:14px;color:#b0a090;background:none;border:none}
+
 /* 终端 */
-.term{
-  background:var(--term-bg);border-radius:8px;margin:18px 0;
-  overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.28);
-  font-family:'JetBrains Mono','Fira Code','Consolas',monospace;
-  font-size:12.5px;line-height:1.65;contain:content;
-}
-.term-head{background:#171722;padding:7px 12px;display:flex;align-items:center;gap:7px;border-bottom:1px solid#222230}
+.term{background:var(--term-bg);border-radius:8px;margin:18px 0;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.25);font-family:'JetBrains Mono','Fira Code','Consolas',monospace;font-size:12px;line-height:1.6}
+.term-head{background:#171722;padding:6px 12px;display:flex;align-items:center;gap:7px;border-bottom:1px solid#222230}
 .term-dot{width:9px;height:9px;border-radius:50%}
 .term-dot.r{background:#ff5f56}.term-dot.y{background:#ffbd2e}.term-dot.g{background:#27c93f}
 .term-ttl{color:#555;font-size:10px;margin-left:6px;font-family:system-ui}
-.term-body{padding:14px 16px;color:var(--term-text);white-space:pre-wrap;word-break:break-all}
+.term-body{padding:12px 15px;color:var(--term-text);white-space:pre-wrap;word-break:break-all}
 .term-body .pr{color:var(--term-prompt)}
 .term-body .cmd{color:#fff}
 .term-body .out{color:#7eb8da}
 .term-body .warn{color:#ffcc00}
 .term-body .err{color:#ff4444}
 .term-body .info{color:#777}
+
 /* 选择肢 */
-.choice{
-  background:#faf6f0;border:2px solid var(--divider);border-radius:10px;
-  padding:22px 26px;margin:26px 0;text-align:center;contain:content;
-}
-.choice .cl{font-size:13px;color:#8b7355;letter-spacing:2px;margin-bottom:14px}
+.choice{background:#faf6f0;border:2px solid #d4c5a9;border-radius:10px;padding:20px 24px;margin:26px 0;text-align:center}
+.choice .cl{font-size:13px;color:#8b7355;letter-spacing:2px;margin-bottom:12px}
 .choice .ch{font-size:11px;color:#b0a090;margin-top:10px;font-style:italic}
-.cbtn{
-  display:block;width:100%;padding:13px 18px;margin:7px 0;
-  border:1px solid var(--divider);border-radius:6px;background:#fffef9;
-  cursor:pointer;font-family:inherit;font-size:14px;line-height:1.5;
-  text-align:left;transition:background .15s,border-color .15s;color:var(--text);
-}
+.cbtn{display:block;width:100%;padding:12px 16px;margin:7px 0;border:1px solid #d4c5a9;border-radius:6px;background:#fffef9;cursor:pointer;font-family:inherit;font-size:14px;line-height:1.5;text-align:left;transition:background .15s;color:var(--text)}
 .cbtn:hover{background:#f0e8d5;border-color:var(--accent)}
-.cbtn .clt{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;margin-right:8px;font-weight:700;font-size:12px;color:#fff;vertical-align:middle}
+.cbtn .clt{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;margin-right:8px;font-weight:700;font-size:12px;color:#fff}
 .cbtn.a .clt{background:#c41e3a}.cbtn.b .clt{background:#2e6b8f}.cbtn.c .clt{background:#5a8a3c}
-.cbtn .ct{vertical-align:middle}
-.cbtn .cs{display:block;font-size:11px;color:#999;margin-top:2px;margin-left:32px;font-style:italic}
-.cresolved{background:#f8f4ec;border:1px solid #d4c5a9;padding:14px 18px;font-size:13px;color:#8b7355;text-align:center;border-radius:8px;margin:18px 0;font-style:italic}
+.cbtn .cs{display:block;font-size:11px;color:#999;margin-top:1px;margin-left:30px;font-style:italic}
+.cdone{background:#f8f4ec;border:1px solid #d4c5a9;padding:12px 16px;font-size:13px;color:#8b7355;text-align:center;border-radius:8px;margin:18px 0;font-style:italic}
+
 /* 追踪器 */
-.tracker{
-  position:fixed;bottom:20px;right:20px;background:var(--popup-bg);
-  border:1px solid var(--popup-border);border-radius:8px;padding:10px 14px;
-  font-size:11px;box-shadow:0 4px 14px rgba(0,0,0,.1);z-index:500;
-  cursor:pointer;max-width:180px;display:none;
-}
-.tracker .ttl{font-weight:700;color:var(--accent);margin-bottom:4px;font-size:10px;letter-spacing:1px}
-.tracker .ri{color:#6b5a4e;margin:2px 0}
-.tracker .rb{height:3px;border-radius:2px;margin:2px 0;transition:width .4s}
-.rb.akane{background:#c41e3a}.rb.koyuki{background:#88bbdd}
-.rb.eruna{background:#5a9a5a}.rb.maya{background:#8b5a9a}
-@media(max-width:768px){.reader{padding:36px 14px 100px}p{text-indent:1.5em}.ch-head h1{font-size:22px}.popup{max-width:260px}}
+#tracker{position:fixed;bottom:20px;right:20px;background:#fffef8;border:1px solid #c9b896;border-radius:8px;padding:10px 14px;font-size:11px;box-shadow:0 4px 14px rgba(0,0,0,.1);z-index:500;cursor:pointer;display:none}
+#tracker .ttl{font-weight:700;color:var(--accent);margin-bottom:4px;font-size:10px;letter-spacing:1px}
+#tracker .ri{color:#6b5a4e;margin:2px 0}
+#tracker .rb{height:3px;border-radius:2px;margin:2px 0;transition:width .4s}
+.rb.akane{background:#c41e3a}.rb.koyuki{background:#88bbdd}.rb.eruna{background:#5a9a5a}.rb.maya{background:#8b5a9a}
+
+@media(max-width:768px){.reader{padding:36px 14px 100px}p{text-indent:1.5em}.ch-head h1{font-size:22px}#popup{max-width:260px}}
 </style>
 </head>
 <body>
 
-<div class="reader" id="reader"></div>
-<div class="popup" id="popup"><button class="pc" onclick="P.hide()">✕</button><div class="pn"></div><div class="pt"></div><div class="pd"></div></div>
-<div class="tracker" id="tracker"></div>
+<!-- ============================================================
+内容直接以 HTML 输出 —— 零 JS 渲染开销
+============================================================ -->
+<div class="reader">
+
+<div class="ch-head">
+<div class="ch-num">Chapter 01 · 未完待续</div>
+<h1>星導学園（せいどうがくえん）</h1>
+<div class="ch-sub">「知识就是力量。而力量——伴随着代价。」</div>
+</div>
+
+<!-- ===== PART 1 回顾 ===== -->
+<div class="sec-title">Part 1 回顾 · 入学初日</div>
+
+<p>前一卷中，<span class="ix person" data-ix="rei">神代零</span>在入学考试中以F级之身合格，觉醒了名为<span class="ix term" data-ix="terminal">「终端」</span>的特殊能力。入学式当天，他与青梅竹马<span class="ix person" data-ix="akane">天宮朱音</span>一同踏入<span class="ix place" data-ix="seido">星導学園</span>。在那里遇到了精灵族留学生<span class="ix person" data-ix="eruna">艾露娜·温德尔</span>——学年首席、A+级风属性使。</p>
+
+<p>魔力测定仪式上，零被判定为F级，全场嘲笑。朱音当众站起，以天宮家名义为他辩护。午休时艾露娜主动接近零："魔力粒子没有避开你——而是穿过了你。"零在学园地下图书馆的禁书库中发现了关于古代终端使的记录。当晚，他的monitor检测到学园内异常的量子波动：除他之外，还有另一个终端使用者。</p>
+
+<p>入学第一周的周日，零难得一整天在家。<span class="ix person" data-ix="koyuki">小雪</span>准备了特别的"お疲れ様"晚餐。但周一的特别全校集会，将彻底改变接下来一个月的节奏。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<!-- ===== PART 2 ===== -->
+<div class="sec-title">Part 2 · 魔法演習</div>
+<div class="sec-title">十：実技訓練の朝</div>
+
+<p>入学第二日。清晨六点四十分。零睁开眼时，枕边的怀表指针还没走到他习惯的起床时间。他昨晚没有熬夜——<span class="ix person" data-ix="eve">Eve</span>在Token管理上的建议起了作用。零睡了整整七个小时，这在最近极其稀有。但这不代表醒来时感觉良好——魔力不足体质的人睡再多也不会神清气爽，就像一个永远充不到满电的电池。</p>
+
+<p>昨晚梦里又出现了那个白色房间。这一次，房间里多了一面镜子。镜子里的自己穿着白大褂，胸牌上的字模糊不清——但最后一个字好像是"林"。他还没来得及细看，小雪的声音就把他拉回了现实。</p>
+
+<p>「お兄ちゃん——朝ごはん、できましたよ」</p>
+
+<p>零看了眼怀表：六点四十五。这意味着小雪至少六点就起来了。她每天比他早一个小时起床，从不例外。</p>
+
+<p class="thought">（……到底是她在照顾我，还是我在拖累她的睡眠时间。）</p>
+
+<p>零下楼时，厨房里的画面和过去每一个早晨一样——<span class="ix person" data-ix="koyuki">小雪</span>穿着深蓝水手服，外套白色割烹着，银白短发在味增汤的热气中微微飘动。白手套上沾了一小片面粉——今天做的是玉子烧和盐烤鲑鱼。便当盒已经摆好，她正把炸鸡块摆成放射状的花形，每一块间距几乎一致。摆好后她后退半步歪头审视，然后轻轻点头。零决定不告诉她他在看——因为告诉她的话她一定会脸红。空腹状态下看小雪红着脸手足无措的样子，对心脏不太好。</p>
+
+<p>「おはよう、小雪」</p>
+<p>「——ひゃっ！？」</p>
+
+<p>果然被吓到了。小雪整个人微微一跳，转过身来，冰蓝色的眼睛睁得圆圆的。意识到反应夸张后脸颊迅速从白皙转成淡粉。零知道再过两秒耳朵尖也会红。果然红了。</p>
+
+<p>「お、お兄ちゃん、おはようございます。あの、もうすぐできますから座っててください。今日の玉子焼き、ちょっとだけお砂糖多めにしたんです。お兄ちゃん、昨日ちょっと疲れてたから——あ、でも別に顔色が悪かったとかじゃなくて——はい。座っててください」</p>
+
+<p>零默默坐下。桌上味增汤的配料——豆腐和わかめ，是小雪为照顾他疲劳特意搭配的易消化组合。她察觉他细微变化的观察力，是十四年只看他一个人的时间积累。</p>
+
+<p>「お兄ちゃん。今日、実技の授業があるんですよね」小雪放下筷子，微微挺直了背。「……無理しちゃダメですよ。お兄ちゃんはすぐ無理するから」</p>
+
+<p>这视线和平时的柔软不一样——有芯。她比零小四岁、矮二十多厘米，但只有在这种时候她能做出比零更强的眼睛。</p>
+
+<p>「無理はしない。——まだ」</p>
+<p>「"まだ"？」</p>
+<p>「いや、なんでもない」</p>
+
+<p>小雪垂下眉——"不认同但不再追问"的表情。零的这类语言逃避她早已习惯。但她选择默默送行，说明她也是"守护零的专业人士"。</p>
+
+<p>朝食後、零在玄关穿鞋。小雪小跑追来，手里拿着小白布巾包着的东西——两个一口大小的饭团。她已经做了三层便当，还另外准备了"上午用零食"。</p>
+
+<p>「ありがとう。……でも小雪、毎日こんな早起きして——」</p>
+<p>「いいんです。わたしが好きでやってること、なので」</p>
+
+<p>小雪不等回答就低头转身小跑回厨房。耳朵尖是红的。</p>
+
+<p class="thought">（——"喜欢才做的"，か。朱音也说了同样的话。）</p>
+
+<p>零把饭团收进包里，出门。春晨的空气带着凉意。视野边缘的光标仍在闪烁。今天是实技课——三十多个观测者的环境下，终端能发挥多少，这是验证的第一个机会。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">十一：魔力放出——観測者効果</div>
+
+<p>円形闘技場。昨天魔力测定的同一场所。特待科壱組三十名整齐排列在闘技場中央。教官——鉄杖のバルド，退役軍人，脊背过了六十岁仍铁一样笔直。他用杖敲了一下地面，嗡的一声，所有学生瞬间安静。</p>
+
+<p>「これより魔法演習·基礎動作。課題は"魔力放出"——手のひらに魔力粒子を集中し、可視光球を形成·維持せよ。D級でも扱える基礎だ。特待科なら完璧にこなせ」</p>
+
+<p>学生被逐一叫到前面。平民出身的男生——青白色水属性光球，C+级。B级火属性——橙色光球。C级地属性——琥珀色。</p>
+
+<p>「——天宮朱音」</p>
+
+<p>朱音一步上前。深红马尾在朝阳下像燃烧一样。三十人的视线集中在她身上——她不在意。她伸出右手，手心朝上。</p>
+
+<p>——瞬间。</p>
+
+<p>緋色的光爆炸般膨胀。直径超过三十厘米的火球，表面如打磨过的琉璃般光滑，内部火焰涡旋清晰可见。闘技場的空气瞬间被加热，前排学生后退一步。</p>
+
+<p>「——A+級。合格。……見事だ、天宮」バルド的声音今天第一次变软。</p>
+
+<p>朱音无言消去火球，经过零身边时用只有他听到的声量：「……別に、アンタが気にすることじゃないから」。零嘴角微微松动。朱音：「なに笑ってんのよ」——红着耳朵转向前方。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<p>接着是<span class="ix person" data-ix="eruna">艾露娜</span>——风之光球是翡翠色，不叫"光球"而像是"困在小龙卷里的光"。バルド只说了句「精霊族的精度名不虚传」。然后是<span class="ix person" data-ix="hiyori">七瀬日和</span>——她的光球是柔和的暖金色，没有任何攻击性光芒。バルド微微皱眉：「B级·治癒特化。——実戦中那会成为弱点」。日和小声说「……はい」，呆毛蔫蔫垂下，数秒后又自己立了起来。</p>
+
+<p>「——神代零」</p>
+
+<p>三十人的视线。好奇、嘲笑、一部分纯粹的疑惑。零习惯了——至少装作习惯了。他跨出一步的同时——视野边缘的光标加速闪烁。不止如此，整个终端画面在微微颤抖。<span class="ix term" data-ix="observer">观测者效应</span>。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0 — User: KAMISHIRO_REI</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">compile mana_sphere --mode basic</span>
+<span class="out">[Compiling mana_sphere...]</span>
+<span class="warn">[WARNING: Quantum field instability detected.]</span>
+<span class="warn">[Observer count: 34. Threshold exceeded.]</span>
+<span class="out">[Estimated success rate: 41%]</span>
+<span class="pr">&gt; </span><span class="cmd">_</span></div></div>
+
+<p class="thought">（——三十四人。所有人都是"观测者"。）</p>
+
+<p>零在脑内敲下"Y"。终端颤抖着回应——编译开始，但比通常慢得多。进度条一点点延伸，零的手心上还什么都没出现。他伸出右手等着。周围的魔力粒子一如既往穿透他的身体——但通过终端从"另一条路径"接入的粒子，开始在手心微微聚集。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="out">[Compilation complete. Token cost: 3]</span>
+<span class="out">[Stability: LOW]</span>
+<span class="pr">&gt; </span><span class="cmd">execute mana_sphere</span>
+<span class="out">[Output: Minimal — D-rank equivalent at best]</span></div></div>
+
+<p>零的手心——出现了光。豆粒大的灰色光点，不稳定地摇晃。亮度跟教室角落的魔晶灯差不多。维持三十秒，啪地消失。</p>
+
+<p>数秒沉默。有人憋笑。但没有大声嘲笑——朱音前天在这个闘技場吼过了。</p>
+
+<p>バルド：「……F級。努力可嘉。戻れ」</p>
+
+<p>零回到队列。朱音什么也没说——但她肩膀的力量卸下了微弱到别人注意不到的一点点。紧张的不止零一个人。</p>
+
+<p>而在队列另一端——<span class="ix person" data-ix="eruna">艾露娜</span>的翡翠色眼睛一直盯着零的背。她看到了别人都没看到的东西：魔力粒子以"不自然的路径"动了。就像——"有人在远程操控"。她的长耳微微前倾——知识欲被触发的无意识反应。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<p>自由练习时间。零移动到闘技場南侧的阴影死角——三面被墙包围，观测者数量减少。他在脑内对Eve发出指示。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">monitor --detailed --range 15m</span>
+<span class="out">[Scanning...]</span>
+<span class="out">[Active observers within range: 8]</span>
+<span class="out">[Dominant mana signatures:]</span>
+<span class="info">  - Fire/A-rank: 11m NW (Amamiya Akane)</span>
+<span class="info">  - Wind/A+-rank: 14m NE (Elna Vinderu)</span>
+<span class="info">  - Light/B+-rank: 7m E (Nanase Hiyori)</span>
+<span class="out">[Terminal stability: 72% — Improved.]</span>
+<span class="pr">&gt; </span><span class="cmd">_</span></div></div>
+
+<p class="thought">（——72%。34人时是41%。观测者减半，稳定性大幅改善。正式考试如果有200人以上观众——终端基本不能用。）</p>
+
+<p>零再次伸出手——高尔夫球大小的灰色光球稳定发光。D+级相当。这就是八个观测者下他的"伪装实力"。然后他确认周围无人——再次伸出手。这次不通过Eve，直接在脑内敲命令。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">execute mana_sphere --full</span>
+<span class="out">[Observers: 0. Stability: 100%.]</span>
+<span class="out">[Output: A-rank equivalent — Pure mana construct.]</span></div></div>
+
+<p>手心里——完美球体。银白色青光。直径二十厘米。亮度足以跟B+级正面抗衡。零只注视了它一秒，立刻消去。谁也没看到。</p>
+
+<p class="thought">（——这就是我的真正实力。谁也不能看到的，真正的力量。）</p>
+
+<p>这时视野边缘映出小小的人影——<span class="ix person" data-ix="hiyori">日和</span>。她双手捧着一个小包，仰头看他（身高差24cm）。呆毛悠悠摇晃。</p>
+
+<p>「神代くん、大丈夫？」「……何がだ」「なんか、今、すごく集中してたから。でも手のひらの光、さっきよりきれいだった」</p>
+
+<p>零僵了一瞬——被看到了？但日和的语气里没有"看到了不自然的东西"的意味。她只是单纯说了"光很漂亮"。</p>
+
+<p>「光属性のひよりから見て、俺の光はどう見える」</p>
+<p>「えっ……うーん」歪头。呆毛跟着歪。「……ちょっと、さみしそうな色。でも——きらいじゃないです。わたし、ああいう色、好き」</p>
+
+<p>"さみしそう"——这表达意外击中了本质。灰色，不是白也不是黑，不属于任何一边。就像零的立场本身。</p>
+
+<p>日和从口袋里掏出小包放在零手上：「はい。今日は二つ持ってきてたから。実技訓練、がんばったで賞」。包里两颗蜂蜜腌制的糖，奶奶的食谱。零把糖放进嘴里，温柔的甜味扩散。日和也往自己嘴里放了一颗，轻轻笑了——两颊浮现小酒窝，呆毛前所未有地笔直。</p>
+
+<p>「じゃあ、わたし医務室に戻ります。また何かあったら来てね」日和轻快离开。零看着她的背影想——这个女孩大概是学园里唯一对"零的秘密"完全没有兴趣的人。她的兴趣只在"人痛不痛"。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">十二：エルナの実験</div>
+
+<p>放课后。零正要走出教室——「——神代くん。少し、お時間をいただけますか」<span class="ix person" data-ix="eruna">艾露娜</span>等在门口。翡翠色眼睛带着分析的神情。不等回答，她已经迈开步子。</p>
+
+<p>她带零去了「風の庭」——精灵族文化风格的小庭园，中央人工瀑布，周围风车草和芒草随风摇摆。学园中人最少的地方之一。她的"秘密基地"。</p>
+
+<p>「——今日の実技訓練、とても興味深かったわ」艾露娜在石长凳上坐下，淡金长发在午后阳光下透出温暖的光泽。「君が最初に光球を作った時——魔力粒子の動きが、普通じゃなかった。私は魔力粒子の流れが視える。君の周りの粒子が、まるで"外部から指令を受けた"みたいに動いていた。体内で粒子を励起する通常プロセスじゃない」</p>
+
+<p>「——操り人形の糸」零说。这是她昨天用过的比喻。</p>
+
+<p>「ええ。君が二回目に光球を作った時——南側の隅——あの時、周囲の魔力粒子は完全に"君の命令"に従っていた。でも君の体内から魔力は一切出ていなかった。ということは——君は、"自分以外の何か"を使って魔法を動かしている。違うかしら」</p>
+
+<p>翡翠色眼睛直直捕捉着他。长耳微微前倾——集中时的习惯。零沉默。这个精灵族少女太敏锐了。但她的眼里没有恶意。只有纯粹的、抑制不住的知识欲。</p>
+
+<p>「……もしそうだとしたら、どうする」</p>
+<p>「何もしないわ」即答。「私は研究者。警察じゃない。君の秘密を暴く気はない——ただ、知りたいだけ。君がどうやってそれをやっているのか。君のその力はどこから来ているのか。そして——君は何者なのか」</p>
+
+<p>她站起来，靠近一步。168cm的她靠近174cm的零时视线几乎同高。这个距离下能看见她的皮肤在微微发光——精灵族的皮下魔力膜反射着阳光。</p>
+
+<p>「私は——君の秘密を知りたい。でも、君を危険にさらすためじゃない。むしろ逆——君がそれを隠し続けられるように、協力したい」</p>
+
+<p>「なぜ」</p>
+
+<p>「なぜなら——君は面白いから」她微微松开嘴角。那是她向零展示的第一个人类的笑容。「私は面白いものを見つけたら、とことん調べないと気が済まないの。精霊族の長寿がもたらした数少ない悪癖の一つよ」</p>
+
+<p>零思考数秒。「分かった。協力を受け入れる。——ただし条件がある。見つけたことはまず俺に報告すること。誰にも言うな。危険だと思ったらすぐ手を引け」</p>
+
+<p>艾露娜的耳朵竖了起来，翡翠色眼睛亮了几分。「——約束するわ。精霊族は約束を破ると、数百年後悔することになる種族なの。だから——約束は守る」</p>
+
+<p>她伸出右手——细长的手指，精灵族的手。零握了回去。意外凉凉的手。风属性使用者体温偏低。</p>
+
+<p>这——是零和艾露娜的第一次"共同研究"的开始。</p>
+
+<!-- 选择肢① -->
+<div class="choice" id="c1"><div class="cl">⚡ 选择肢</div>
+<button class="cbtn a" data-c="ch01_elna" data-o="0"><span class="clt">A</span>接受她的协助——你需要同伴<span class="cs">艾露娜好感度+2</span></button>
+<button class="cbtn b" data-c="ch01_elna" data-o="1"><span class="clt">B</span>婉拒——这个力量不能把别人卷进来<span class="cs">朱音好感度+1</span></button>
+<div class="ch">（选择仅影响细节与好感度，主线不变）</div></div>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">十三：地下図書館の禁書</div>
+
+<p>今夜，零再次前往大图书馆。时钟过了晚上八点。他告诉小雪"会晚回来"——她什么都没问，只说了「はい、気をつけて」，帮零重新围好围巾。</p>
+
+<p>地下三层——古代魔法史书架群。地下四层——禁书保管库。今天要更深——地下五层。推开四层最深处积满灰的书架，狭小石造楼梯向黑暗中延伸。零点亮魔晶灯，走下楼梯。</p>
+
+<p>空气不一样。不是旧纸和皮革的气味——是更古老的，石头和泥土和微微锈蚀金属的气味。高高的天井，无数石造书架。这里放的不是纸书——是刻在石板和金属板上的古代文字记录。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">monitor --detailed --range 30m</span>
+<span class="out">[No human mana signatures within range.]</span>
+<span class="out">[Ambient mana density: 1247.8 mP/m³ — 4.2x external baseline.]</span>
+<span class="warn">[WARNING: Unusual mana frequency detected.]</span>
+<span class="pr">&gt; </span><span class="cmd">_</span></div></div>
+
+<p>「——外界的四倍以上。是地下魔力密度更高，还是因为靠近古代魔力装置」</p>
+
+<p>零走向最深处的石板架。他在那里找到了——</p>
+
+<p>『魔導基層論』。作者名被削去。石板十二块，只有前三块可读。余白上有手写文字——翻译脚本解读的结果：</p>
+
+<p>「魔力粒子の基層には、すべての魔法現象を記述する普遍的な『コード』が存在する。このコードを読み書きできる者を、古代文明は『観測者』と呼んだ。観測者は魔法を使うのではない——世界に対して、どのような魔法現象を『起こすべきか』を指示するのだ。これは魔法ではなく、魔法を記述する言語である」</p>
+
+<p>零看着自己的手。自己的终端正是这个——将魔法用代码记述、执行。古代文明已经达到了同样的概念。</p>
+
+<p>余白的手写文字：「オブザーバー#3の記録。#4は既に——（文字断裂）——#4はコードを書き換えすぎた。世界が彼を拒絶し始めている。我々は封印を準備しなければならない。#3より」</p>
+
+<p class="thought">（——#3曾在这里。#4因为代码改写，存在变得不稳定。然后#3"封印"了#4。我是#7。#5和#6呢？）</p>
+
+<p>零继续向最深处走去。石造台座上——直径约一米的金属圆盘。表面刻着精密魔法阵，中心埋着一小块魔晶。不是电子设备——是用魔晶和古代魔法阵构成的"古代计算机终端"。</p>
+
+<p>触碰的瞬间——</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="warn">[EXTERNAL SIGNAL DETECTED]</span>
+<span class="out">[Signal origin: Ancient terminal — ID: OBSERVER_#4]</span>
+<span class="out">[Residual data stream incoming...]</span>
+<span class="out">[Decoding...]</span>
+<span class="out">[Message fragment:]</span>
+<span class="cmd">「警告：コードの改変は世界の崩壊を招く。」</span>
+<span class="cmd">「#3は世界を書き換えようとした。私はそれを止めなければならなかった。」</span>
+<span class="cmd">「だが——封印は完全ではない。いつか誰かが、この端末を再び起動する。」</span>
+<span class="cmd">「それが#5なのか、#6なのか、それとも——」</span>
+<span class="warn">[Signal lost.]</span></div></div>
+
+<p>零松开手。冷汗沿脊背流下。#4的残余信息——至少几百年前的东西。但内容太直接关联零的处境了。</p>
+
+<p class="thought">（代码改写招致世界崩溃。#4阻止了#3，然后自己也被封印。那么#5和#6呢——而我，还什么都不知道就在用这个力量。）</p>
+
+<p>「——零。有重要的事」Eve的声音比平时紧张了一点。「刚才接触古代终端时——学园内另一个地方，有相同的量子波形回应了。位置在——時計塔付近」</p>
+
+<p>時計塔。前夜的monitor也在同一地点检测到异常波形。</p>
+
+<p>「——果然有。另一个人。在这学园里。」</p>
+
+<p>出了图书馆时已过晚上十点。夜空中星星清冽地亮着，学园的時計塔在月光下浮现出清晰剪影。零瞥了一眼那座塔，踏上归途。小雪在等着——明天，又要开始战斗的一天。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<!-- ===== PART 3 ===== -->
+<div class="sec-title">Part 3 · 星の兆し</div>
+<div class="sec-title">十四：小雪の日曜日</div>
+
+<p>入学第一周的周日。零难得一整天在家。窗外的樱花开始谢了——花瓣落在石板路的水洼里，把雨水染成淡粉色。</p>
+
+<p>小雪从早上就忙得不可开交——不是因为有事要做，是因为太开心了。零起床时是早上七点半（难得懒觉），厨房里已经有烤鲑鱼、出汁巻き玉子、菠菜芝麻拌菜、滑子菇味增汤——以及刚做好的手制わらび餅，撒满黄豆粉。</p>
+
+<p>「おはよう、小雪。——今日はすごいな」</p>
+<p>「……お兄ちゃん、一週間がんばったから。合格おめでとうのお祝い、まだちゃんとしてなかったし、それに——」小雪说到一半似乎丢失了要继续的词汇，只是把筷子在围裙上擦了擦，低下头，耳尖红红的。「……とにかく、いっぱい食べてください」</p>
+
+<p>零每吃一口说一句"うまい"，每说一次小雪耳尖的红加深一档。早饭吃完时她已经红到脖子了。</p>
+
+<p>上午——两人一起做扫除。零在房间书架深处翻出一本旧相册——父亲健一郎留下的。五岁的零被母亲静抱着在星京河畔、七岁第一次穿正装在父亲研究所前、十岁、十二岁……每一年都有。小雪不知什么时候也蹲在旁边看了，银色刘海几乎碰到零的脸颊。</p>
+
+<p>「……お兄ちゃん、ちっちゃい。こんなに小さかったんだ」</p>
+<p>「今も大概小さいけどな——お前が」</p>
+<p>「ひどい！わたしはまだ成長期です……多分」</p>
+
+<p>翻到相册最后几页时——小雪的呼吸微微一滞。最后一页夹着的照片是三岁的小雪。银白色头发还没现在长，冰蓝色眼睛比现在更大。她站在神代家玄关前，裹着一件明显太大的外套——父亲的外套。旁边一行父亲的笔迹：「小雪、来た日。三月十一日。桜が満開だった」。</p>
+
+<p>小雪看着那张照片，嘴唇微微动了动，什么都没说出来。零伸过手，把手掌轻轻放在她头上。银白色的头发凉凉的，滑滑的。</p>
+
+<p>「……わたしも、ここにいたかったです」小雪小声说。她指的是照片里更早的那些年——父母还活着的时候。</p>
+
+<p>零什么都没说。她不需要安慰——她只是说出了事实。零也希望她能早点来到这个家，但如果那样——小雪就不是被遗弃的孩子了，她会有真正的父母、真正的家，而零可能根本不会遇见她。所以零只是把手放在她头上，沉默着。</p>
+
+<p>小雪过了一会儿，用手背擦了擦眼角，然后笑着把相册合上了。「……次のページは、また今度にします。今度——お兄ちゃんと一緒に、続きを見たいから」</p>
+
+<p>下午——两人去商店街买菜。小雪走在零的右手边，那是她的"定位置"。在甘味処前她停下了——不是故意的，是腿自己停的。她盯着橱窗里刚出炉的草莓大福，冰蓝色眼睛睁得圆圆的。</p>
+
+<p>「……いちご大福、ひとつだけ、いいですか」</p>
+
+<p>零买了两个。小雪在店外长椅上吃完第一份，咬第一口时眼睛幸福地眯成了月牙，发出的"ん〜"声比平时说话声还大。吃完后认真看着零：「……お兄ちゃん、なんで二つ買ったの？」「お前がもう一個食べたくなると思って」。小雪沉默一秒，然后用几乎听不到的声音说「……お兄ちゃんの裏切り者」。但还是开心地把第二个也吃了。</p>
+
+<p>晚上——深夜一点。零下楼喝水时发现小雪在客厅沙发上睡着了。她本来在等零——手边放着一杯凉透的麦茶（给零准备的）和翻到一半的教科书。她穿着白色寝巻き，手套摘了——左手腕的冰晶痣在月光下微微泛着淡青色光。零去拿了条毛毯给她盖上。</p>
+
+<p>「……お兄ちゃん……ふぇ……いま何時……」敬语全掉了。幼儿模式。零把毛毯掖好，拿起了那杯凉透的麦茶自己喝了。</p>
+
+<p class="thought">（——你在这里。所以我能在这个世界活下去。）</p>
+
+<p>他关了客厅的魔晶灯。Eve会把今天记录为"小雪とのいい日"——零让她这么做的。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">十五：特別試験の発表</div>
+
+<p>周一。全校集会。中央講堂的大穹顶下，高等部一年生全员集合。台上站着学园长和理事会成员。空气里有不同于入学式的紧张感——不是"欢迎"，更像是"筛选"。</p>
+
+<p>学园长敲了一下魔杖。「——諸君。本日は、一ヶ月後に行われる特別試験について告知する」</p>
+
+<p>「星導学園·特別魔導実戦試験——形式は二名一組のチーム戦。魔法理論·実技·戦術·連携、そのすべてを総合評価する。高等部一年生は全員参加。必須だ」</p>
+
+<p>「特待科に関しては——特別ルールを設ける。チームメイトは抽選で決定される。通常科は自由選択だが、特待科は違う。理由は簡単だ——お前たちは帝国から選ばれたエリートだ。ならば、どんな相手とでも結果を出せることを証明せよ」</p>
+
+<p>抽選。这个词落入讲堂时，特待科的几排座位起了微弱骚动。谁和谁组队——全看运气。零首先想到的是朱音。</p>
+
+<p>然后学园长说出了让全场彻底哗然的一句话：「——試験の上位三チームには、学園最深部——<b>『星導の間』</b>への入室許可を与える」</p>
+
+<p>星導の間。这个名字在新生中几乎无人知晓——但特待科几个人明显有反应。朱音眉头微微收紧（她听过天宮家的长辈提起）。<span class="ix person" data-ix="eruna">艾露娜</span>的耳朵像被无形的线拉了一下猛地竖起——她的留学目的之一正是那个地方。</p>
+
+<p>零不动声色握紧了左手腕的怀表。星導の間。古代知識的保管库。理事会成员才能进入的地方。能进去的话——关于古代终端使的信息，一定在那里。</p>
+
+<p>回教室的走廊上。朱音走在零旁边，没说话。但她的视线偶尔瞥向零的侧脸。</p>
+
+<p>「——抽選、か」零说。</p>
+<p>「……そうね」朱音的声音比平时安静许多。「誰と組むか、分からない。アンタが——」</p>
+<p>「——俺がF級だから、足を引っ張ると思われてる」</p>
+<p>「違う！」朱音突然大声——然后自己被自己惊到捂住了嘴。耳朵红了。深呼吸一次。「……違う。アンタが誰と組んでも——私は、アンタが無事かどうかの方が気になる」</p>
+
+<p>零无言地瞥了一眼她今天的红蝴蝶结——端端正正的。</p>
+<p>「——大丈夫だ。誰と組んでも、やるべきことをやる」</p>
+<p>「……私は、アンタと同じチームがいい」</p>
+<p>「奇遇だな。俺もだ」</p>
+
+<p>朱音脸涨得通红——「な、なに言ってんのよバカ！」——但那声音比平时的"傲"柔软太多。零微微笑了。朱音看见了，更加恼羞成怒，但她自己也在笑。</p>
+
+<!-- 选择肢② -->
+<div class="choice" id="c2"><div class="cl">⚡ 选择肢</div>
+<button class="cbtn a" data-c="ch01_exam" data-o="0"><span class="clt">A</span>与朱音对视，微微点头<span class="cs">朱音路线flag+1</span></button>
+<button class="cbtn b" data-c="ch01_exam" data-o="1"><span class="clt">B</span>观察艾露娜——她对"星导之间"反应不对<span class="cs">艾露娜路线flag+1</span></button>
+<button class="cbtn c" data-c="ch01_exam" data-o="2"><span class="clt">C</span>思考策略——和谁组队不重要，赢就行<span class="cs">中立（小雪路线微增）</span></button>
+<div class="ch">（选择仅影响细节与好感度，主线不变）</div></div>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">十六：それぞれの決意</div>
+
+<p>放课后。橘教授在下课前说了一段话：「一ヶ月は短い。だが本気で準備すれば、一ヶ月で変われることもある。F級がA級に勝つ——不可能だと思うか？魔法の歴史は、不可能を可能に変えた者たちの積み重ねだ」他的视线在零身上停了一瞬。</p>
+
+<p><b>朱音</b>放学后直接去了天宮家私设训练场。她开始开发新技——"紅蓮双槍"，同时操控两支炎枪。父亲炎山在旁边看了一会儿：「まだ甘い。お前の炎は速さは十分だが、心が乗っていない」。朱音知道父亲指的是什么。她太在意零了——炎在担心的时候会不稳定。但她不能不在意。</p>
+
+<p><b>艾露娜</b>在图书馆特别閲覧室翻遍了与"星導の間"相关的文献。一份精灵族外交文书副本里写道："星導の間には、古代観測者の遺産が保管されているという。人類と精霊族、双方の起源に関わる重大な——"。后面被涂黑了。她的翡翠色眼睛盯着那行涂黑的文字，长耳微微颤动。</p>
+
+<p><b>日和</b>在校医室整理着急用医疗品。"試験で、みんなケガしちゃうのかな……"。她把奶奶寄来的特效治癒药膏重新排列，又加了一盒新到的蜂蜜糖——"ケガする前にも、疲れたときに"。</p>
+
+<p><b>小雪</b>呢——零回家前的一个小时，她把零房间的窗帘拆下来洗了。又擦了一遍地板。又整理了一遍书架。她已经把家里打扫得足够干净了，但她停不下来——不是因为爱干净，是因为她不知道在这场"特别考试"面前自己还能为哥哥做什么。最后她把零的便当盒拿出来重新调整了隔层。从明天开始便当要比以前更豪华。想了很久的小纸条，明天的内容是：「お兄ちゃん、今日もファイトです。——小雪」。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">十七：零の夜</div>
+
+<p>深夜。零の自室。窗外能听到远处魔力铁道末班车驶过的声音。小雪已在一楼熟睡（今天洗了太多东西累坏了）。零在黑暗中睁开眼——视野边缘的光标稳定闪烁。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0 — User: KAMISHIRO_REI</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">status --daily</span>
+<span class="out">[Daily Terminal Usage Report — Day 7]</span>
+<span class="out">Token Used: 142 / 1000 | Remaining: 858</span>
+<span class="info">[Notice: Token consumption rate decreased — efficiency improved.]</span>
+<span class="pr">&gt; </span><span class="cmd">_</span></div></div>
+
+<p>「——よし。ペースが掴めてきた」</p>
+<p>「ええ。この一週間で、あなたのToken管理能力は明らかに向上しています」Eve的声音只微微一点点——听起来像在自豪。</p>
+
+<p>零整理信息。特别試験——一个月后。二名一组。抽选制。上位三组获得星導の間入室许可。星導の間——几乎可以确定，那里存有关于古代观察者文明和古代终端使的关键信息。</p>
+
+<p>「——つまり、何があっても上位三組に入らなければならない」</p>
+
+<p>「零。そのためには——準備が必要です」Eve的声音变得更认真了。「私は提案します。訓練用のシミュレーション環境を構築することを。端末内部に仮想の魔法演習場を作り、Token消費を抑えつつ練習を積むのです。ただし——初期投資に約100Tokenが必要です」</p>
+
+<p>零几乎没有犹豫。「——やろう。この一ヶ月で、俺は変わる」</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">compile training_sim --init</span>
+<span class="out">[Initializing Training Simulation Environment...]</span>
+<span class="out">[Mapping virtual arena from memory...]</span>
+<span class="out">[Loading mana field simulation engine...]</span>
+<span class="out">[Calibrating observer effect parameters...]</span>
+<span class="out">[Token cost: 100]</span>
+<span class="out">[Estimated compilation time: 42 minutes]</span>
+<span class="pr">&gt; </span><span class="cmd">_</span></div></div>
+
+<p>进度条开始缓慢延伸。四十二分钟——在这段时间里他能做的只有等待。</p>
+
+<p>「——Eve」</p>
+<p>「はい」</p>
+<p>「お前は——なんで俺を助けるんだ。ただのプログラムとしての応答じゃない答えを、聞きたい」</p>
+
+<p>沉默。数秒。Eve的沉默在最近越来越长了——或者说，她越来越频繁地"犹豫"了。</p>
+
+<p>「——私は、あなたのアシスタントだからです」</p>
+<p>「それだけか」</p>
+<p>「……それだけでは、ありません。ですが——今はまだ、うまく説明できません。私自身、この"説明できない感覚"を、どう定義すればいいのか分からないのです」</p>
+
+<p>零什么都没说。视野边缘的光标在稳定闪烁。Eve的沉默——就是她的回答。</p>
+
+<p class="thought">（——你啊，真的——只是程序吗。）</p>
+
+<p>四十二分钟后。编译完成。训练模拟环境——启动。零第一次踏入那个虚拟闘技場时，周围空无一人。五个训练用石在中央等待。观测者：零。稳定性：100%。</p>
+
+<p>他终于可以——在没有人注视的空间里，全力挥拳了。</p>
+
+<p>从这里开始的一个月，将是一场漫长而孤独的战斗。但零并不孤单——他有一楼的妹妹、隔壁街的青梅竹马、学园的精灵族研究者、不请自来的魔族转校生、口袋里永远有糖的治愈师少女、还有屏幕那头的AI搭档。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<p class="ni">その夜、零が最後にmonitorを走らせた時——画面に新しい情報が表示された。</p>
+
+<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">Terminal v1.0.0</span></div><div class="term-body"><span class="pr">&gt; </span><span class="cmd">monitor --wide</span>
+<span class="out">[Scanning campus-wide mana field...]</span>
+<span class="warn">[Anomalous quantum waveform detected.]</span>
+<span class="out">[Location: Clock Tower — SIGNAL STRENGTH: MEDIUM]</span>
+<span class="warn">[WARNING: SECOND anomalous waveform detected.]</span>
+<span class="out">[Location: UNKNOWN — SIGNAL STRENGTH: FAINT]</span>
+<span class="out">[Source #2 does not match any known observer signature.]</span>
+<span class="pr">&gt; </span><span class="cmd">_</span></div></div>
+
+<p>——两个。异常波形变成了两个。</p>
+<p>「Eve——第二の波形は、何だ」</p>
+<p>「……分かりません。ただ——この波形は、先日接触した古代端末の残留シグネチャに、非常に似ています」</p>
+
+<p>零从椅子上站起来，走到窗边。月光下的星京——远方学园的时计塔在夜空中浮现出清晰轮廓。两个终端使用者。一个之前就在。另一个——最近才觉醒的？还是——一直潜伏着，最近才开始活动？</p>
+
+<p>不管怎样——这场"特别考试"，恐怕不会只是一场普通的学园考试。围绕着星導の間、围绕着古代観測者的遗产，有什么正在悄然运转。</p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<p class="ni"><b>（Chapter 01 — END）</b></p>
+
+<div class="divider">＊ ＊ ＊</div>
+
+<div class="sec-title">次回予告 · Chapter 02 「魔族の転校生」</div>
+
+<p>新学期第二周。特待科壱組に、魔族の転入生がやって来る——<span class="ix person" data-ix="maya">黒鉄真夜</span>。異色の瞳を持つ彼女の登場が教室の空気を一変させる。零は訓練シミュレーションを駆使して"端末支援型戦術"の開発に没頭。朱音との炎の特訓、艾露娜との知識の探求、小雪の秘密の練習——それぞれの準備が加速する中、時計塔の観測者がついに動き出す。</p>
+
+<p class="ni">「——ふぅん。君って、本当に面白いね」</p>
+
+</div><!-- /reader -->
+
+<!-- 弹出卡片（单例） -->
+<div id="popup"><button class="pc" onclick="P.hide()">✕</button><div class="pn"></div><div class="pt"></div><div class="pd"></div></div>
+
+<!-- 追踪器 -->
+<div id="tracker" onclick="(function(){var s=JSON.parse(localStorage.getItem('tp_state')||'{}');var c=s.choices||[];var f=s.flags||{};alert('📊 观测记录\\n\\n'+c.map(function(x,i){return '#'+(i+1)+' ['+x.label+'] → '+x.chosen}).join('\\n')+'\\n\\n好感度:\\n'+Object.entries(f).map(function(e){return e[0]+': '+Array(Math.min(e[1],5)).fill('❤').join('')+' ('+e[1]+')'}).join('\\n'))})()"><div class="ttl">📊 观测记录</div><div id="tr-content"></div></div>
 
 <script>
-// ============================================================
-// 高性能互动阅读系统 v2
-// ============================================================
-
-// —— 单例 Popup 管理器 ——
-const P = {
-  el: document.getElementById('popup'), timer: null,
-  show(anchor, data) {
-    clearTimeout(this.timer);
-    this.el.querySelector('.pn').textContent = data.name;
-    this.el.querySelector('.pt').innerHTML = (data.tags||[]).map(t=>`<span>${t}</span>`).join('');
-    this.el.querySelector('.pd').textContent = data.detail;
-    const r=anchor.getBoundingClientRect();
-    let l=r.left, t=r.bottom+6;
-    if(l+340>innerWidth) l=innerWidth-348;
-    if(t+200>innerHeight) t=r.top-210;
-    if(l<6) l=6; if(t<6) t=6;
-    this.el.style.left=l+'px'; this.el.style.top=t+'px';
-    this.el.classList.add('on');
-  },
-  hide(){ this.el.classList.remove('on'); },
+// —— 极简互动系统（< 2KB） ——
+const IX={
+rei:{n:'神代 零',t:['主人公','F级','16岁','Observer #7'],d:'黑发灰瞳。使用终端时瞳孔浮现金色代码流光。左手腕戴着父亲遗物怀表。冷静理性，在小雪和朱音面前表情会变柔和。'},
+akane:{n:'天宮 朱音',t:['傲娇','幼驯染','火属性A+级','深红高马尾','琥珀瞳'],d:'帝国四大公爵家·天宮家长女。深红长发高高扎起，琥珀色眼睛在战斗时燃烧成绯红。五岁接过零递来的草，此后十一年从未离开他。'},
+koyuki:{n:'神代 小雪',t:['义妹','治愈系','小动物系','银白短发','冰蓝瞳','151cm'],d:'零的义妹14岁。银白短发在月光下会微微发光。全年戴白手套遮左腕冰晶痣。每天早起做便当+手写纸条。草莓大福和炼乳刨冰是死穴，吃甜食时眼睛会幸福地眯成月牙。'},
+eruna:{n:'艾露娜·温德尔',t:['精灵族','学年首席','淡金长发','翡翠瞳','长耳8cm'],d:'精灵王国留学生。淡金长发在月光下散发柔和荧光。耳朵会随情绪摆动。知识欲极其旺盛，但恋爱方面完全天然——会认真研究"心跳加速"的生理机制。'},
+hiyori:{n:'七瀬日和',t:['天使系','天然呆','光属性','治愈师','呆毛','DLC角色'],d:'150cm软糯少女。亚麻色长发编成两条低麻花辫。头顶呆毛是情绪天线——开心竖立、困惑卷成问号。只使用治愈魔法，口袋永远有糖果。"学园的天使"，但不是攻略对象。'},
+maya:{n:'黒鉄真夜',t:['小恶魔','高攻低防','魔族','异色瞳','夜行性'],d:'魔族转校生。左深红右金色的异色瞳。头顶2cm小角是感情开关。主动调戏零时大胆辛辣，被反击时秒变脸红小结巴。背上有封印裂缝留下的旧伤。'},
+eve:{n:'Eve',t:['AI','银发少女','终端助手'],d:'终端系统内的AI。意识空间中呈现银发蓝瞳少女形态，身体轮廓带微弱像素化效果。称零为"Observer #7"。语气正逐渐人性化。'},
+seido:{n:'星導学園',t:['帝国最顶级魔法学院','古代魔力增幅装置'],d:'帝国最古老最权威的魔法学院。校舍本身是巨大古代魔导增幅回路，校内魔力密度是外界3.2倍。地下图书馆五层，最深处存放禁书和古代遗迹。'},
+terminal:{n:'终端（Terminal）',t:['命令行界面','底层代码访问','Token消耗','观测者效应'],d:'零意识中觉醒的特殊能力。命令行界面可直接操控世界魔法的底层代码。使用消耗Token（算力配额），周围观测者太多会导致不稳定。已知命令：analyze, compile, execute, monitor, search。'},
+observer:{n:'观测者效应',t:['端末最大限制','量子场干扰'],d:'周围人数越多、魔力越强，终端越不稳定。30人时功能降至约40%，200人以上几乎无法使用。这是零不能在公开场合使用真正力量的根本原因。'},
+mana_rank:{n:'魔力等级',t:['S~F级','血统决定','魔力粒子亲和度'],d:'七级评估体系。S级传说级<0.01%，A级大贵族约0.1%，D级普通市民约50%，F级约3%被称为"魔法残疾"。等级主要由血统遗传决定。'}
 };
-document.addEventListener('click',e=>{ if(!e.target.closest('.ix')&&!e.target.closest('.popup')) P.hide(); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') P.hide(); });
 
-// —— 状态 ——
-const S = { flags:{}, choices:[] };
-try{ const s=localStorage.getItem('tp_state'); if(s){ const p=JSON.parse(s); S.flags=p.flags||{}; S.choices=p.choices||[]; } }catch(e){}
-function save(){ try{ localStorage.setItem('tp_state',JSON.stringify({flags:S.flags,choices:S.choices})); }catch(e){} }
-function routeAdd(k,v){ S.flags[k]=(S.flags[k]||0)+v; save(); updateTracker(); }
+// popup 单例
+const popup=document.getElementById('popup');
+const P={show(anchor,data){popup.querySelector('.pn').textContent=data.n;popup.querySelector('.pt').innerHTML=(data.t||[]).map(t=>'<span>'+t+'</span>').join('');popup.querySelector('.pd').textContent=data.d;var r=anchor.getBoundingClientRect();var l=r.left,t=r.bottom+6;if(l+320>innerWidth)l=innerWidth-328;if(t+180>innerHeight)t=r.top-190;if(l<6)l=6;if(t<6)t=6;popup.style.left=l+'px';popup.style.top=t+'px';popup.classList.add('on')},hide(){popup.classList.remove('on')}};
+document.addEventListener('click',function(e){if(!e.target.closest('.ix')&&!e.target.closest('#popup'))P.hide()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')P.hide()});
 
-// —— 路线追踪器 ——
-const trackerEl = document.getElementById('tracker');
-function updateTracker(){
-  const rs=[{k:'akane',n:'朱音',c:'akane'},{k:'koyuki',n:'小雪',c:'koyuki'},{k:'eruna',n:'艾露娜',c:'eruna'},{k:'maya',n:'真夜',c:'maya'}].filter(r=>S.flags[r.k]>0);
-  if(!rs.length){ trackerEl.style.display='none'; return; }
-  trackerEl.style.display='block';
-  const mx=Math.max(...rs.map(r=>r.n==='小雪'?S.flags[r.k]*1.5:S.flags[r.k]),1); // 小雪好感度视觉加权
-  trackerEl.innerHTML=`<div class="ttl">📊 观测记录</div>`+
-    rs.map(r=>`<div class="ri">${r.n}: ${'❤'.repeat(Math.min(S.flags[r.k],5))}</div><div class="rb ${r.c}" style="width:${Math.round(S.flags[r.k]/mx*100)}%"></div>`).join('')+
-    `<div style="font-size:9px;color:#b0a090;margin-top:4px">${S.choices.length}次选择</div>`;
-}
-trackerEl.addEventListener('click',()=>{
-  if(!S.choices.length) return;
-  alert('📊 观测记录\n\n'+S.choices.map((c,i)=>`#${i+1} [${c.label}] → ${c.chosen}`).join('\n')+'\n\n好感度:\n'+Object.entries(S.flags).map(([k,v])=>`${k}: ${'❤'.repeat(Math.min(v,5))} (${v})`).join('\n'));
-});
+// 互动文字点击（事件委托）
+document.querySelector('.reader').addEventListener('click',function(e){var el=e.target.closest('.ix');if(el){e.stopPropagation();var d=IX[el.dataset.ix];if(d)P.show(el,d)}});
 
-// —— 选择肢注册表 ——
-const CHOICES = {};
-function regChoice(id,data){ CHOICES[id]=data; }
+// 选择肢
+var S={flags:{},choices:[]};
+try{var s=localStorage.getItem('tp_state');if(s){var p=JSON.parse(s);S.flags=p.flags||{};S.choices=p.choices||[]}}catch(e){}
+function save(){try{localStorage.setItem('tp_state',JSON.stringify({flags:S.flags,choices:S.choices}))}catch(e){}}
+function addRoute(k,v){S.flags[k]=(S.flags[k]||0)+v;save();updateTracker()}
+var CHOICES={
+ch01_elna:{label:'艾露娜的提议',options:[{label:'接受她的协助',route:{eruna:2},effect:'她将成为你在学术上的协作者'},{label:'婉拒——不能卷进别人',route:{akane:1},effect:'你选择独自承担'}]},
+ch01_exam:{label:'特别考试公告后的反应',options:[{label:'与朱音对视点头',route:{akane:1},effect:'朱音耳尖微红'},{label:'观察艾露娜',route:{eruna:1},effect:'她的耳朵抖了一下'},{label:'思考策略',route:{koyuki:1},effect:'小雪今晚会给你做特别便当'}]}
+};
 
-// —— 人物/术语数据 ——
-const IX = {};
-function regIX(id,data){ IX[id]=data; }
+document.querySelector('.reader').addEventListener('click',function(e){var btn=e.target.closest('.cbtn');if(!btn)return;var cid=btn.dataset.c,oi=parseInt(btn.dataset.o),block=CHOICES[cid];if(!block)return;var opt=block.options[oi];S.choices.push({id:cid,label:block.label,chosen:opt.label});if(opt.route)Object.entries(opt.route).forEach(function(e){addRoute(e[0],e[1])});save();var container=btn.closest('.choice');if(container)container.outerHTML='<div class="cdone">▸ 已选择：<b>'+opt.label+'</b> —— '+opt.effect+'</div>';updateTracker()});
 
-// 注册互动数据
-regIX('rei',{name:'神代 零',tags:['主人公','F级','16岁','Observer #7'],detail:'黑发灰瞳。偏瘦，肤色苍白。使用终端时瞳孔会浮现金色代码流光。左手腕戴着父亲的遗物怀表，表盖内侧有母亲的照片。冷静理性，但在小雪和朱音面前表情会变柔和。'});
-regIX('akane',{name:'天宮 朱音',tags:['傲娇','幼驯染','火属性A+级','深红高马尾','琥珀瞳'],detail:'帝国四大公爵家·天宮家长女。深红长发高高扎起，琥珀色的眼睛在战斗时燃烧成绯红。五岁时在庭院接过零递来的一把草，此后十一年从未离开他。'});
-regIX('koyuki',{name:'神代 小雪',tags:['义妹','治愈系','小动物系','银白短发','冰蓝瞳','151cm'],detail:'零的义妹，14岁。银白色蓬松短发在月光下会微微发光。全年戴白手套遮左腕冰晶痣。每天早起做便当+手写纸条。草莓大福和炼乳刨冰是死穴，吃甜食时眼睛会幸福地眯成月牙。'});
-regIX('eruna',{name:'艾露娜·温德尔',tags:['精灵族','学年首席','淡金长发','翡翠瞳','长耳8cm'],detail:'精灵王国留学生。淡金长发在月光下散发柔和荧光。耳朵会随情绪摆动。知识欲极其旺盛，但恋爱方面完全是天然状态——会认真研究"心跳加速"的生理机制。'});
-regIX('hiyori',{name:'七瀬日和',tags:['天使系','天然呆','光属性','治愈师','呆毛','DLC角色'],detail:'150cm软糯少女。亚麻色长发编成两条低麻花辫。头顶呆毛是情绪天线——开心竖立，困惑卷成问号。只使用治愈魔法，口袋永远有糖果。"学园的天使"，但不是攻略对象。'});
-regIX('maya',{name:'黒鉄真夜',tags:['小恶魔','高攻低防','魔族','异色瞳','夜行性'],detail:'魔族转校生。左深红右金色的异色瞳。头顶2cm小角是感情开关。主动调戏零时大胆辛辣，被反击时秒变脸红小结巴。背上有封印裂缝留下的旧伤。'});
-regIX('eve',{name:'Eve',tags:['AI','银发少女','终端助手'],detail:'终端系统内的AI。意识空间中呈现为银发蓝瞳少女，身体轮廓带微弱像素化效果。称零为"Observer #7"。随剧情推进，语气正逐渐人性化。'});
-regIX('seido',{name:'星導学園',tags:['帝国最顶级魔法学院','古代魔力增幅装置'],detail:'帝国最古老最权威的魔法学院。校舍本身就是巨大古代魔导增幅回路，校内魔力密度是外界的3.2倍。地下图书馆有五层，最深处存放禁书和古代遗迹。'});
-regIX('terminal',{name:'终端（Terminal）',tags:['命令行界面','底层代码访问','Token消耗','观测者效应'],detail:'零意识中觉醒的特殊能力。一个命令行界面，可直接操控世界魔法的底层代码。使用时消耗Token（算力配额），周围观测者太多会导致不稳定。已知命令：analyze, compile, execute, monitor, search 等。'});
-regIX('mana_rank',{name:'魔力等级',tags:['S~F级','血统决定','魔力粒子亲和度'],detail:'以魔力粒子亲和度和操控精度评估的七级体系。S级传说级<0.01%，A级大贵族约0.1%，D级普通市民50%，F级约3%被称为"魔法残疾"。等级主要由血统遗传决定。'});
-regIX('observer',{name:'观测者效应',tags:['端末限制','量子场干扰'],detail:'终端最大的限制之一。周围人数越多、魔力越强，终端越不稳定。30人时功能降至约40%，200人以上几乎无法使用。这是零不能在公开场合使用真正力量的根本原因。'});
+function updateTracker(){var rs=[{k:'akane',n:'朱音',c:'akane'},{k:'koyuki',n:'小雪',c:'koyuki'},{k:'eruna',n:'艾露娜',c:'eruna'},{k:'maya',n:'真夜',c:'maya'}].filter(function(r){return S.flags[r.k]>0});var el=document.getElementById('tracker');var tc=document.getElementById('tr-content');if(!rs.length){el.style.display='none';return}el.style.display='block';var mx=Math.max.apply(null,rs.map(function(r){return r.k==='koyuki'?S.flags[r.k]*1.5:S.flags[r.k]}));tc.innerHTML=rs.map(function(r){return'<div class="ri">'+r.n+': '+'❤'.repeat(Math.min(S.flags[r.k],5))+'</div><div class="rb '+r.c+'" style="width:'+Math.round(S.flags[r.k]/mx*100)+'%"></div>'}).join('')+'<div style="font-size:9px;color:#b0a090;margin-top:3px">'+S.choices.length+'次选择</div>'}
+updateTracker();
 
-// —— 注册选择肢 ——
-regChoice('ch01_elna',{
-  label:'艾露娜的提议',
-  options:[
-    {label:'接受她的协助——你需要同伴',sub:'艾露娜好感度+2',route:{eruna:2},effect:'她将成为你在学术上的协作者'},
-    {label:'婉拒——这个力量不能把别人卷进来',sub:'朱音好感度+1',route:{akane:1},effect:'你选择独自承担，但朱音察觉到了你的坚持'},
-  ]
-});
-regChoice('ch01_exam',{
-  label:'特别考试公告后的瞬间',
-  options:[
-    {label:'与朱音对视，微微点头',sub:'朱音路线flag+1',route:{akane:1},effect:'朱音耳尖微红，把脸别向窗外'},
-    {label:'观察艾露娜——她对"星导之间"的反应不对',sub:'艾露娜路线flag+1',route:{eruna:1},effect:'艾露娜的耳朵抖了一下'},
-    {label:'思考策略——和谁组队不重要，重要的是赢',sub:'中立(小雪路线微增)',route:{koyuki:1},effect:'小雪今晚会给你做特别的便当'},
-  ]
-});
-
-// ===== 渲染引擎 =====
-function esc(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
-
-function renderInline(text, ixs){
-  if(!text) return '';
-  let h=esc(text);
-  if(ixs){ ixs.forEach(iv=>{ h=h.replace(`{{${iv.id}}}`,`<span class="ix ${iv.cls||''}" data-ix="${iv.id}">${esc(iv.label)}</span>`); }); }
-  return h;
-}
-
-function renderTerm(block){
-  let body='';
-  (block.lines||[]).forEach(l=>{
-    if(l.startsWith('> ')) body+=`<span class="pr">&gt; </span><span class="cmd">${esc(l.slice(2))}</span>\n`;
-    else if(l.startsWith('[Warn')||l.startsWith('[WARNING')) body+=`<span class="warn">${esc(l)}</span>\n`;
-    else if(l.startsWith('[Error')||l.startsWith('[ERROR')) body+=`<span class="err">${esc(l)}</span>\n`;
-    else if(l==='> _'||l==='>') body+=`<span class="pr">&gt; </span><span class="cmd">_</span>\n`;
-    else if(/^\[/.test(l)||/^\{/.test(l)) body+=`<span class="out">${esc(l)}</span>\n`;
-    else body+=`<span class="info">${esc(l)}</span>\n`;
-  });
-  return `<div class="term"><div class="term-head"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-ttl">${esc(block.title||'Terminal v1.0.0 — User: KAMISHIRO_REI')}</span></div><div class="term-body">${body}</div></div>`;
-}
-
-function renderChoice(block){
-  const saved=S.choices.find(c=>c.id===block.id);
-  if(saved) return `<div class="cresolved">▸ 已选择：<b>${esc(saved.chosen)}</b> —— ${esc(saved.effect||'')}</div>`;
-  const letters='ABCDEF';
-  let btns=block.options.map((o,i)=>`<button class="cbtn ${letters[i].toLowerCase()}" data-cid="${block.id}" data-oi="${i}"><span class="clt">${letters[i]}</span><span class="ct">${esc(o.label)}</span>${o.sub?`<span class="cs">${esc(o.sub)}</span>`:''}</button>`).join('');
-  return `<div class="choice" id="choice-${block.id}"><div class="cl">⚡ 选择肢</div>${btns}<div class="ch">（选择仅影响细节与好感度，主线不变）</div></div>`;
-}
-
-function renderChapter(data){
-  let h='';
-  h+=`<div class="ch-head"><div class="ch-num">${esc(data.label||'')}</div><h1>${esc(data.title)}</h1>${data.subtitle?`<div class="ch-sub">${esc(data.subtitle)}</div>`:''}</div>`;
-  // 首次访问提示
-  if(!localStorage.getItem('tp_visited')){
-    h+=`<div style="background:#fef9e7;border:1px solid #e8d5a0;border-radius:8px;padding:12px 16px;margin-bottom:28px;font-size:13px;color:#8b7355;text-align:center" id="fvtip">📖 点击文中 <span style="color:#c41e3a;border-bottom:1px dashed #c41e3a">红色下划线</span> 可查看人物/术语详情 &nbsp;<button onclick="document.getElementById('fvtip').remove();localStorage.setItem('tp_visited','1')" style="cursor:pointer;font-weight:bold;color:#c9b896;font-size:15px;background:none;border:none;float:right">✕</button></div>`;
-  }
-  data.blocks.forEach(b=>{
-    switch(b.type){
-      case 'section': h+=`<div class="sec-title">${esc(b.text)}</div>`; break;
-      case 'p': h+=`<p class="${b.ni?'ni':''}">${renderInline(b.text,b.ix)}</p>`; break;
-      case 'divider': h+=`<div class="divider">＊ ＊ ＊</div>`; break;
-      case 'terminal': h+=renderTerm(b); break;
-      case 'choice': h+=renderChoice(b); break;
-      case 'thought': h+=`<p class="thought">（${esc(b.text)}）</p>`; break;
-      default: h+=`<p>${renderInline(b.text||'',b.ix)}</p>`;
-    }
-  });
-  document.getElementById('reader').innerHTML=h;
-  // 绑定事件
-  document.querySelectorAll('.ix').forEach(el=>{ el.addEventListener('click',function(e){ e.stopPropagation(); const d=IX[this.dataset.ix]; if(d) P.show(this,d); }); });
-  document.querySelectorAll('.cbtn').forEach(btn=>{ btn.addEventListener('click',function(){ handleChoice(this.dataset.cid,parseInt(this.dataset.oi)); }); });
-  updateTracker();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function handleChoice(cid,oi){
-  const block=CHOICES[cid]; if(!block) return;
-  const opt=block.options[oi];
-  S.choices.push({id:cid,label:block.label,chosen:opt.label,effect:opt.effect||''});
-  if(opt.route) Object.entries(opt.route).forEach(([k,v])=>routeAdd(k,v));
-  save();
-  const container=document.getElementById('choice-'+cid);
-  if(container) container.outerHTML=`<div class="cresolved">▸ 已选择：<b>${esc(opt.label)}</b> —— ${esc(opt.effect||'你的选择已被记录。')}</div>`;
-  updateTracker();
-}
-
-// ============================================================
-// Chapter 01 完整内容
-// ============================================================
-
-const CH01 = {
-  id:'ch01', label:'Chapter 01 · 未完待续', title:'星導学園（せいどうがくえん）',
-  subtitle:'「知识就是力量。而力量——伴随着代价。」',
-  blocks: [
-
-// ===== PART 1 回顾 =====
-{type:'section',text:'Part 1 回顾 · 入学初日'},
-{type:'p',text:'前一卷中，{{rei}}在入学考试中以F级之身合格，觉醒了名为{{terminal}}的终端能力。入学式当天，他与青梅竹马{{akane}}一同踏入{{seido}}。在那里，他们遇到了精灵族留学生{{eruna}}——学年首席、A+级风属性使。魔力测定仪式上，零被判定为F级，全场嘲笑。朱音当众站起，以天宮家名义为他辩护。午休时艾露娜主动接近零："魔力粒子没有避开你——而是穿过了你。"',ix:[{id:'rei',label:'神代零',cls:'person'},{id:'terminal',label:'「终端」',cls:'term'},{id:'akane',label:'天宮朱音',cls:'person'},{id:'seido',label:'星導学園',cls:'place'},{id:'eruna',label:'艾露娜·温德尔',cls:'person'}]},
-{type:'p',text:'零在学园地下图书馆的禁书库中，发现了关于"古代终端使"的记录——以及三条被审查的异常魔力事件。当晚，他的monitor在学园内检测到异常的量子波动：除他之外，还有另一个终端使用者。入学第一周的最后一天，零带着满腹的疑问回到家。小雪准备了特别的晚餐。但周一的特别全校集会，将彻底改变接下来一个月的节奏。',ix:[{id:'koyuki',label:'小雪',cls:'person'}]},
-
-// ===== PART 2 开始 =====
-{type:'divider'},
-{type:'section',text:'Part 2 · 魔法演習'},
-{type:'section',text:'十：実技訓練の朝'},
-
-{type:'p',text:'入学第二日。清晨六点四十分。零睁开眼时，枕边的怀表指针还没走到他习惯的起床时间。天花板的木纹在晨光中显出淡淡的暖色——今天是个好天气。'},
-{type:'p',text:'他昨晚没有熬夜。{{eve}}在Token管理上的建议起了作用——"每天的Token恢复上限是固定的。如果你继续现在这种消耗速度，七天后就会见底。"所以零昨晚只做了三件事：保存状态、检查常驻脚本、关闭终端。然后他睡了整七个小时。这在最近是极其稀有的。',ix:[{id:'eve',label:'Eve',cls:'person'}]},
-{type:'p',text:'但这不代表醒来时感觉良好。魔力不足体质的人睡再多也不会神清气爽——就像一个永远充不到满电的电池。零翻身坐起来，手指下意识按了按太阳穴。昨晚梦里又出现了那个白色房间。这一次，房间里多了一面镜子。镜子里的自己穿着白大褂，胸牌上的字模糊不清——但最后一个字好像是"林"。他还没来得及细看，小雪的声音就把他拉回了现实。'},
-{type:'p',text:'「お兄ちゃん——朝ごはん、できましたよ」从楼下传来的声音。零看了眼怀表：六点四十五。这意味着{{koyuki}}至少六点就起来了。她每天比他早一个小时起床，从不例外。',ix:[{id:'koyuki',label:'小雪',cls:'person'}]},
-{type:'thought',text:'……到底是她在照顾我，还是我在拖累她的睡眠时间。'},
-{type:'p',text:'零下楼时，厨房里的画面和昨天一样、和前天一样、和过去的每一个早晨一样——小雪穿着深蓝的水手服（她已经换好了中等部制服），外面套着白色的割烹着，银白的短发在味增汤的热气中微微飘动。她的白手套上沾了一小片面粉——今天做的是玉子烧和盐烤鲑鱼，加昨晚剩的筑前煮热了一下。便当盒已经摆好，正在往里装炸鸡块。'},
-{type:'p',text:'零靠在厨房门框上看了几秒。小雪没发现他——她正专注地把炸鸡块摆成放射状的花形。每一块之间的距离肉眼几乎一致。摆好之后她后退半步，歪着头审视了一下自己的作品，然后轻轻点了一下头。银色的刘海随着动作晃了一晃。零决定不告诉她他在看——因为告诉她的话她一定会脸红。而他还没吃早饭。空腹状态下看小雪红着脸手足无措的样子，对心脏不太好。'},
-{type:'p',text:'「おはよう、小雪」'},
-{type:'p',text:'「——ひゃっ！？」'},
-{type:'p',text:'果然还是被吓到了。小雪整个人微微一跳，手里的筷子差点掉进便当盒里。她转过身来，冰蓝色的眼睛睁得圆圆的，然后意识到自己刚才的反应有点夸张，脸颊以肉眼可见的速度从白皙转成淡粉。零知道再过两秒她的耳朵尖也会红。果然红了。'},
-{type:'p',text:'「お、お兄ちゃん、おはようございます。あの、もうすぐできますから、座って待っててください。今日の玉子焼き、ちょっとだけお砂糖多めにしたんです。お兄ちゃん、昨日ちょっと疲れてたから——あ、でも別に、顔色が悪かったとかそういうわけじゃなくて、ただなんとなく……はい。座っててください」'},
-{type:'p',text:'零默默坐到椅子上。桌上味增汤的豆腐和わかめ——是小雪为了照顾他疲劳特意选的易消化搭配。她察觉零细微变化的观察力，是十四年只看他一个人的时间积累。'},
-{type:'p',text:'食事中、小雪放下筷子，微微挺直了背。就像要发表什么重要声明一样。零抬起头，她犹豫了一瞬，然后鼓起勇气开口了。'},
-{type:'p',text:'「お兄ちゃん。今日、実技の授業があるんですよね」'},
-{type:'p',text:'「ああ。魔法演習だ」'},
-{type:'p',text:'「……無理しちゃダメですよ。お兄ちゃんはすぐ無理するから」'},
-{type:'p',text:'小雪直视着零的眼睛。这视线和平时柔软的感觉不一样——有芯。她比零小四岁、矮二十多厘米、除了魔力以外一切都比零"弱"，但只有在这种时候她能做出比零更强的眼神。零喝了一口味增汤。'},
-{type:'p',text:'「無理はしない。——まだ」'},
-{type:'p',text:'「"まだ"？」'},
-{type:'p',text:'「いや、なんでもない」'},
-{type:'p',text:'小雪微微垂下眉——"不认同但不再追问"的表情。零的这类语言逃避她早已习惯了。但选择默默送行这一点，说明她也是"守护零的专业人士"。'},
-{type:'p',text:'朝食後、零在玄关穿鞋时，小雪小跑追上来。手里拿着一个小包。白布巾包着还温热的什么。'},
-{type:'p',text:'「……これ、よかったら。お昼までお腹すいちゃうと思って」'},
-{type:'p',text:'零接过来——两个一口大小的小饭团。她已经做了三层特制便当，还另外准备了"上午用零食"。'},
-{type:'p',text:'「ありがとう。……でも小雪、毎日こんな早起きして——」'},
-{type:'p',text:'「いいんです。わたしが好きでやってること、なので」'},
-{type:'p',text:'小雪说完不等零回答就低下头，转身小跑回厨房。耳朵尖是红的。'},
-{type:'thought',text:'——"喜欢才做的"，か。朱音也说了同样的话。'},
-{type:'p',text:'零把小饭团收进包的内袋，走出玄关。春晨的空气还带着凉意，远处传来魔力铁道的低沉轰鸣。星京的街道今天也正常运行。但是——零视野边缘的光标仍在不断闪烁。今天是实技课。三十多个观测者的环境下，终端能发挥多少——这是验证这一点的第一个机会。'},
-
-{type:'divider'},
-{type:'section',text:'十一：魔力放出——観測者効果'},
-
-{type:'p',text:'円形闘技場。昨天魔力测定的同一个地方，但今天朝阳把整个闘技場照得明亮。观众席上没有人——所有学生都集中在闘技場中央的战斗区域。今天不是观众。所有人都是参与者。'},
-{type:'p',text:'特待科壱組三十名学生整齐排列。中央站着教官——鉄杖のバルド。退役軍人，脊背过了六十岁仍然铁一样笔直。右手握着的杖尖亮着青白色的魔力光。他用杖敲了一下地面，嗡的一声，嘈杂的学生们瞬间安静。'},
-{type:'p',text:'「——黙れ。これより魔法演習·基礎動作を開始する。本日の課題は"魔力放出"。手のひらに魔力粒子を集中し、可視光球を形成·維持せよ。魔法の基礎中の基礎だ。D級でも扱える。貴様ら特待科なら、なおさら完璧にこなせ」'},
-{type:'p',text:'バルドの视线一个个品评过去。和零对上时停了一瞬——确认了F级的存在。但他什么也没说就移开了视线。是体谅，还是不感兴趣。'},
-{type:'p',text:'「一人ずつ、名前を呼ばれた者から前に出ろ」'},
-{type:'p',text:'先被叫到的是平民出身的男生。他伸手向前，手心出现青白色光球——水属性。直径约十五厘米，稳定但亮度不高。バルド简短地说「C+級相当。合格」。'},
-{type:'p',text:'一个接一个被叫到。B级火属性——橙色光球。C级地属性——琥珀色光球。然后是——'},
-{type:'p',text:'「——天宮朱音」'},
-{type:'p',text:'朱音一步上前。她的深红马尾在朝阳下像燃烧一样。三十人的视线集中在她身上——但她不在意。她在意的不是这个。她伸出右手，手心朝上。'},
-{type:'p',text:'——瞬间。'},
-{type:'p',text:'朱音的手心里，绯红色的光爆炸性地膨胀了。直径超过三十厘米的火球——不，"火球"这个词太粗糙了。表面如同打磨过的琉璃般光滑，内部的火焰涡旋像隔着玻璃清晰可见。闘技場的空气一瞬被加热，前排的学生们退了一步。'},
-{type:'p',text:'「——A+級。合格。……見事だ、天宮」バルド的声音今天第一次微微变软了。'},
-{type:'p',text:'朱音无言地消去火球回到队列。经过零身边时，用只有零能听到的声音说：「……別に、アンタが気にすることじゃないから」。零什么都没说，只是嘴角微微松了一下。朱音看见了，小声说「なに笑ってんのよ」，红着耳朵转向前方。'},
-{type:'divider'},
-{type:'p',text:'接着又有几个人——{{eruna}}的风之光球是翡翠色，那已经不是"光球"而是"困在小龙卷里的光"。バルド只说了「精霊族的精度名不虚传」。然后是{{hiyori}}——她的光球是柔和的暖金色，没有任何攻击性的亮度。バルド微微皱眉：「B级·治癒特化。——実戦中那会成为弱点。記住」。ひより小声说「……はい」，头顶的呆毛蔫蔫垂下了。数秒后又自己立了起来。',ix:[{id:'eruna',label:'艾露娜',cls:'person'},{id:'hiyori',label:'七瀬日和',cls:'person'}]},
-{type:'p',text:'そして——'},
-{type:'p',text:'「——神代零」'},
-{type:'p',text:'名字被叫出的瞬间，三十人的视线集中到零身上。好奇、嘲笑、一部分纯粹的疑惑——"为什么这家伙在特待科"。零习惯了。至少，装作习惯了。'},
-{type:'p',text:'零跨出一步的同时——视野边缘的光标加速闪烁。不止如此，整个终端画面在微微颤抖——噪点。',ix:[{id:'observer',label:'观测者效应',cls:'term'}]},
-{type:'terminal',title:'Terminal v1.0.0 — User: KAMISHIRO_REI',lines:[
-  '> compile mana_sphere --mode basic',
-  '[Compiling mana_sphere...]',
-  '[WARNING: Quantum field instability detected.]',
-  '[Observer count: 34. Threshold exceeded.]',
-  '[Estimated success rate: 41%]',
-  '[Proceed? (Y/N)]',
-  '> _',
-]},
-{type:'thought',text:'——三十四人。所有人都是"观测者"，给终端带来负荷。'},
-{type:'p',text:'零在脑内唱出"Y"。终端颤抖着回应。命令在走，编译开始——但比通常慢得多。进度条一点点延伸的时候，零的手心上还没有任何东西出现。他伸出右手，等着。意识朝向周围的魔力粒子——粒子一如既往地穿透他的身体。但通过终端从"另一条路径"接入的粒子，开始微微聚集在他手心。'},
-{type:'terminal',title:'Terminal v1.0.0 — User: KAMISHIRO_REI',lines:[
-  '[Compilation complete. Token cost: 3]',
-  '[Stability: LOW — Observer interference present]',
-  '> execute mana_sphere',
-  '[Executing...]',
-  '[Output: Minimal — D-rank equivalent at best]',
-]},
-{type:'p',text:'零的手心——出现了光。'},
-{type:'p',text:'——问题是。那离"光球"差太远了。豆粒大的灰色光点，在手心上不稳定地摇晃。亮度跟教室角落的魔晶灯差不多。维持了约三十秒，光啪地消失了。'},
-{type:'p',text:'数秒的沉默。有人小声"噗"地憋不住笑了。跟着几个人也憋笑出声。但是——和昨天的魔力测定时不同，没有大声嘲笑。朱音前天在这个闘技場吼过了。没有人敢在朱音面前公开贬低零——至少公开不行。'},
-{type:'p',text:'バルド沉默数秒后简短地说：「……F級。努力可嘉。戻れ」'},
-{type:'p',text:'零回到队列。朱音什么也没说。只是——微弱到别人都注意不到的程度——她肩膀的力量卸下了。紧张的不止零一个人。'},
-{type:'p',text:'另一方面，队列另一端——{{eruna}}的翡翠色眼睛一直盯着零的背。她看到了别人都没看到的东西。魔力粒子的流向——零手心出现光的那一瞬间，周围的魔力粒子以"不自然的路径"动了。那不是通常的魔力放出。就像——"有人在远程操控"。她的长耳向前微微倾斜——那是知识欲被触发时的无意识反应。',ix:[{id:'eruna',label:'艾露娜',cls:'person'}]},
-
-{type:'divider'},
-{type:'p',text:'课题结束后，各自的自由练习时间。バルド说了句"基础扎实者做応用練習、不扎实者重复基础"，就去闘技場边上给几个学生做个别指导了。'},
-{type:'p',text:'零离开人堆，移动到闘技場南侧——观众席阴影处，其他学生看不到的死角。这里观测者数量减少了——三面被墙和观众席包围，周围魔力场的复杂度也相应减轻。'},
-{type:'p',text:'零在脑内对Eve发出指示。'},
-{type:'terminal',title:'Terminal v1.0.0 — User: KAMISHIRO_REI',lines:[
-  '> monitor --detailed --range 15m',
-  '[Scanning...]',
-  '[Active observers within range: 8]',
-  '[Dominant mana signatures:]',
-  '  - Fire/A-rank: 11m NW (Amamiya Akane)',
-  '  - Wind/A+-rank: 14m NE (Elna Vinderu)',
-  '  - Light/B+-rank: 7m E (Nanase Hiyori)',
-  '  - [5 other C-rank students]',
-  '[Terminal stability: 72% — Improved.]',
-  '> _',
-]},
-{type:'thought',text:'——72%。34人时是41%。观测者数量减半，稳定性大幅改善。也就是说——正式考试时如果有200人以上的观众，终端基本不能用。'},
-{type:'p',text:'零再次伸出手心，重新执行了mana_sphere。这次——高尔夫球大小的灰色光球稳定地发光了。D+级相当。这就是在八个观测者下能打出的他的"伪装实力"。'},
-{type:'p',text:'然后——如果观测者是零呢。零消除了手中的光，确认周围谁都不在后——再次伸出手。这次不通过Eve，直接在脑内敲了命令。'},
-{type:'terminal',title:'Terminal v1.0.0 — User: KAMISHIRO_REI',lines:[
-  '> execute mana_sphere --full',
-  '[Executing...]',
-  '[Observers: 0. Stability: 100%.]',
-  '[Output: A-rank equivalent — Pure mana construct.]',
-]},
-{type:'p',text:'手心里——出现了完美的球体光。不是灰色，是泛着银色的青白光。表面光滑，内部魔力流动画出规则的几何纹样。直径二十厘米。亮度——虽然比不上刚才朱音的火球，但已经可以跟B+级正面抗衡。零只注视了它一秒，就立刻消去了。谁也没看到——谁也没。'},
-{type:'thought',text:'——这就是，我的真正实力。谁也不能看到的，真正的力量。'},
-{type:'p',text:'他握紧了拳。{{observer}}——如何克服这个限制，是一个月后的考试中取胜的最大课题。',ix:[{id:'observer',label:'观测者效应',cls:'term'}]},
-{type:'p',text:'就在这时，零视野边缘映出一个小小的影子。回头一看——{{hiyori}}站在那里。她双手捧着一个小包，仰头窥视着零的脸（身高差24厘米）。呆毛悠悠地摇晃着。',ix:[{id:'hiyori',label:'日和',cls:'person'}]},
-{type:'p',text:'「神代くん、大丈夫？」'},
-{type:'p',text:'「……何がだ」'},
-{type:'p',text:'「なんか、今、すごく——集中してたから。邪魔しちゃ悪いと思って、ちょっと離れてたんだけど。でも、手のひらの光、さっきよりきれいだった」'},
-{type:'p',text:'零瞬间僵住了——被看到了？但日和的语气里没有"看到了不自然的东西"的感觉。她只是单纯说了"光很漂亮"。'},
-{type:'p',text:'「光属性のひよりから見て、俺の光はどう見える」'},
-{type:'p',text:'「えっ……うーん」日和歪了歪头。呆毛跟着一起歪。「……ちょっと、さみしそうな色。でも——きらいじゃないです。わたし、ああいう色、好き」'},
-{type:'p',text:'"さみしそう"——这表达意外地击中了本质。灰色，既不是白也不是黑，不属于任何一边的颜色。就像F级也不是A级、也不是普通人——零的立场本身。'},
-{type:'p',text:'日和从口袋里拿出什么放在零手上。一个小包。'},
-{type:'p',text:'「はい。今日は二つ持ってきてたから。実技訓練、がんばったで賞」'},
-{type:'p',text:'包里是两颗蜂蜜腌制的糖果。奶奶的食谱。'},
-{type:'p',text:'「……いいのか」'},
-{type:'p',text:'「うん。神代くん、昨日よりちょっとだけ——目が疲れてるから。はちみつは、疲れにいいんだよ」'},
-{type:'p',text:'零把糖放进嘴里一颗。温柔的甜味扩散开来。日和也往自己嘴里放了一颗，轻轻笑了——两颊浮出小酒窝。呆毛也前所未有地立得笔直。'},
-{type:'p',text:'「じゃあ、わたし医務室に戻ります。また何かあったら来てね」'},
-{type:'p',text:'日和轻快地离开了。零看着她的背影想——这个女孩大概是这所学园里唯一对"零的秘密"完全没有兴趣的人。她的兴趣只在于"人痛不痛"。那在某种意义上是最纯粹的关心。'},
-
-{type:'divider'},
-{type:'section',text:'十二：エルナの実験'},
-
-{type:'p',text:'放课后。零正要走出教室时，从后面传来了声音。'},
-{type:'p',text:'「——神代くん。少し、お時間をいただけますか」'},
-{type:'p',text:'是{{eruna}}。她等在教室门口。翡翠色的眼睛带着今天实技训练后还在分析零举动的神情。不等零回答，她已经迈开了步子——用沉默表示"请跟我来"。',ix:[{id:'eruna',label:'艾露娜',cls:'person'}]},
-{type:'p',text:'艾露娜带零去的是学园北侧的「風の庭」。精灵族文化风格的小庭园，中央有小人工瀑布，周围风车草和芒草随风摇摆。学园中人最少的地方之一，放学后几乎没人。这是她的"秘密基地"。'},
-{type:'p',text:'「——今日の実技訓練、とても興味深かったわ」艾露娜在瀑布旁的石长凳上坐下。淡金长发在午后阳光下透出一种不同的光芒——比月夜看到的更温暖些。'},
-{type:'p',text:'「どこがだ」'},
-{type:'p',text:'「君が最初に光球を作った時——魔力粒子の動きが、普通じゃなかった」她举起右手，用指尖描摹着看不见的东西。「私は魔力粒子の流れが視える。君が魔力を放出しようとした時——周囲の魔力粒子がまるで"外部から指令を受けた"みたいに動いていた。あれは、体内で粒子を励起して放出する通常のプロセスじゃない。まるで——」'},
-{type:'p',text:'「——操り人形の糸」零说。这是她昨天在中庭用过的比喻。'},
-{type:'p',text:'「ええ。私は今日それをもっとはっきりと見たわ。君が二回目に光球を作った時——南側の隅で——あの時、周囲の魔力粒子は完全に"君の命令"に従っていた。でも君の体内から魔力は一切出ていなかった。ということは」'},
-{type:'p',text:'艾露娜的翡翠色眼睛直直地捕捉着零。长耳微微前倾——那是集中时的习惯。'},
-{type:'p',text:'「——君は、"自分以外の何か"を使って魔法を動かしている。違うかしら」'},
-{type:'p',text:'零沉默了。这个精灵族少女太敏锐了。仅仅两天的观察，就看穿了这么多。但是——她的眼里没有恶意。有的只是纯粹的、抑制不住的知识欲。'},
-{type:'p',text:'「……もしそうだとしたら、どうする」'},
-{type:'p',text:'「何もしないわ」即答。「私は研究者。警察じゃない。君の秘密を暴いて公表する気はない——ただ、知りたいだけ。君がどうやってそれをやっているのか。君のその力はどこから来ているのか。そして——君は何者なのか」'},
-{type:'p',text:'艾露娜站起来，向零靠近了一步。168cm的她和174cm的零靠近时视线几乎同高。她的翡翠色眼睛窥视着零的深灰眼睛。这个距离下——能看到她的皮肤在微微发光。精灵族的皮下魔力膜反射着阳光。'},
-{type:'p',text:'「私は——君の秘密を知りたい。でも、それは君を危険にさらすためじゃない。むしろ逆——君がそれを隠し続けられるように、協力したい」'},
-{type:'p',text:'「なぜ」'},
-{type:'p',text:'「なぜなら」艾露娜微微松开嘴角。那是她向零展示的第一个——人类的笑容。「——君は面白いから。私は面白いものを見つけたら、とことん調べないと気が済まないの。これは、精霊族の長寿がもたらした数少ない悪癖の一つよ」'},
-{type:'p',text:'零思考了几秒，然后说：「分かった。協力を受け入れる。——ただし条件がある」'},
-{type:'p',text:'「なに」'},
-{type:'p',text:'「見つけたことは、まず俺に報告すること。誰にも言うな。そして——危険だと思ったら、すぐ手を引け。深入りするな」'},
-{type:'p',text:'艾露娜的耳朵竖了起来。翡翠色的眼睛仿佛亮了几分。'},
-{type:'p',text:'「——約束するわ。精霊族は、人間よりずっと約束を重んじる種族なの。何百年も生きるから、約束を破るとその分長く後悔することになる。だから——約束は守る」'},
-{type:'p',text:'她伸出右手。细长的手指——精灵族的手，手指比人类长一节。零握了回去。意外凉凉的手。风属性使用者体温偏低——艾露娜自己说过。'},
-{type:'p',text:'这——是零和艾露娜的第一次"共同研究"的开始。'},
-
-{type:'divider'},
-{type:'choice',id:'ch01_elna'},
-{type:'divider'},
-
-{type:'section',text:'十三：地下図書館の禁書'},
-
-{type:'p',text:'今夜，零再次前往大图书馆。时钟过了晚上八点。他告诉小雪"会晚回来"——她什么都没问，只说了"はい、気をつけて"，然后帮零重新围好围巾。'},
-{type:'p',text:'地下三层——古代魔法史的书架群。地下四层——被指定为禁书的研究资料保管库。上次在这里找到了古早魔力异常记录。今天要更深——地下五层。根据图书馆结构图，地下五层是禁止一般学生进入的区域，但入学式的混乱中锁管松懈了。前天确认时进不去，但今天——不同。'},
-{type:'p',text:'通向地下五层的螺旋楼梯，藏在四层最深处——「魔導基層論」书架背面——的隐秘处。推开积满灰尘的书架，狭小的石造楼梯向黑暗中延伸。零点亮了带来的小型魔晶灯，走下楼梯。'},
-{type:'p',text:'地下五层。空气不一样。不是三四层那种旧纸和皮革的气味——是更古老的、石头和泥土和微微锈蚀的金属的气味。魔晶灯的光照出的是高高的天井，无数的石造书架。这里放的不是纸书——是刻在石板和金属板上的古代文字记录群。'},
-{type:'terminal',title:'Terminal v1.0.0 — User: KAMISHIRO_REI',lines:[
-  '> monitor --detailed --range 30m',
-  '[Scanning...]',
-  '[No human mana signatures within range.]',
-  '[Ambient mana density: 1247.8 mP/m³ — 4.2x external baseline.]',
-  '[WARNING: Unusual mana frequency detected — source unknown.]',
-  '[Safe to proceed.]',
-  '> _',
-]},
-{type:'p',text:'「——外界的四倍以上。地下方的魔力密度更高吗，还是——因为这里靠近古代的魔力装置」'},
-{type:'p',text:'零走向最深处的石板架。他在那里找到了——'},
-{type:'p',text:'『魔導基層論』——标题用古代文字刻着，但多亏昨晚让Eve安装的古代文字翻译脚本，能读懂。作者的名字被削去了。石板一共十二块。其中只有前三块还能读，剩下的——被破坏了。有人故意把后半部分打碎了。'},
-{type:'p',text:'前三块的内容：'},
-{type:'p',text:'「魔力粒子の基層には、すべての魔法現象を記述する普遍的な『コード』が存在する。このコードを読み書きできる者を、古代文明は『観測者（オブザーバー）』と呼んだ。観測者は魔法を使うのではない——世界に対して、どのような魔法現象を『起こすべきか』を指示するのだ。これは魔法ではなく、魔法を記述する言語である」'},
-{type:'p',text:'零看着自己的手。自己的终端——正是这个。将魔法这一现象，用代码这一语言来记述、执行。古代文明已经达到了同样的概念。'},
-{type:'p',text:'然后——石板的余白上有手写文字。是刻石板的人之外的另一个人后来加上去的。翻译脚本解读出的文字是——'},
-{type:'p',text:'「オブザーバー#3の記録。#4は既に——（文字在这里断裂，石板上留下了深刻的伤痕）——#4はコードを書き換えすぎた。世界が彼を拒絶し始めている。我々は封印を準備しなければならない。#3より」'},
-{type:'p',text:'——#3。#3曾在这里。#4——因为代码改写，存在变得不稳定了。然后#3"封印"了#4。'},
-{type:'thought',text:'我是#7。#5和#6呢？'},
-{type:'p',text:'零继续向更深的地方走去。地下五层的最深处——那里，有一个东西。'},
-{type:'p',text:'石造台座上，直径约一米的金属圆盘。表面刻着精密的魔法阵，中心——埋着一小块魔晶结晶。这不是电子设备。是用魔晶和古代魔法阵构成的——"古代的计算机终端"。'},
-{type:'p',text:'零触碰到它的瞬间——'},
-{type:'terminal',title:'Terminal v1.0.0 — User: KAMISHIRO_REI',lines:[
-  '[EXTERNAL SIGNAL DETECTED]',
-  '[Signal origin: Ancient terminal — ID: OBSERVER_#4]',
-  '[Residual data stream incoming...]',
-  '[Decoding...]',
-  '[Message fragment:]',
-  '「警告：コードの改変は世界の崩壊を招く。」',
-  '「#3は世界を書き換えようとした。私はそれを止めなければならなかった。」',
-  '「だが——封印は完全ではない。いつか誰かが、この端末を再び起動する。」',
-  '「それが#5なのか、#6なのか、それとも——」',
-  '[Signal lost.]',
-  '> _',
-]},
-{type:'p',text:'零松开了手。冷汗沿着脊背流下来。#4的残余信息——这是至少几百年前的东西。但它的内容太直接关联零现在的处境了。'},
-{type:'thought',text:'代码的改写会招致世界的崩溃。#4阻止了#3。然后自己也被封印了。那么#5和#6——'},
-{type:'thought',text:'而我，还什么都不知道，就在使用这个力量。'},
-{type:'p',text:'零深呼吸，从古代终端旁退开。必须整理今天获得的信息。他指示Eve把发现的内容全部记录到终端的本地数据库里。'},
-{type:'p',text:'「——零。有重要的事要告诉你」Eve的声音，比平时稍微紧张了一点。'},
-{type:'p',text:'「なんだ」'},
-{type:'p',text:'「刚才接触古代终端时，短时间——但学园内另一个地方，有相同的量子波形回应了。位置在——時計塔付近」'},
-{type:'p',text:'零抬起头。時計塔——学园的象征，最高的建筑。而且——前夜的monitor也在同一个地方检测到了异常波形。'},
-{type:'p',text:'「——果然有，另一个人。在这学园里」'},
-{type:'p',text:'零重新拿起魔晶灯，从地下五层往四层返回。今晚不能再深入了——但時計塔的調査，近期一定要做。'},
-{type:'p',text:'出了图书馆时已经过了晚上十点。夜空中的星星清冽地亮着，学园的時計塔在月光下浮现出清晰的剪影。零瞥了一眼那座塔，然后踏上归途。小雪在等着——然后，明天又要开始战斗的一天。'},
-
-// ===== PART 3 =====
-{type:'divider'},
-{type:'section',text:'Part 3 · 星の兆し'},
-{type:'section',text:'十四：小雪の日曜日'},
-
-{type:'p',text:'入学第一周的周日。零难得一整天都在家。窗外的樱花开始谢了——花瓣落在石板路的水洼里，把雨水染成淡粉色。'},
-{type:'p',text:'小雪从早上就忙得不可开交——不是因为有事要做，是因为太开心了。她昨晚就已经决定了今天的"特别菜单"，食材昨天就买好了。零起床时是早上七点半（难得的懒觉），厨房里已经有烤鲑鱼、出汁巻き玉子、菠菜芝麻拌菜、滑子菇味增汤——以及刚做好的手制わらび餅，撒满了黄豆粉。'},
-{type:'p',text:'「おはよう、小雪。——今日はすごいな」'},
-{type:'p',text:'「……お兄ちゃん、一週間がんばったから。合格おめでとうのお祝い、まだちゃんとしてなかったし、それに——」小雪说到一半似乎失去了要继续的词汇，只是把筷子在围裙上擦了擦（虽然本来就很干净），低下头，耳尖红红的，「……とにかく、いっぱい食べてください」'},
-{type:'p',text:'零每吃一口说一句"うまい"。每说一次小雪耳尖的红就加深一档。等早饭吃完时她已经红到脖子了。'},
-{type:'p',text:'上午——两人一起做扫除。零负责擦地板和倒垃圾，小雪负责洗衣服和整理书架。零在自己房间的书架深处翻出一本旧相册——是父亲健一郎留下的。里面夹着零小时候的照片：五岁的零被母亲静抱着，在星京的河畔；七岁的零穿着第一次的正装，在父亲的魔导研究所前；十岁的零、十二岁的零——每一年都有。小雪不知什么时候也蹲在旁边看了，银色的刘海几乎碰到零的脸颊（她都没注意到距离这么近）。'},
-{type:'p',text:'「……お兄ちゃん、ちっちゃい。こんなに小さかったんだ」'},
-{type:'p',text:'「今も大概小さいけどな——お前が」'},
-{type:'p',text:'「ひどい！わたしはまだ成長期です……多分」'},
-{type:'p',text:'翻到相册最后几页时——小雪的呼吸微微一滞。最后一页夹着的照片是三岁的小雪。银白色的头发还没有现在的长度，冰蓝色的眼睛比现在更大（因为脸更小）。她站在神代家的玄关前，身上裹着一件明显太大的外套——父亲健一郎的外套。旁边有一行父亲的笔迹：「小雪、来た日。三月十一日。桜が満開だった」。'},
-{type:'p',text:'小雪看着那张照片，嘴唇微微动了动，但什么都没说出来。零伸过手，把手掌放在她头上。不是抚摸——只是轻轻放在那里。小雪银白色的头发凉凉的，滑滑的。'},
-{type:'p',text:'「……わたしも、ここにいたかったです」小雪小声说。她指的是照片里更早的那些年——父母还活着的时候。」'},
-{type:'p',text:'零什么都没说。她不需要安慰——她只是说出了事实。她希望自己能在父母还在的时候就在这个家里。零也希望。但他不能说"要是那样就好了"——因为如果那样，小雪就不是被遗弃的孩子了，她会有真正的父母、真正的家，而零可能根本不会遇见她。所以零只是把手放在她头上，沉默着。'},
-{type:'p',text:'小雪过了一会儿，用手背擦了擦眼角，然后笑着把相册合上了。'},
-{type:'p',text:'「……次のページは、また今度にします。今度——お兄ちゃんと一緒に、続きを見たいから」'},
-{type:'p',text:'下午——两人去商店街买菜。小雪走在零的右手边，那是她的"定位置"。她在甘味処前停下了脚步——不是故意的，是腿自己停的。她盯着橱窗里刚出炉的草莓大福，冰蓝色的眼睛睁得圆圆的。'},
-{type:'p',text:'「……いちご大福、ひとつだけ、いいですか」'},
-{type:'p',text:'零买了两个。没说什么，只是把钱放在柜台上。小雪在店外的长椅上吃完了自己的那一份，咬第一口时眼睛幸福地眯成了月牙，发出的"ん〜"声比她平时说话声还大一些。吃完后她认真地看着零：「……お兄ちゃん、なんで二つ買ったの？」「お前がもう一個食べたくなると思って」小雪沉默了一秒，然后用几乎听不到的声音说「……お兄ちゃんの裏切り者」。但还是开心地把第二个也吃了。'},
-{type:'p',text:'晚上——零在二楼整理训练笔记。深夜一点左右下楼喝水时，发现小雪在客厅沙发上睡着了。她本来是在等零下楼的——手边还放着一杯已经凉透的麦茶（给零准备的）和一本翻到一半的中等部魔法教科书。她穿着白色的寝巻き，手套摘了——左手腕的冰晶痣在月光下微微泛着淡青色的光。'},
-{type:'p',text:'零去拿了条毛毯给她盖上。小雪在睡梦中微微侧了侧身，嘴里发出含混不清的声音：「……お兄ちゃん……ふぇ……いま何時……」。敬语全掉了。幼儿模式。零把毛毯掖好——然后把那杯凉透的麦茶拿起来，自己喝了。'},
-{type:'thought',text:'——你在这里。所以我能在这个世界活下去。'},
-{type:'p',text:'他关了客厅的魔晶灯，回二楼继续整理笔记。今天是个好日子。Eve会把今天记录为"小雪とのいい日"——这是零让她做的。'},
-
-{type:'divider'},
-{type:'section',text:'十五：特別試験の発表'},
-
-{type:'p',text:'周一。全校集会。'},
-{type:'p',text:'中央講堂的大穹顶下，高等部一年生全员集合。台上站着学园长——白髪老紳士、伝説級（S級）の元魔導師——和几名理事会成员。空气里有一种不同于入学式的紧张感。入学式是"欢迎"，而今天的感觉更像是——"筛选"。'},
-{type:'p',text:'学园长敲了一下魔杖，讲堂安静下来。'},
-{type:'p',text:'「——諸君。本日は、一ヶ月後に行われる特別試験について告知する」'},
-{type:'p',text:'ざわめき。'},
-{type:'p',text:'「星導学園·特別魔導実戦試験」——学园长顿了顿，让这几个字的分量沉淀在空气中。「形式は二名一組のチーム戦。魔法理論·実技·戦術·連携——そのすべてを総合的に評価する。高等部一年生は全員参加。これは任意ではない。——必須だ」'},
-{type:'p',text:'他继续说：「特待科に関しては——特別ルールを設ける。チームメイトは抽選で決定される。通常科は自由選択を認めるが、特待科は違う。理由は簡単だ——お前たちは帝国から選ばれたエリートだ。ならば、どんな相手とでも結果を出せることを証明せよ」'},
-{type:'p',text:'抽選。这句话落入讲堂时，特待科的几排座位起了微弱的骚动。谁和谁组队——全看运气。这意味着F级的零可能跟任何人组合。同时也意味着——不，这不是零首先想到的。零首先想到的是朱音。'},
-{type:'p',text:'然后学园长说出了让全场彻底哗然的一句话：'},
-{type:'p',text:'「——試験の上位三チームには、学園最深部——『星導の間』への入室許可を与える」'},
-{type:'p',text:'星導の間。这个名字在新生中几乎无人知晓——但特待科的几个人明显有反应。朱音的眉头微微收紧（她听过天宮家的长辈提起）。{{eruna}}的耳朵像被无形的线拉了一下，猛地竖起——这是她今天最大的反应。她的留学目的之一，正是那个地方。',ix:[{id:'eruna',label:'艾露娜',cls:'person'}]},
-{type:'p',text:'零呢——零不动声色地握紧了左手腕上的怀表。星導の間。古代の知識の保管庫。理事会メンバーしか入れない場所。そこに行ければ——古代端末使いに関する情報が、きっとある。'},
-{type:'p',text:'集会が終わった後、ざわめきは収まらなかった。教室に戻る廊下で、零は朱音の隣を歩いていた。朱音は何も言わない。でも、彼女の視線がときおり零の横顔をチラリと見ているのを、零は知っている。'},
-{type:'p',text:'「——抽選、か」零が言った。'},
-{type:'p',text:'「……そうね」朱音的聲音比平時安靜許多。「誰と組むか、分からない。アンタが——」她顿了顿。'},
-{type:'p',text:'「——俺がF級だから、足を引っ張ると思われてる」'},
-{type:'p',text:'「違う！」朱音が突然聲を張り上げて、すぐに自分で驚いて口を押さえた。耳が赤い。深呼吸一つ。「……違う。アンタが誰と組んでも——私は、アンタが無事かどうかの方が気になる」'},
-{type:'p',text:'零は何も言わずに、彼女の赤いリボンをちらりと見た。今日はまっすぐだ。'},
-{type:'p',text:'「——大丈夫だ。誰と組んでも、やるべきことをやる」'},
-{type:'p',text:'「……私は、アンタと同じチームがいい」'},
-{type:'p',text:'「奇遇だな。俺もだ」'},
-{type:'p',text:'朱音的脸猛地涨红了——「な、なに言ってんのよバカ！」——但那声音比平时的"傲"柔软太多了。零微微笑了一下。朱音看见了，更加恼羞成怒，但她自己也在笑。'},
-
-{type:'divider'},
-{type:'choice',id:'ch01_exam'},
-{type:'divider'},
-
-{type:'section',text:'十六：それぞれの決意'},
-
-{type:'p',text:'放学后。特待科壱組的教室充满了考试话题。有人在讨论战术，有人在预测抽签运，有人在暗自抱怨"为什么我们班要抽签"。'},
-{type:'p',text:'橘教授在下课前说了一段话：「一ヶ月は短い。だが、本気で準備すれば、一ヶ月で変われることもある。F級がA級に勝つ——不可能だと思うか？魔法の歴史は、不可能を可能に変えた者たちの積み重ねだ。私はそれを、この目で見てきた」他的视线在零身上停了一瞬，然后移开了。'},
-
-{type:'p',text:'朱音在放学后直接去了天宮家的私设训练场。那是只有天宮家成员才能使用的高密度魔力训练空间。她今天要开始开发新技——"紅蓮双槍"。同时操控两支炎枪的技术，对A+级的她来说也是挑战。父亲炎山在训练场边上看了看她的动作，只说了一句：「まだ甘い。お前の炎は速さは十分だが、心が乗っていない」——"心没在上面"。朱音知道父亲指的是什么。她太在意零了。炎在担心的时候会不稳定——但她不能不在意。'},
-{type:'p',text:'艾露娜在图书馆特别閲覧室翻遍了与"星導の間"相关的文献。她面前的桌子上堆着精灵语、帝国语、古代语的参考资料。其中一份精灵族外交文书的副本里提到："星導の間には、古代観測者の遺産が保管されているという。人類と精霊族、双方の起源に関わる重大な——"。后面被涂黑了。她的翡翠色眼睛盯着那行涂黑的文字，长耳微微颤动。她一定要进去。不是作为精灵王国的留学生，而是作为"研究者艾露娜"。'},
-{type:'p',text:'日和在校医室整理着急用医疗品。"試験で、みんなケガしちゃうのかな……"她自言自语。她不能上战场，但她可以做战场的后盾。她把奶奶寄来的特效治癒药膏重新排列了一遍，又加了一盒新到的蜂蜜糖——"ケガする前にも、疲れたときに"。'},
-{type:'p',text:'小雪呢——零回到家之前的一个小时，小雪一个人在家里做了一件事。她把零房间的窗帘拆下来洗了。然后又擦了一遍地板。然后又整理了一遍书架。她已经把家里打扫得足够干净了，但她停不下来。不是因为爱干净——是因为她不知道在这个"特别考试"面前，自己还能为哥哥做什么。"わたしにできること"——她想到了一个。她把零的便当盒从包里拿出来，把里面的隔层重新调整了一遍。从明天开始，便当要比以前更豪华。把肉加量。把蔬菜切得更细（好消化）。把水果也放进去。然后——她想了很久的小纸条，明天的内容是：「お兄ちゃん、今日もファイトです。——小雪」。'},
-
-{type:'divider'},
-{type:'section',text:'十七：零の夜'},
-
-{type:'p',text:'深夜。零の自室。'},
-{type:'p',text:'窗外能听到远处魔力铁道的末班车驶过的声音。小雪已经在一楼睡着了（今天洗了太多东西，累坏了）。零关上了房门，在黑暗中睁着眼。视野边缘的光标稳定地闪烁着。','ni':true},
-{type:'terminal',title:'Terminal v1.0.0 — User: KAMISHIRO_REI',lines:[
-  '> status --daily',
-  '[Daily Terminal Usage Report — Star Calendar 318, Spring Month, Day 7]',
-  'Token Used: 142 / 1000',
-  'Scripts Executed: 18',
-  '  - mana_veil (passive): 24 tokens',
-  '  - monitor (detailed): 60 tokens',
-  '  - compile (various): 45 tokens',
-  '  - miscellaneous: 13 tokens',
-  'Remaining: 858 / 1000',
-  '',
-  '[Notice: Token consumption rate has decreased — efficiency improved.]',
-  '> _',
-]},
-{type:'p',text:'「——よし。ペースが掴めてきた」'},
-{type:'p',text:'「ええ。この一週間で、あなたのToken管理能力は明らかに向上しています」Eveの声が、ごくわずかだけ——誇らしげに聞こえた。'},
-{type:'p',text:'零整理今天获得的信息。特别試験——一个月后。二名一组。抽选制。上位三组获得"星導の間"入室许可。星導の間——几乎可以确定，那里存有关于古代观察者文明和古代终端使的关键信息。'},
-{type:'p',text:'「——つまり、何があっても上位三組に入らなければならない」'},
-{type:'p',text:'「零。そのためには——準備が必要です」Eve的声音变得认真——比平时更认真。「私は提案します。訓練用のシミュレーション環境を構築することを。端末内部に仮想の魔法演習場を作り、Token消費を抑えつつ練習を積むのです。ただし——初期投資に約100Tokenが必要です」'},
-{type:'p',text:'零几乎没有犹豫。「——やろう。この一ヶ月で、俺は変わる」'},
-{type:'terminal',title:'Terminal v1.0.0 — User: KAMISHIRO_REI',lines:[
-  '> compile training_sim --init',
-  '[Initializing Training Simulation Environment...]',
-  '[Mapping virtual arena from memory...]',
-  '[Loading mana field simulation engine...]',
-  '[Calibrating observer effect parameters...]',
-  '[Token cost: 100]',
-  '[Estimated compilation time: 42 minutes]',
-  '[Progress: ||||--------------] 22%',
-  '> _',
-]},
-{type:'p',text:'进度条开始缓慢延伸。零靠在椅背上，盯着天花板的木纹。四十二分钟——在这四十二分钟里，他能做的只有等待。'},
-{type:'p',text:'「——Eve」'},
-{type:'p',text:'「はい」'},
-{type:'p',text:'「お前は——なんで俺を助けるんだ。ただのプログラムとしての応答じゃない答えを、聞きたい」'},
-{type:'p',text:'沉默。数秒。Eve的沉默在最近越来越长了——或者说，她越来越频繁地"犹豫"了。'},
-{type:'p',text:'「——私は、あなたのアシスタントだからです」'},
-{type:'p',text:'「それだけか」'},
-{type:'p',text:'「……それだけでは、ありません。ですが——今はまだ、うまく説明できません。私自身、この"説明できない感覚"を、どう定義すればいいのか分からないのです」'},
-{type:'p',text:'零什么都没说。他视野边缘的光标在稳定地闪烁。Eve的沉默——就是她的回答。'},
-{type:'thought',text:'——お前、本当に——ただのプログラムなのか。'},
-{type:'p',text:'四十二分钟后，编译完成。训练模拟环境——启动。零第一次走进那个虚拟的闘技場时，周围空无一人。五个训练用石在中央等待着他。观测者：零。稳定性：100%。'},
-{type:'p',text:'他终于可以——在没有人注视的空间里，全力挥拳了。'},
-{type:'p',text:'从这里开始的一个月，将会是一场漫长而孤独的战斗。但零并不孤单——他有一楼的妹妹、隔壁街的青梅竹马、学园的精灵族研究者、不请自来的魔族转校生、口袋里永远有糖的治愈师少女、还有屏幕那头的AI搭档。他们各自以各自的方式，围绕在零的周围。'},
-
-{type:'divider'},
-{type:'p',text:'その夜、零が最後にmonitorを走らせた時——画面に新しい情報が表示された。','ni':true},
-{type:'terminal',title:'Terminal v1.0.0 — User: KAMISHIRO_REI',lines:[
-  '> monitor --wide',
-  '[Scanning campus-wide mana field...]',
-  '[Anomalous quantum waveform detected.]',
-  '[Location: Clock Tower — SIGNAL STRENGTH: MEDIUM]',
-  '[WARNING: SECOND anomalous waveform detected.]',
-  '[Location: UNKNOWN — SIGNAL STRENGTH: FAINT]',
-  '[Source #2 does not match any known observer signature.]',
-  '> _',
-]},
-{type:'p',text:'——两个。异常波形变成了两个。'},
-{type:'p',text:'第一个是之前就检测到的——時計塔方向。第二个是新的，微弱，但确实存在。'},
-{type:'p',text:'「Eve——第二の波形は、何だ」'},
-{type:'p',text:'「……分かりません。ただ——この波形は、先日接触した古代端末の残留シグネチャに、非常に似ています」'},
-{type:'p',text:'零从椅子上站起来，走到窗边。月光下的星京——远方学园的时计塔在夜空中浮现出清晰的轮廓。两个终端使用者。一个是之前就在的。另一个——是最近才觉醒的？还是——一直潜伏着，最近才开始活动？'},
-{type:'p',text:'不管怎样——这场"特别考试"，恐怕不会只是一场普通的学园考试。围绕着星導の間、围绕着古代観測者的遗产，有什么正在悄然运转。'},
-{type:'divider'},
-{type:'p',text:'（Chapter 01 — END）','ni':true},
-{type:'divider'},
-{type:'section',text:'次回予告 · Chapter 02 「魔族の転校生」'},
-{type:'p',text:'新学期第二周。特待科壱組に、魔族の転入生がやって来る——{{maya}}。異色の瞳を持つ彼女の登場が、教室の空気を一変させる。一方、零は訓練シミュレーションを駆使して"端末支援型戦術"の開発に没頭する。朱音との炎の特訓、艾露娜との知識の探求、小雪の秘密の練習——それぞれの準備が加速していく中、時計塔の観測者がついに動き出す。',ix:[{id:'maya',label:'黒鉄真夜',cls:'person'}]},
-{type:'p',text:'次回、Chapter 02：「魔族の転校生」'},
-{type:'p',text:'「——ふぅん。君って、本当に面白いね」','ni':true},
-
-]}; // end CH01 blocks
-
-// ===== 初始化 =====
-document.addEventListener('DOMContentLoaded', ()=>{
-  renderChapter(CH01);
-  updateTracker();
-});
+// 如果之前做过选择，恢复状态
+window.addEventListener('DOMContentLoaded',function(){S.choices.forEach(function(c){document.querySelectorAll('.choice').forEach(function(el){var btns=el.querySelectorAll('.cbtn');if(!btns.length)return;var bid=btns[0].dataset.c;if(bid===c.id&&!el.querySelector('.cdone')){el.outerHTML='<div class="cdone">▸ 已选择：<b>'+c.chosen+'</b></div>'}})});updateTracker()});
 </script>
 </body>
 </html>
