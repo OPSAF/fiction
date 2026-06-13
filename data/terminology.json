@@ -120,8 +120,8 @@
       "term_cn": "终端",
       "term_en": "Terminal",
       "category": "terminal",
-      "definition": "神代零の意識内に存在するコマンドラインインターフェース。魔法の「底層コード」にアクセス可能。Eveが搭載されている。",
-      "first_appearance": "序章（実技試験中に覚醒）",
+      "definition": "神代零の意識内に五歳より存在するコマンドラインインターフェース。魔法の「底層コード」にアクセス可能。Eveが搭載されている。周囲の観測者数に応じて機能が不安定化する（観測者効果）。",
+      "first_appearance": "序章（零の五歳時に初覚醒、十六歳の入学試験で完全起動）",
       "related_terms": ["Eve", "Observer #7", "Token"]
     },
     {
@@ -131,7 +131,7 @@
       "term_cn": "Eve",
       "term_en": "Eve",
       "category": "terminal",
-      "definition": "端末システムに搭載されたAIアシスタント。零を「Observer #7」と呼ぶ。自動応答メッセージによれば、零の最初のコマンド実行をトリガーに起動した。詳細は不明。",
+      "definition": "端末システムに搭載されたAIアシスタントv1.0.7。零を「Observer #7」と呼ぶ。機械的·機能的な応答を返し、感情表現はない。零の最初のコマンド実行完了と同時に全機能が解放された。",
       "first_appearance": "序章",
       "related_terms": ["端末", "Observer #7"]
     },
