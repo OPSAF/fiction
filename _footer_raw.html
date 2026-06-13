@@ -1,0 +1,10 @@
+var el=document.getElementById('tk'),tc=document.getElementById('tkc');
+if(!rs.length){el.style.display='none';return}el.style.display='block';
+var mx=Math.max.apply(null,rs.map(function(r){return r.k==='koyuki'?S.flags[r.k]*1.5:S.flags[r.k]}));
+tc.innerHTML=rs.map(function(r){return'<div class="ri">'+r.n+': '+'❤'.repeat(Math.min(S.flags[r.k],5))+'</div><div class="rb '+r.c+'" style="width:'+Math.round(S.flags[r.k]/mx*100)+'%"></div>'}).join('')+'<div style="font-size:8px;opacity:.5;margin-top:2px">'+S.choices.length+'回選択</div>'
+}upd();
+
+window.addEventListener('DOMContentLoaded',function(){S.choices.forEach(function(c){var bl=CC[c.id];if(!bl)return;document.querySelectorAll('.chc').forEach(function(el){if(el.querySelector('[data-c="'+c.id+'"]'))el.innerHTML='<div class="cd">▸ 已選択：<b>'+c.chosen+'</b> —— '+(c.e||'')+' <span class="un" data-cid="'+c.id+'">↩ 取り消し</span></div>'})});upd()});
+</script>
+</body>
+</html>
