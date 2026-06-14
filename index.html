@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>终端之梦 ～ Terminal Phantasm ～</title>
+<title>终端之梦 ~ Terminal Phantasm ~</title>
 <style>
 :root{--bg:#e8e4db;--s:#fffef8;--t:#2c2416;--t2:#6b5a4e;--a:#8b4513;--l:#c41e3a;--b:#d4c5a9;--h:rgba(139,69,19,.06);--ac:rgba(139,69,19,.12);--sb:#f5f0e8;--tb:#0c0c14;--tg:#00ee77;--tp:#ff5555;--cn:#8b7355;--sh:0 2px 12px rgba(0,0,0,.08)}
 body.dark{--bg:#1a1a20;--s:#22222a;--t:#d4cfc8;--t2:#9a9488;--a:#c9a87c;--l:#e8556d;--b:#3a3830;--h:rgba(201,168,124,.08);--ac:rgba(201,168,124,.16);--sb:#1e1e26;--cn:#8b8070;--sh:0 2px 12px rgba(0,0,0,.3)}
@@ -35,9 +35,11 @@ p{margin-bottom:1em;text-indent:2em}p.ni{text-indent:0}
 .ix.person{color:var(--a);border-color:rgba(139,69,19,.35)}.ix.term{color:#2e6b8f;border-color:rgba(46,107,143,.35)}.ix.place{color:#5a8a3c;border-color:rgba(90,138,60,.35)}
 #pp{position:fixed;z-index:9999;max-width:280px;background:var(--s);border:1px solid var(--b);border-radius:8px;box-shadow:var(--sh);padding:12px 14px;font-size:11px;line-height:1.6;opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .18s,transform .18s}
 #pp.on{opacity:1;pointer-events:auto;transform:translateY(0)}
-#pp .pn{font-size:13px;font-weight:700;color:var(--a);margin-bottom:3px}#pp .pt{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:3px}
+#pp .pn{font-size:13px;font-weight:700;color:var(--a);margin-bottom:3px}
+#pp .pt{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:3px}
 #pp .pt span{font-size:9px;background:var(--h);border:1px solid var(--b);border-radius:3px;padding:1px 5px}
-#pp .pd{color:var(--t);font-size:10px}#pp .pc{position:absolute;top:4px;right:7px;cursor:pointer;font-size:12px;color:var(--t2);background:none;border:none;opacity:.5}
+#pp .pd{color:var(--t);font-size:10px}
+#pp .pc{position:absolute;top:4px;right:7px;cursor:pointer;font-size:12px;color:var(--t2);background:none;border:none;opacity:.5}
 .tm{background:var(--tb);border-radius:8px;margin:14px 0;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.25);font-family:'JetBrains Mono','Fira Code','Consolas',monospace;font-size:11px;line-height:1.55}
 .tm-h{background:#171722;padding:5px 10px;display:flex;align-items:center;gap:6px;border-bottom:1px solid#222230}
 .tm-d{width:8px;height:8px;border-radius:50%}.tm-d.r{background:#ff5f56}.tm-d.y{background:#ffbd2e}.tm-d.g{background:#27c93f}
@@ -45,16 +47,20 @@ p{margin-bottom:1em;text-indent:2em}p.ni{text-indent:0}
 .tm-b{padding:10px 13px;color:var(--tg);white-space:pre-wrap;word-break:break-all}
 .tm-b .pr{color:var(--tp)}.tm-b .cm{color:#fff}.tm-b .out{color:#7eb8da}.tm-b .wn{color:#ffcc00}.tm-b .er{color:#ff4444}.tm-b .inf{color:#777}
 .chc{background:var(--h);border:2px solid var(--b);border-radius:10px;padding:18px 22px;margin:22px 0;text-align:center}
-.chc .cl{font-size:11px;color:var(--t2);letter-spacing:2px;margin-bottom:10px}.chc .ch{font-size:9px;color:var(--t2);margin-top:8px;opacity:.6}
+.chc .cl{font-size:11px;color:var(--t2);letter-spacing:2px;margin-bottom:10px}
 .cb{display:block;width:100%;padding:10px 14px;margin:5px 0;border:1px solid var(--b);border-radius:6px;background:var(--s);cursor:pointer;font-family:inherit;font-size:13px;text-align:left;transition:background .15s,transform .15s;color:var(--t)}
 .cb:hover{background:var(--ac);transform:translateX(2px)}
 .cb .lt{display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:50%;margin-right:7px;font-weight:700;font-size:10px;color:#fff}
 .cb.a .lt{background:#c41e3a}.cb.b .lt{background:#2e6b8f}.cb.c .lt{background:#5a8a3c}
 .cb .cs{display:block;font-size:10px;color:var(--t2);margin-top:1px;margin-left:27px;opacity:.6}
 .cd{background:var(--h);border:1px solid var(--b);padding:12px 16px;font-size:12px;color:var(--t2);text-align:center;border-radius:8px;margin:16px 0}
-.pg-page{display:none}.pg-page.on{display:block;animation:fi .2s ease}
-.pg-nav{display:flex;justify-content:center;align-items:center;gap:12px;padding:16px 0;margin-top:20px;border-top:1px solid var(--b)}.pg-nav button{background:var(--h);border:1px solid var(--b);border-radius:6px;padding:6px 16px;cursor:pointer;font-size:12px;color:var(--t);font-family:inherit}.pg-nav button:hover{background:var(--ac)}.pg-nav .pg-info{font-size:11px;color:var(--t2)}
 .cd .un{color:var(--l);cursor:pointer;margin-left:8px;font-size:10px;border-bottom:1px dashed var(--l)}
+.pg-page{display:none}.pg-page.on{display:block;animation:fi .2s ease}
+.pg-nav{display:flex;justify-content:center;align-items:center;gap:12px;padding:16px 0;margin-top:20px;border-top:1px solid var(--b)}
+.pg-nav button{background:var(--h);border:1px solid var(--b);border-radius:6px;padding:6px 16px;cursor:pointer;font-size:12px;color:var(--t);font-family:inherit}
+.pg-nav button:hover{background:var(--ac)}.pg-nav button:disabled{opacity:.3;cursor:default}
+.pg-nav .pg-info{font-size:11px;color:var(--t2)}
+.loading{text-align:center;padding:40px;color:var(--t2);font-style:italic}
 #tk{position:fixed;bottom:16px;right:20px;background:var(--s);border:1px solid var(--b);border-radius:10px;padding:8px 12px;font-size:9px;box-shadow:var(--sh);z-index:500;cursor:pointer;min-width:120px}
 #tk .tt{font-weight:700;color:var(--a);margin-bottom:3px;font-size:9px;letter-spacing:1px}
 #tk .ri{margin:2px 0}#tk .rb{height:3px;border-radius:2px;margin:2px 0;transition:width .3s}
@@ -63,259 +69,110 @@ p{margin-bottom:1em;text-indent:2em}p.ni{text-indent:0}
 </style>
 </head>
 <body>
-
 <div class="win">
-<div class="tb"><div class="ds"><div class="d r"></div><div class="d y"></div><div class="d g"></div></div><div class="ttl">终端之梦 ～ Terminal Phantasm ～</div><button class="tbtn" onclick="T()">🌓</button></div>
+<div class="tb"><div class="ds"><div class="d r"></div><div class="d y"></div><div class="d g"></div></div><div class="ttl">终端之梦 ~ Terminal Phantasm ~</div><button class="tbtn" onclick="T()">🌓</button></div>
 <div class="bd">
 <div class="sb" id="sb">
-<div class="sl">序章</div>
-<button class="ni on" data-p="prologue">零の目覚め</button>
-<div class="sl">Chapter 01</div>
-<button class="ni" data-p="ch01p1">Part 1 · 星導学園</button>
-<button class="ni" data-p="ch01p2">Part 2 · 魔法演習</button>
-<button class="ni" data-p="ch01p3">Part 3 · 星の兆し</button>
+<div class="sl">序章</div><button class="ni on" data-p="prologue">零の目覚め</button>
+<div class="sl">Chapter 01</div><button class="ni" data-p="ch01p1">Part 1 · 星導学園</button><button class="ni" data-p="ch01p2">Part 2 · 魔法演習</button><button class="ni" data-p="ch01p3">Part 3 · 星の兆し</button>
 </div>
 <div class="mn" id="mn">
-
-<!-- PROLOGUE -->
-<div class="pn on" id="p-prologue">
-<div class="ch"><div class="cn">序章</div><h2>零の目覚め</h2><div class="cs">「世界はコードでできている。ならば——僕は、何者なんだろう。」</div></div>
-
-<div class="st">零（ゼロ）</div>
-
-<p>——また、あの夢だ。</p><p class="cn">——又是，那个梦。</p>
-<p>白い壁。発光する文字列。大人たちのくぐもった声。誰かが僕を「林博士」と呼ぶ——違う。それは僕の名前じゃない。なのに呼ばれるたびに、胸の奥がかすかにチリっとする。返事をしそうになる自分がいる。目の前の光の壁に、無数の文字が流れている。見たことのないアルファベット——この世界のどの文字とも違う。なのに、不思議と"理解できてしまう"。一瞥しただけで意味が頭に入る。そしてなぜか——"書ける"気もする。この文字を。この言葉を。初めて見たはずなのに——ずっと昔から知っていたみたいに。</p><p class="cn">白色的墙壁。发着光的文字串。大人们含混的声音。有人叫我"林博士"——不对。那不是我的名字。可每次被这样叫，心底都会微微刺痛。有一个想要做出回应的自己。眼前的光之壁上，无数文字在流动。从未见过的字母——和这个世界的任何文字都不同。可是，不可思议地"能够理解"。只瞥一眼意义就进入脑海。而且不知为何——感觉自己也能"写"。这种文字。这种语言。明明是第一次见——却仿佛很久以前就一直知道。</p>
-<p>——で、目が覚めると、全部消えてる。毎回だ。夢の内容は九割方、砂みたいに崩れていく。手を伸ばしても掴めない。枕元にメモを置いて起きた瞬間に書き留めようとしたこともある。でもだめだ。ペンを握った時にはもう——指の間から、水がこぼれ落ちるみたいに、消えている。</p><p class="cn">——然后，一睁眼，就全消失了。每次都这样。梦的内容九成像沙子一样崩溃。伸出手也抓不住。也试过在枕边放备忘录，醒来瞬间就写下来。但不行。握住笔的时候已经——像水从指缝漏出一样，消失了。</p>
-<p>でも——"知識"だけは残る。不思議なことに、具体的な記憶ではなく"概念"や"思考の枠組み"として。数学の公式。物理法則。論理学の枠組み。情報工学の概念——この世界には存在しないはずの知識の断片が、ふとした瞬間に頭に浮かぶ。それは決まって、ある分野に偏っているわけじゃない。計算の仕方だったり、物の仕組みの考え方だったり、時には——お金の流れの読み方だったり。まるで、別の世界で誰かが長い時間をかけて体系的に学び尽くした"知の総体"が、断片的に夢を通じて漏れ出している——そんな感覚。</p><p class="cn">但是——只有"知识"会留下。不可思议的是，不是具体的记忆而是作为"概念"或"思考框架"。数学的公式。物理定律。逻辑学的框架。信息工程的概念——这个世上不应该存在的知识碎片，在偶然的瞬间浮现在脑海中。它们绝不会偏向某一个领域。有时是计算方法，有时是对事物构造的思考方式，有时——是对金钱流向的解读方法。仿佛，在另一个世界某人花了漫长时间系统性地学尽的"知识总体"，正断片地通过梦境泄漏出来——那样的感觉。</p>
-<p>前世？それとも——ただの妄想？十六年考えてるけど、いまだに答えは出てない。ただ、一つだけ確かなこと。この"既視感"は、確かに僕を導いてきた。——並外れた学習能力と、途方もない体系的教育を受けた"誰か"の残滓。それが今、僕の頭の中に息づいている。誰か——十八歳で博士号を取った誰か。機密研究に携わっていた誰か。そして——"意識マッピング"という言葉と共に、この世界に送り込まれた誰か。</p><p class="cn">前世？还是——单纯的妄想？想了十六年，至今还没有答案。只是，有一件事是确定的。这份"既视感"，确实一直在引导着我。——拥有惊人学习能力和受过庞大体系教育的"某人"的残渣。它现在，正在我脑海中呼吸着。某人——十八岁取得博士学位的某人。从事着机密研究的某人。还有——伴随着"意识映射"这个词，被送入这个世界的某人。</p>
-
-<p>——で、もう一つ。</p><p class="cn">——然后，还有一点。</p>
-<p>僕の名前は<span class="ix person" data-ix="rei">神代零</span>。十六歳。<span class="ix term" data-ix="mana_rank">F級</span>——百人に三人の"魔法障害者"。体内に魔力粒子を保持できない。どんな初歩的な魔法も使えない。この世界では——それが"障害"として扱われる。初等部の魔力検査でF級判定を受けた日のことを覚えてる。先生の顔に浮かんだ、ほんの一瞬の——同情。そしてクラスメイトたちの遠巻きな視線。"魔法が使えない子"。それが、この世界での僕の公的なラベルだ。</p><p class="cn">我的名字是神代零。十六岁。F级——一百人里三个的"魔法残疾者"。体内无法保持魔力粒子。任何初步的魔法都无法使用。在这个世界——那被当作"残疾"来对待。记得初等部魔力检查被判定为F级的那天。老师脸上浮现的、仅仅一瞬的——同情。还有同学们远远围观的视线。"不会魔法的孩子"。那就是，在这个世界我的公开标签。</p>
-<p>でも——三歳のときから、視界の隅にいる。緑色の小さな四角。規則正しく点滅する光。夢で見るのと同じアルファベットがそこに浮かび——僕にしか見えない。僕にしか操作できない。<b>端末</b>。世界の"コード"にアクセスするためのインターフェース。F級の僕が、この理不尽な世界で自分の足で立つための——唯一無二の武器。</p><p class="cn">但是——从三岁起，就在视野的角落。绿色的小小方块。规律闪烁的光。和梦中看到的一样的字母在那里浮现——只有我能看到。只有我能操作。<b>终端</b>。为了访问世界"代码"而存在的界面。F级的我，在这个不讲理的世界里用自己的双脚站立的——独一无二的武器。</p>
-<p>表の顔：魔法が使えない劣等生。</p><p class="cn">表面的脸：不会魔法的劣等生。</p>
-<p>裏の顔：世界の底層コードを書き換える"端末使い"。</p><p class="cn">里面的脸：改写世界底层代码的"终端使"。</p>
-<p>——まあ、誰にも言えないけどね。そしてこれからも、言うつもりはない。この秘密は——僕だけのものだ。</p><p class="cn">——嘛，虽然谁也不能说。而且今后，也不打算说。这个秘密——只属于我。</p>
-
-<div class="dv">＊ ＊ ＊</div>
-<div class="st">壱（いち）—— 星ノ宮</div>
-
-<p>帝都·星京から蒸気機関車で約一時間。車窓の景色が高層建築と魔晶灯のきらめきから、なだらかな丘陵と点在する集落に変わった頃——小さな駅に列車が滑り込む。星ノ宮駅。プラットホームには数人の乗降客。煉瓦造りの古い駅舎の壁には鉱山会社の看板が何枚もかかっていて、改札を出るとすぐに、かすかな魔鉱の粉塵が混じった空気が鼻をつく。——この匂い、嫌いじゃない。むしろ落ち着く。十六年間吸い続けてきた、故郷の空気だ。</p><p class="cn">从帝都星京乘蒸汽火车约一小时。车窗的景色从高层建筑与魔晶灯的闪耀，变为平缓的丘陵与散落的村落时——列车滑入了小小的车站。星之宫站。站台上有寥寥数名上下车乘客。砖造旧站舍的墙上挂着好几块矿山公司的看板，一出检票口，微微混杂着魔矿粉尘的空气就扑鼻而来。——这个气味，不讨厌。不如说令人安心。是十六年间一直呼吸着的，故乡的空气。</p>
-<p><span class="ix place" data-ix="hoshinomiya">星ノ宮</span>。人口約五万。帝都圏の外縁に位置するこの町は、帝国でも五指に入る規模の魔鉱鉱山を有している。町の歴史は鉱山と共にあった。二百年前、この地で良質な魔鉱の鉱脈が発見されて以来、星ノ宮は帝国の産業革命を地方から支える重要拠点となった。鉱山で採掘される魔鉱は帝都の発電所で魔力エネルギーに変換され、街灯を灯し、工場を動かし、鉄道を走らせる。町の中央には小規模な魔力変電所があり、そこから放射状に伸びる送電線が町全体に魔晶灯の淡い青白い光を届けている。夜、山の斜面に無数の青白い光がぽつぽつと浮かぶ景色は——結構きれいだ。星の名前がついてるだけのことはある。</p><p class="cn">星之宫。人口约五万。位于帝都圈外缘的这个城镇，拥有帝国前五规模的魔矿矿山。城镇的历史与矿山同在。两百年前，在此地发现优质魔矿矿脉以来，星之宫就成了从地方支撑帝国产业革命的重要据点。矿山开采的魔矿在帝都的发电站转换为魔力能量，点亮街灯，运转工厂，驱动铁路。城镇中央有小型魔力变电站，从那里呈放射状延伸的输电线将魔晶灯淡淡的青白色光芒送达整个城镇。夜晚，山腰上无数青白色的光点点浮现的景色——还挺漂亮的。不愧是带着"星"字的名字。</p>
-<p>鉱山で働く者。鉱石を選別する者。それを運ぶ者。魔鉱を加工し魔晶や魔油を精製する工場の職人たち。そして彼らの生活を支える商店、学校、診療所。——星ノ宮のほとんどの人間が、何らかの形で魔鉱に絡みながら生きている。鉱山の坑道は町の地下に無数に張り巡らされ、その総延長は数百キロに及ぶ。そしてその多くは——すでに掘り尽くされ、放棄された"廃坑"だ。これらは後に、僕の"もう一つの顔"を育む場所になる。</p><p class="cn">在矿山工作的人。筛选矿石的人。运输它的人。加工魔矿精炼魔晶和魔油的工厂工匠们。还有支撑他们生活的商店、学校、诊所。——星之宫的几乎所有的人，都以某种形式和魔矿有关而生活着。矿山的坑道在城镇地下无数地延伸，总长度达数百公里。而其中大多数——是已被挖尽、废弃的"废坑"。这些后来，成为培育我"另一张脸"的场所。</p>
-
-<p>——で、うちはというと。</p><p class="cn">——然后，说到我家。</p>
-<p>父·健一郎。町役場の戸籍係。朝七時に家を出て、夕方五時に帰ってくる小役人だ。給料は多くないが安定している——この家の経済を支える大黒柱。母·静。近所の雑貨商店でパートをしながら家事をこなしている。二人とも魔力等級はE級かD級——日常生活でお茶を温めたり靴の汚れを落としたりできる程度。特に秀でた才能があるわけじゃない。ごく普通の、帝国の庶民。それが神代家だった。</p><p class="cn">父亲健一郎。镇公所的户籍员。早上七点出门，傍晚五点回来的小职员。工资不多但稳定——是支撑这个家经济的大黑柱。母亲静。在附近的杂货商店做兼职的同时处理家务。两人魔力等级都是E级或D级——能在日常生活中热热茶、清理鞋上污渍的程度。并没有什么特别出众的才能。极其普通的，帝国的庶民。这就是神代家。</p>
-<p>通貨単位は"リル"。硬貨には銅貨（一リル、十リル）、銀貨（百リル）、そして魔晶を原料とする"晶貨"（千リル、一万リル）がある。庶民の昼食がだいたい五十リルくらい。月収の平均は三千から五千リル——といったところだ。物価も常識も、この世界の基準で動いている。</p><p class="cn">货币单位是"利尔"。硬币有铜币（一利尔、十利尔）、银币（百利尔）、还有以魔晶为原料的"晶币"（千利尔、一万利尔）。平民的午餐大约五十利尔左右。月收平均大概三千到五千利尔——这样的感觉。物价和常识，都以这个世界的基准运转。</p>
-
-<p>——で、僕はというと——この家の本当の子供じゃない。</p><p class="cn">——然后，说到我——不是这个家的，真正的孩子。</p>
-<p>十六年前の冬。記録的な寒波が星ノ宮を襲った日。町の診療所の前に、一つの籠が置かれていた。中には産まれたばかりの赤ん坊。籠には何の手がかりもなく、ただ——その赤ん坊の左手首に、奇妙な痣があった。幾何学的な模様。まるでバーコードのようにも、古代の魔法陣のようにも見える。誰も見たことのない印。通りかかった健一郎と静がその赤ん坊を保護し——そして、自分たちの子供として育てることを決めた。実の子として。何のためらいもなく。後にこの痣が端末と関係することを知るが——それはずっと先の話だ。</p><p class="cn">十六年前的冬天。创纪录的寒潮袭击星之宫的那天。镇上的诊所前，被放了一个篮子。里面是刚出生的婴儿。篮子里没有任何线索，只是——那个婴儿的左手腕上，有奇妙的印记。几何学的图案。既像条形码，又像古代的魔法阵。谁也没见过的印。路过的健一郎和静保护了那个婴儿——然后，决定作为自己的孩子抚养。当作亲生孩子。毫不犹豫。后来才知道这个印记与终端有关——但那是很久以后的事了。</p>
-
-<p>——で、四歳のとき、もう一人増えた。</p><p class="cn">——然后，四岁的时候，又增加了一个。</p>
-<p>妹。<span class="ix person" data-ix="koyuki">神代小雪</span>。銀白色の髪に、氷青色の瞳——雪みたいに白くて、凍った湖みたいに青い。彼女もまた遠縁から引き取られた。複雑な家庭の事情で行き場を失った幼子を、神代夫妻が引き取ったのだ。血は繋がってない。でも——そんなこと、この十四年間、一度だって気にしたことがない。小雪は僕の妹。僕は小雪の兄。ただそれだけの——絶対の事実。誰に何を言われようと、それは変わらない。</p><p class="cn">妹妹。神代小雪。银白色的头发，和冰蓝色的眼睛——像雪一样白，像冻结的湖一样蓝。她也是从远亲那里接来的。因复杂的家庭情况失去了去处的幼子，由神代夫妇收养了。没有血缘。但是——这种事，在这十四年间，一次也没有在意过。小雪是我的妹妹。我是小雪的哥哥。仅此而已的——绝对的事实。不管被谁说什么，那都不会改变。</p>
-
-<div class="dv">＊ ＊ ＊</div>
-<div class="st">弐（に）—— 三歳の"起動"</div>
-
-<p>三歳の冬——たぶん、これが僕の最初の記憶だ。いや、正確には——"端末"が初めて起動した瞬間の記憶。</p><p class="cn">三岁的冬天——大概，这是我最初的记忆。不，准确地说——是"终端"第一次启动的瞬间的记忆。</p>
-<p>あの日、小雪が熱を出した。まだ一歳にもならない小雪。布団の中で小さく震えて、顔が不自然なほど真っ赤だった。母は商店のシフトで不在。父は役場——帰ってくるのは夕方だ。家には、三歳の僕と、熱にうなされる小雪だけ。三歳の子供にできること？ない。本来なら。ただ親が帰ってくるのを待って、不安で泣くことしかできないはずだった。</p><p class="cn">那天，小雪发烧了。还不到一岁的小雪。在被窝里微微发抖，脸不自然地通红。母亲在商店值班不在家。父亲在镇公所——要傍晚才回来。家里，只有三岁的我和发烧呻吟的小雪。三岁小孩能做的事？没有。本来。只能等待父母回来，不安地哭泣。</p>
-<p>でも——その時、視界の隅に"それ"がいることに気づいた。今までもぼんやりと存在は感じていた。でも気のせいだと思っていた。しかしこの時——初めて、はっきりと"認識"した。緑色の小さな四角。チカチカチカチカ——規則正しい点滅。まるで——何かの入力を待っているみたいに。</p><p class="cn">但是——那时，注意到视野角落有"它"在。至今为止也模糊地感觉到存在。但以为是错觉。然而这时——第一次，清晰地"认识"了。绿色的小小方块。一闪一闪一闪——规律的闪烁。仿佛——在等待什么输入一样。</p>
-<p>三歳児に理屈なんてわかるはずがない。コンピュータも、インターフェースも、コマンドも——そんな概念はこの世界のどこにもない。なのに——"わかって"た。これは僕にしか見えない。これは僕だけのものだ。そして——これを使えば、小雪を助けられる。なぜそう思ったのかは、十六年経った今でも説明できない。ただ——確信があった。揺るぎない、絶対の確信が。</p><p class="cn">三岁小孩不可能懂什么道理。计算机、界面、命令——这些概念在这个世界任何地方都不存在。可是——"知道"了。这个只有我能看到。这个是只属于我的。而且——用这个，就能救小雪。为什么那样想，过了十六年的现在也无法说明。只是——有确信。无法动摇的、绝对的确信。</p>
-
-<div class="tm"><div class="tm-h"><div class="tm-d r"></div><div class="tm-d y"></div><div class="tm-d g"></div><span class="tm-t">Terminal — Initialization — Observer #7 (age 3)</span></div><div class="tm-b"><span class="out">[First contact detected. Quantum link establishing...]</span>
-<span class="out">[User identified: Observer #7]</span>
-<span class="out">[Analyzing intent from biometric feedback: PROTECT(KOYUKI)]</span>
-<span class="out">[Compiling low-freq healing modulation — waveform: comfort]</span>
-<span class="out">[Estimated token cost: 3 | Remaining: 997]</span>
-<span class="out">[Execute? The system will respond to your volition. Y/N]</span>
-<span class="pr">&gt; </span><span class="cm">_</span></div></div>
-
-<p>この"Y"という文字——なんでこれが"はい"を意味するのか、三歳児にわかるはずがない。でも——わかった。直感的に。"はい"——そう強く念じた。すると——小雪の額に、淡い青白い光が灯った。ふわり。温かくて、柔らかい光。ほんの数秒。でも確かに——熱が、すうっと引いていった。小雪の呼吸が深くなって、ぎゅっとこわばってた小さな手の力が、ほどけていく。やがて——すう、すう、と寝息。安らかな、規則正しい寝息。</p><p class="cn">这个"Y"字——为什么这意味着"是"，三岁小孩不可能知道。但是——知道了。直觉地。"是"——那样强烈地默念了。于是——小雪的额头上，亮起了淡淡的青白色光芒。轻轻地。温暖的、柔和的光。仅仅数秒。但确实——热度，倏地消退了。小雪的呼吸变深了，一直紧绷的小手的力量，松开了。不久——咝、咝，的睡息。安稳的、规律的睡息。</p>
-<p>僕は自分の手を見つめた。何も握ってない。魔力を使った感触もない。周囲に魔力の痕跡も——後でわかることだが——まったくない。端末の実行は、魔力粒子を励起する通常の魔法発動とは根本的に原理が違う。世界の"ルール"そのものを一時的に書き換える——だから、魔力の痕跡が残らない。そしてもう一つ、三歳の僕が直感したこと。——この力は、絶対に誰にも知られてはいけない。誰かが近くにいると、視界の隅の光が弱まる。誰かが僕を見ていると——端末の反応が鈍る。まるで"観測される"ことそのものが、この力を妨げているかのように。幼い僕の、最初の掟。そして——最も正しい掟だった。</p><p class="cn">我看着自己的手。什么都没握。也没有使用魔力的感触。周围魔力的痕迹也——后来才知道——完全没有。终端的执行，和激发魔力粒子的通常魔法发动在根本上原理不同。将世界的"规则"本身暂时改写——所以，魔力的痕迹不会留下。还有一点，三岁的我直觉到的。——这个力量，绝对不能被任何人知道。有人在附近时，视野角落的光就会变弱。有人在看着我——终端的反应就变钝。仿佛"被观测"这件事本身，就在干扰着这个力量。幼小的我的，第一条戒律。而且——是最正确的戒律。</p>
-
-<div class="dv">＊ ＊ ＊</div>
-<div class="st">参（さん）—— 初等部、"冒険"、そして"副業"</div>
-
-<p>六歳——義務教育の始まり。帝国のすべての子供は六歳から十五歳までの九年間、学校に通うことが法律で定められている。初等部六年、中等部三年——建前上は"貴族も平民も平等に教育を受けられる"ことになっているが、実際は中等部から"普通科"と"魔導科"に分かれる。魔法の才能がある子は魔導科でエリート教育。ない子は普通科で一般教養。これがこの世界の——誰もが当然だと思って受け入れている現実だ。魔法が産業の根幹を支えるこの世界では、読み書き算盤と同じくらい、基礎魔法理論と魔力制御の初歩を学ぶことが"市民の当然の教養"とされていた。</p><p class="cn">六岁——义务教育的开始。帝国的所有小孩，从六岁到十五岁的九年间，法律规定必须上学。初等部六年，中等部三年——表面上"贵族和平民都能平等接受教育"，实际上从中等部起分为"普通科"和"魔导科"。有魔法才能的孩子在魔导科接受精英教育。没有的孩子在普通科接受一般教养。这就是这个世界的——谁都认为是理所当然而接受着的现实。在魔法支撑产业根基的这个世界，与读写算盘同样，学习基础魔法理论和魔力控制的初步被当作"市民当然的教养"。</p>
-<p>星ノ宮町立初等部——鉱山労働者の子供も、商店の子供も、役場の子供も、みんな同じ教室で学ぶ。校舎は鉱山会社の寄付で建てられた立派な煉瓦造りで、教室の窓からは遠くに鉱山の巻き上げ機が見えた。放課後になると——魔法の才能がある子は特別クラスで実技練習。ない子はそのまま帰宅。入学時の魔力検査で、僕は"F級"と判定された。体内に魔力粒子が定着できない——"魔法障害"。百人に三人。当然、放課後の魔法クラスには行けない。実技の成績は——まあ、最低評価。</p><p class="cn">星之宫町立初等部——矿山工人的孩子也好，商店的孩子也好，镇公所的孩子也好，大家都在同一个教室里学习。校舍是矿山公司捐赠建成的气派砖造建筑，从教室的窗户能远远看到矿山的卷扬机。到了放学后——有魔法才能的孩子在特别班练习实技。没有的孩子直接回家。入学时的魔力检查中，我被判定为"F级"。体内魔力粒子无法定着——"魔法残疾"。一百人里三个。当然，放学后的魔法班去不了。实技的成绩——嘛，最低评价。</p>
-<p>でも——ぶっちゃけ、初等部の授業なんて退屈以外の何物でもなかった。算数？<code>analyze</code>で物の質量や数を瞬時に把握できる僕に、紙の上の計算問題……何の意味が？理科？魔力粒子の波粒二象性や魔鉱のエネルギー変換効率——僕、端末で実物を<b>観測</b>してるんだけど。教科書の説明より、ずっと深く理解している。魔法理論？F級だから実技はできない。でも頭の中には——"林博士"の知識が息づいてる。教師が黒板に書く数式の、さらに二歩も三歩も先にある理論体系が——"見えて"しまう。</p><p class="cn">但是——老实说，初等部的课程除了无聊什么都不是。算术？对能用analyze瞬间把握物体质量和数量的我来说，纸上的计算题……有什么意义？理科？魔力粒子的波粒二象性和魔矿的能量转换效率——我，用终端实际<b>观测</b>过。比教科书的说明，理解得深刻得多。魔法理论？因为是F级所以不能做实技。但是脑子里——"林博士"的知识在呼吸着。老师在黑板上写的数式，再往前两步三步的理论体系——能"看见"。</p>
-<p>もちろん、それを表に出したりはしない。絶対に。F級のガキが教師より魔法理論に詳しい？目立ちすぎる。"異常"だと思われて各種機関に報告されたら——洒落にならない。場合によっては"研究対象"にされる可能性すらある。魔法が使えないのに理論だけ突出してる——そんな存在がこの血統主義の世界でどう扱われるか、想像に難くない。だから僕は、わざとテストで数問間違え、授業中もひたすら小さくなって過ごした。これが——僕の最初の"扮猪吃老虎"。F級の劣等生。それがこの世界で僕が演じなければならない役割だった。</p><p class="cn">当然，不会表现出来。绝对。F级的小鬼比老师还精通魔法理论？太显眼了。被当成"异常"报告给各种机构的话——可不是开玩笑的。根据情况甚至可能成为"研究对象"。不会魔法但只有理论突出——那样的存在在这个血统主义的世界会被怎样对待，不难想象。所以我故意在考试中错几道题，上课时也一味缩着身子度过。这就是——我最初的"扮猪吃老虎"。F级的劣等生。那是在这个世界我必须扮演的角色。</p>
-
-<p>——で、放課後のほうがずっと充実してた。</p><p class="cn">——然后，放学后要充实得多。</p>
-<p>星ノ宮の地下に眠る無数の廃坑——これが僕の"遊び場"であり"狩り場"だった。誰も近づかない廃坑の奥深く——観測者ゼロ。端末が十全の力を発揮できる、僕だけの空間。<code>compile</code>でスクリプトを組み、<code>execute</code>で魔獣を狩る。魔力の刃が——目に見えない形で、音もなく——魔獣を切り裂く。これは魔法じゃない。世界の底層コードに対する直接のコマンド送信。魔力粒子を励起する通常魔法とは原理が違うから、魔力の痕跡が一切残らない。誰にも感知されない。完璧な"ステルス"だ。</p><p class="cn">星之宫地下沉睡的无数废坑——这就是我的"游乐场"和"狩猎场"。谁也不靠近的废坑深处——观测者零。终端能发挥十全力量的、只属于我的空间。用compile组脚本，用execute狩猎魔兽。魔力之刃——以看不见的形式、无声地——撕裂魔兽。这不是魔法。是对世界底层代码的直接命令发送。和激发魔力粒子的通常魔法原理不同，所以魔力痕迹完全不留下。谁也感知不到。完美的"潜行"。</p>
-<p>魔獣が落とす魔石や素材を回収して——これが、僕の最初の"収入源"になった。買取所で魔石一個が数十リル。中級品なら数百リル。廃坑で拾った鉱石サンプルや稀産の魔晶片が、思いがけない高値で売れることもあった。F級の僕にできるはずがないから、誰も気づかない——まさか町の小学生が単身で魔獣を狩ってるなんて、想像すらできないだろう。</p><p class="cn">回收魔兽掉落的魔石和素材——这就是，我最初的"收入源"。收购所里一颗魔石值几十利尔。中级品的话几百利尔。在废坑捡到的矿石样本和稀产的魔晶碎片，偶尔也会以意外的高价卖出。F级的我不可能做到，所以谁也不会发现——话说回来镇上的小学生独自狩猎魔兽什么的，连想象都想象不到吧。</p>
-<p>——気づけば、自室の床下には"コレクション"が貯まっていった。売らなかったものだ。魔力が異常に濃い鉱石。古代文字が刻まれた金属片。どこから見ても"普通じゃない"光り方をする魔晶の欠片——<code>analyze</code>でも正体が解析できないものもある。価値がわからないものは、とりあえず取っておく。いつか何かの役に立つかもしれない。まあ大半はがらくただろうけど——中には本当に"特別"なものもある気がする。それは——ただの直感だ。でも、その直感はだいたい当たる。</p><p class="cn">——不知不觉间，房间地板下积攒起了"收藏品"。是没卖掉的东西。魔力异常浓厚的矿石。刻着古代文字的金属片。怎么看都"不普通"的发光魔晶碎片——连analyze都无法解析正体的东西也有。不知道价值的东西，总之先留着。也许哪天能派上什么用场。嘛大半大概都是垃圾——但总觉得，其中也有真正"特别"的东西。那是——只是直觉。但是，那个直觉大致都会中。</p>
-
-<p>——もう一つ、小遣い稼ぎの手段があった。隣町·陽和（ようわ）との間での"跨鎮倒賣"。星ノ宮は鉱山町だから、魔鉱関連の商品は安いが農産物や織物は高い。陽和は農村地帯の中心地で、その逆。月に一度、親に連れられて陽和に行くたびに、小銭を握りしめて相場をチェックし、星ノ宮で安く仕入れた魔石細工を陽和で売り、陽和で安い毛織物を買って星ノ宮で売る。頻度は高くなかったが、これでそこそこの差益が出た。</p><p class="cn">——还有一个，赚零花钱的手段。与邻镇阳和之间的"跨镇倒卖"。星之宫是矿山镇，魔矿相关商品便宜，但农产品和织物贵。阳和是农村地带的中心地，正好相反。每月一次，被父母带着去阳和的时候，握着零钱检查行情，把在星之宫便宜进的魔石工艺品在阳和卖，把在阳和便宜的毛织物买回星之宫卖。频率不高，但这产生了相当的差价利润。</p>
-<p>——こうして、両親からの小遣いに頼らなくても自分の必要なものは自分で買える程度の蓄えはできた。この時点で床下には七千リルほどの貯蓄——十一歳の小学生にしてはまあまあだろう。でもそれはあくまで"小遣い"の範囲だ。もし将来、本気でまとまった金が必要になったら——その時はもっと本気で動かないといけない。今はまだ、その必要がないだけで。</p><p class="cn">——就这样，即使不依赖父母的零花钱，自己需要的东西能自己买的程度的积蓄是有了。在这个时点地板下有约七千利尔的储蓄——作为十一岁的小学生还算可以吧。但那终究是"零花钱"的范围。如果将来真的需要一笔可观的钱——那时不得不更认真地行动。只是现在，还没有那个必要而已。</p>
-
-<div class="dv">＊ ＊ ＊</div>
-<div class="st">肆（し）—— 朱音</div>
-
-<p>初等部四年、十歳の春。——転入生。</p><p class="cn">初等部四年，十岁的春天。——转学生。</p>
-<p>その日は朝から教室の空気が違った。担任が「今日から新しい友達が増えます」と言った瞬間、みんながざわついた。星ノ宮のような町では転入生は珍しい。まして——その転入生が"天宮"の名字を持っていると知れた時、教室のざわめきは一瞬で静まり返った。天宮家——帝国四大公爵家の一つ。炎属性魔法の名門。朱音の家はその<b>分家</b>で、星ノ宮では鉱山から産出される魔鉱の品質管理と帝国への納品を担当している。魔鉱は帝国のエネルギー政策に直結する戦略物資——その管理を任されている時点で、天宮分家が本家から一定の信頼を得ている証だった。朱音はその分家の長女で、火属性魔法の才能はA級——十歳にしてすでに中等部レベルの魔法を使いこなす、町では有名な"天才"。</p><p class="cn">那天从早上起教室的空气就不同。班主任说"今天开始会增加新朋友"的瞬间，大家都骚动了。在星之宫这样的城镇转学生是稀罕的。更何况——当得知那个转学生姓"天宫"时，教室的嘈杂声一瞬间安静了下来。天宫家——帝国四大公爵家之一。火属性魔法的名门。朱音的家是其<b>分家</b>，在星之宫负责矿山上产出的魔矿品质管理和向帝国交货。魔矿是直接关联帝国能源政策的战略物资——被委任其管理这件事本身，就是天宫分家从本家获得一定信赖的证明。朱音是那个分家的长女，火属性魔法才能是A级——十岁就据说已经能运用中等部水平的魔法，镇上有名的"天才"。</p>
-<p>「——天宮朱音です。」深紅の長い髪を高いポニーテールに結った少女が教壇の前に立った。背筋がまっすぐで——十歳とは思えないほど、すでに"出来上がった"佇まい。琥珀色の瞳が教室を見渡す。その目には——好奇心も、緊張も、どちらもなかった。ただ、眼前の現実を淡々と確認しているような——冷めた色。そしてどこか、警戒しているようにも見えた。当然だ。この町で"天宮"の名を背負うことがどういうことか、彼女は誰よりもよく知っている。</p><p class="cn">"——我是天宫朱音。"深红色的长发高高扎成马尾的少女站在了讲台前。脊背挺得笔直——不像十岁孩子般的、已经"完成"的站姿。琥珀色的眼睛环视着教室。那双眼睛里——没有好奇，也没有紧张。只是，仿佛在淡淡确认眼前现实般的——冷静的颜色。而且看起来，似乎也有些警戒。当然的。在这个镇上背负"天宫"之名意味着什么，她比谁都更清楚。</p>
-<p>朱音は当然のように一番前の席に座った。周囲の子供たちは遠巻きに彼女を眺め、誰も話しかけようとしない。天宮の——たとえ分家でも——令嬢に、鉱山労働者や商店の子供たちが気軽に声をかけられるはずがなかった。僕はというと——いつも通り最後列の窓際で、こっそり<code>monitor</code>を起動して彼女の魔力場を観測。新しいクラスメイトの魔力場を分析するのは、もはや僕の習慣になっていた。</p><p class="cn">朱音理所当然地坐在了最前排。周围的孩子们远远地望着她，谁也不敢上前搭话。天宫的——即使是分家——千金，矿山工人和商店的孩子们不可能随便搭话。至于我——像往常一样在最后一排靠窗，偷偷启动了monitor观测她的魔力场。分析新同学的魔力场，已经成了我的习惯。</p>
-
-<div class="tm"><div class="tm-h"><div class="tm-d r"></div><div class="tm-d y"></div><div class="tm-d g"></div><span class="tm-t">Terminal — Age 10, passive observation</span></div><div class="tm-b"><span class="pr">&gt; </span><span class="cm">monitor --target new_student --detailed</span>
-<span class="out">[High-freq mana oscillation — Fire affinity, A-rank potential.]</span>
-<span class="out">[Actual output: A+ suppressed. Cause: emotional turbulence</span>
-<span class="out">at chakra #3 — consistent with high-pressure adaptation stress.]</span>
-<span class="out">[Projected: With emotional stability, output exceeds A+ boundary.]</span></div></div>
-
-<p>——才能すごいのに、感情が魔力を乱してる。転入のストレスか、それとも——もっと別の何かか。いずれにせよ、潜在出力はA+どころじゃない。環境さえ整えばS級に手が届く可能性もある。でも——僕が声をかける理由はなかった。F級の劣等生と天宮分家の天才令嬢。教室で接点なんてあるわけがない。</p><p class="cn">——明明才能这么厉害，感情却在扰乱魔力。是转学的压力，还是——更别的什么。无论如何，潜在输出远不止A+。只要环境合适，甚至可能触及S级。但是——我没有搭话的理由。F级的劣等生和天宫分家的天才千金。在教室里不可能有交集。</p>
-
-<p>——転機は、一年後の秋。放課後。僕は第七廃坑——十年前に採掘が終わり、今は誰も近づかない場所——で"実験"をしていた。観測者ゼロ。端末が全力を出せる僕だけの空間。坑道の奥で新しいコマンドの挙動をテストしていたら——さらに奥から、かすかな明かりが揺れているのに気づいた。炎の光だ。誰かいる——こんな廃坑に？</p><p class="cn">——转机，是一年后的秋天。放学后。我在第七废坑——十年前采掘结束，现在谁也不靠近的地方——做着"实验"。观测者零。终端能发挥全力的只属于我的空间。在坑道深处测试新命令的行为时——注意到了从更深处，有微弱的光亮在摇曳。是火焰的光。有人在——在这种废坑里？</p>
-<p>慎重に近づくと——そこにいたのは、朱音だった。手のひらに小さな炎を灯し、真剣な顔で練習している。炎は何度も立ち上がりかけては消え——そのたびに彼女は小さく舌打ちして、もう一度集中し直す。周囲の岩壁には無数の焦げ跡。——ここに、ずっと通ってるのか。一人で。</p><p class="cn">小心靠近——在那里的是，朱音。手心里点着小火焰，认真的表情在练习。火焰好几次想要升起又熄灭——每次她都会轻轻咂嘴，重新集中精神。周围岩壁上无数的焦痕。——一直，来这里吗。一个人。</p>
-<p>気配を察したのか、朱音がはっと顔を上げた。お互い、一瞬息を呑む。気まずい沈黙。天宮分家の令嬢が人目を忍んで廃坑で練習——誰にも知られたくない秘密の特訓。そこに突然現れた、同じクラスの、F級の、男子。——彼女の顔に、明らかな動揺が走った。そしてその動揺は、すぐに警戒に変わる。</p><p class="cn">似乎是察觉到了气息，朱音猛地抬起了头。彼此，都倒吸了一口气。尴尬的沉默。天宫分家的千金在废坑里避开人目练习——不想被任何人知道的秘密特训。在那里突然出现的，同班的，F级的，男生。——她的脸上，闪过了明显的动摇。然后那个动摇，立刻变成了警戒。</p>
-<p>「——なんでいるの。」「……そっちこそ。」</p><p class="cn">"——为什么在这里。""……你才是。"</p>
-<p>——ああ、これはマズい。このままだと彼女、ここに来なくなる。せっかく見つけた練習場所を、僕のせいで諦める——それは、なんか、嫌だ。彼女の炎が安定しなかった理由が、ぼんやりとわかった気がしたから——なおさら。この場所は彼女にとって、誰にも見られずに失敗できる、唯一の場所なんだ。</p><p class="cn">——啊啊，这可不妙。这样下去她，就不会再来这里了。好不容易找到的练习场所，因为我的缘故放弃——莫名地，讨厌那样。隐约觉得明白了她的火焰不稳定的理由——更不想那样。这个地方对她来说，是不被任何人看到就能失败的、唯一的场所。</p>
-<p>だから——気がつくと、口を開いてた。</p><p class="cn">所以——回过神来，已经开口了。</p>
-<p>「——その炎、溜めが短すぎる。あと一拍、魔力を掌の中で循環させてから放出すれば安定する。それから——右に三度、軌道がブレる癖がある。肩に力が入りすぎてる。肘から先だけ意識して、力を抜け。」</p><p class="cn">"——那个火焰，蓄力太短了。再一拍，让魔力在掌中循环后再放出就能稳定。还有——有向右偏三度、轨道歪斜的习惯。肩膀太用力了。只意识肘部以前，放松力量。"</p>
-<p>朱音が——はっとした顔で、僕を見た。琥珀色の目に浮かんだのは、驚き、警戒、そして——ほんの少しの、好奇心。それまで僕に向けられたことのない種類の視線だった。</p><p class="cn">朱音——以愣住的表情，看着我。琥珀色的眼睛里浮现的是，惊讶、警戒、还有——一点点的，好奇心。是至今为止从未向我投来过的种类的视线。</p>
-<p>「……あんた、F級でしょ。なんでそんなことわかるの。」</p><p class="cn">"……你，是F级吧。为什么会知道那种事。"</p>
-<p>「さあ。でも——見てたら、わかった。」</p><p class="cn">"谁知道。但是——看着，就明白了。"</p>
-
-</div>
-
-<!-- CHAPTER 01 PART 1 -->
-<div class="pn" id="p-ch01p1">
-<div class="ch"><div class="cn">第一章</div><h2>星導学園</h2><div class="cs">Part 1 · 「魔法が使えない少年と、帝国の天才少女」</div></div>
-
-<div class="st">EP01：星導学園</div>
-
-<p>九月、帝都·星導学園に入学した。</p><p class="cn">九月，进入帝都·星导学园。</p>
-<p>帝国でも有数の魔法学園——星導学園。ここには、帝国中から優れた才能を持った生徒が集まる。貴族の子弟から平民の天才まで、様々な生徒が通っている。そして、僕は——F級の劣等生として入学した。</p><p class="cn">帝国屈指可数的魔法学园——星导学园。这里聚集了来自帝国各地的优秀才能者。从贵族子弟到平民天才，各种各样的学生在这里就读。而我——作为F级的劣等生入学了。</p>
-<p>「……神代零くん？」</p><p class="cn">"……神代零同学？"</p>
-<p>僕はクラスに入ると、一人の少女が僕を呼ぶ。</p><p class="cn">我进入教室后，一个少女叫我。</p>
-<p>「……はい？」</p><p class="cn">"……是？"</p>
-<p>「エルナ·ウェンデルです！よろしくお願いします！」</p><p class="cn">"我是艾露娜·温德尔！请多关照！"</p>
-<p>エルナはエルフの少女だ。銀色の髪に緑色の瞳——典型的なエルフの特徴を持っている。</p><p class="cn">艾露娜是精灵少女。银色的头发和绿色的眼睛——具有典型的精灵特征。</p>
-<p>「……神代零です」</p><p class="cn">"我是神代零。"</p>
-<p>エルナは笑う。</p><p class="cn">艾露娜笑了。</p>
-<p>「神代くんは、F級だって聞きました！」</p><p class="cn">"听说神代同学是F级！"</p>
-<p>僕は黙る。</p><p class="cn">我沉默了。</p>
-<p>「でも、F級でも大丈夫です！魔法が使えなくても、いろいろなことができると思います！」</p><p class="cn">"但是，F级也没关系！就算不会魔法，我觉得也能做很多事！"</p>
-<p>僕は少し驚く。</p><p class="cn">我有点惊讶。</p>
-<p>——この世界で、F級を蔑まない人は少ない。</p><p class="cn">——在这个世界，不轻视F级的人很少。</p>
-
-<p>放課後、僕は学園の一角で端末を開く。</p><p class="cn">放学后，我在学园的一角打开终端。</p>
-<pre class="terminal">
-&gt; terminal.status()
-[STATUS] Token: 1000/1000 | Clearance: LEVEL_1
-[STATUS] Observer Count: 0 | Efficiency: 100%
-&gt; system.scan(location=Hoshidori Academy)
-[SCAN] Mana Flow: High
-[SCAN] Special Signature: Detected
-[SCAN] Location: Clock Tower
-</pre>
-<p>時計塔に特別な何かがある？</p><p class="cn">钟楼里有特别的东西？</p>
-
-</div>
-
-<!-- CHAPTER 01 PART 2 -->
-<div class="pn" id="p-ch01p2">
-<div class="ch"><div class="cn">第一章</div><h2>魔法演習</h2><div class="cs">Part 2 · 「観測者の秘密と、古代の予言」</div></div>
-
-<div class="st">EP07：魔力測定の秘密</div>
-
-<p>第二学期、魔法測定の授業が始まる。</p><p class="cn">第二学期，魔法测量课程开始了。</p>
-<p>「さて、皆さん。今日は魔力測定器を使って、各自の魔力値を測定します」</p><p class="cn">"那么，同学们。今天使用魔力测量器来测量各位的魔力值。"</p>
-<p>橘教授が黒板の前に立つ。</p><p class="cn">橘教授站在黑板前。</p>
-<p>クラスメイトたちは順番に測定器に手を置く。</p><p class="cn">同学们依次把手放在测量器上。</p>
-<p>「佐藤君、B級！良いですね」</p><p class="cn">"佐藤同学，B级！很好哦。"</p>
-<p>「鈴木君、C級！まだまだ成長が期待できます」</p><p class="cn">"铃木同学，C级！还能期待成长。"</p>
-<p>エルナが測定器に手を置く。</p><p class="cn">艾露娜把手放在测量器上。</p>
-<p>測定器が青く輝く。</p><p class="cn">测量器发出蓝色光芒。</p>
-<p>「エルナ·ウェンデルさん……A級！素晴らしいです！」</p><p class="cn">"艾露娜·温德尔同学……A级！太棒了！"</p>
-<p>次は朱音だ。</p><p class="cn">接下来是朱音。</p>
-<p>彼女は測定器に手を置く。</p><p class="cn">她把手放在测量器上。</p>
-<p>測定器が赤く輝く。</p><p class="cn">测量器发出红色光芒。</p>
-<p>「橘朱音さん……S級！驚異的です！」</p><p class="cn">"橘朱音同学……S级！太惊人了！"</p>
-
-<p>最後に、僕が測定器に手を置く。</p><p class="cn">最后，我把手放在测量器上。</p>
-<p>測定器は何も反応しない。</p><p class="cn">测量器没有任何反应。</p>
-<p>僕は端末を開く。測定器を分析する。</p><p class="cn">我打开终端。分析测量器。</p>
-<pre class="terminal">
-&gt; analyze.machine(mana_meter)
-[ANALYZE] Device: Imperial Mana Meter MK-VII
-[ANALYZE] Status: Functional
-[ANALYZE] Reading: N/A - Unknown energy signature
-[ANALYZE] Error: Unable to quantify Observer-type mana
-</pre>
-<p>測定器は、観測者タイプの魔力を測定できない。</p><p class="cn">测量器无法测量Observer类型的魔力。</p>
-
-</div>
-
-<!-- CHAPTER 01 PART 3 -->
-<div class="pn" id="p-ch01p3">
-<div class="ch"><div class="cn">第一章</div><h2>星の兆し</h2><div class="cs">Part 3 · 「世界を救う者」</div></div>
-
-<div class="st">EP11：期末試験·プロジェクトエデンの陰謀</div>
-
-<p>期末試験の時期が来た。</p><p class="cn">期末考试的时期到了。</p>
-<p>僕は端末を開く。試験問題を予測する。</p><p class="cn">我打开终端。预测考试题目。</p>
-<pre class="terminal">
-&gt; system.predict(exam_questions)
-[PREDICT] Exam Subject: Magic Theory
-[PREDICT] Question 1: Mana manipulation fundamentals
-[PREDICT] Question 2: Ancient magic history
-[PREDICT] Question 3: Practical spell casting
-[PREDICT] Accuracy: 95%
-</pre>
-<p>試験は簡単だ。</p><p class="cn">考试很简单。</p>
-
-<p>試験中、僕の端末が警告を出す。</p><p class="cn">考试中，我的终端发出警告。</p>
-<pre class="terminal">
-[WARNING] Security breach detected
-[WARNING] Project Eden signal intercepted
-[WARNING] Location: School administration building
-[ALERT] Classified data access attempt
-</pre>
-
-<p>試験が終わった後、僕は事務棟に行く。</p><p class="cn">考试结束后，我去行政楼。</p>
-<p>理事長室には、理事長ともう一人の人物がいる。</p><p class="cn">理事长室里，有理事长和另一个人。</p>
-<p>それは、林博士だ。</p><p class="cn">是林博士。</p>
-<p>「……観測者#7」</p><p class="cn">"……Observer #7。"</p>
-<p>僕は端末を開く。林博士を分析する。</p><p class="cn">我打开终端。分析林博士。</p>
-<pre class="terminal">
-&gt; analyze.subject(Dr_Lin)
-[ANALYZE] Name: Dr. Lin
-[ANALYZE] Origin: Earth
-[ANALYZE] Role: Project Eden Director
-[ANALYZE] Status: Alive
-[WARNING] High threat level
-</pre>
-<p>「……お前は、地球から来た。お前の使命は、この世界を救うことだ」</p><p class="cn">"……你来自地球。你的使命是拯救这个世界。"</p>
-
-<div class="st">EP14：新しい世界·第一章終わり</div>
-
-<p>エデンゲートが開いてから、一ヶ月が経った。</p><p class="cn">Eden Gate打开后，一个月过去了。</p>
-<p>世界は変わった。</p><p class="cn">世界改变了。</p>
-<p>僕は、星導学園で普通の学生生活を送っている。</p><p class="cn">我在星导学园过着普通的学生生活。</p>
-
-<p>「……お兄ちゃん、遅れるよ！」</p><p class="cn">"……哥哥，要迟到了！"</p>
-<p>小雪が僕を起こす。</p><p class="cn">小雪叫醒我。</p>
-<p>「うん……もう少しだけ」</p><p class="cn">"嗯……再睡一会儿。"</p>
-<p>「ダメ！今日は授業があるんだから！」</p><p class="cn">"不行！今天有课！"</p>
-
-<p>朝食を食べて、学園に行く。</p><p class="cn">吃完早餐，去学园。</p>
-<p>エルナが待っている。</p><p class="cn">艾露娜在等着。</p>
-<p>「神代くん！待って！」</p><p class="cn">"神代同学！等等！"</p>
-
-<p>教室に着くと、朱音が僕の席に座っている。</p><p class="cn">到教室后，朱音坐在我的座位上。</p>
-<p>「……お兄ちゃん、遅刻しそうだったね」</p><p class="cn">"……哥哥，差点迟到了呢。"</p>
-<p>僕は笑う。</p><p class="cn">我笑了。</p>
-
-<p><div class="st">第一章 終わり</div></p><p class="cn"><div class="st">第一章 结束</div></p>
-<p><div class="st">To be continued...</div></p>
-
-</div>
-
-</div>
-</div>
+<div class="pn on" id="p-prologue"><div class="loading">加载中...</div></div>
+<div class="pn" id="p-ch01p1"><div class="loading">加载中...</div></div>
+<div class="pn" id="p-ch01p2"><div class="loading">加载中...</div></div>
+<div class="pn" id="p-ch01p3"><div class="loading">加载中...</div></div>
+</div></div></div>
+<div id="pp"><button class="pc" onclick="P.hide()">✕</button><div class="pn"></div><div class="pt"></div><div class="pd"></div></div>
+<div id="tk"><div class="tt">📊 観測記録</div><div id="tkc"></div></div>
 <script>
-function T(){document.body.classList.toggle("dark")}
-document.querySelectorAll(".ni").forEach(e=>e.addEventListener("click",()=>{document.querySelectorAll(".pn").forEach(n=>n.classList.remove("on"));document.querySelectorAll(".ni").forEach(n=>n.classList.remove("on"));e.classList.add("on");document.getElementById("p-"+e.dataset.p).classList.add("on")}))
+(function(){if(localStorage.getItem('tp_theme')==='dark')document.body.classList.add('dark')})();
+function T(){document.body.classList.toggle('dark');localStorage.setItem('tp_theme',document.body.classList.contains('dark')?'dark':'light')}
+
+var IX={rei:{n:'神代 零',t:['主人公','F级','16岁','Observer #7','3岁觉醒','平民出身'],d:'亲生父母不明，由星ノ宮平凡的神代家收养。3岁起秘密使用终端能力。前世综合天才残滓。外表F级劣等生。左手腕有天生几何状印记。'},akane:{n:'天宮 朱音',t:['傲娇','幼驯染','火属性A+级','深红高马尾','琥珀瞳','黑丝裤袜'],d:'天宮分家长女。10岁转学星ノ宮，废坑与零偶遇。六年渐进关系。校服配黑色裤袜。努力型天才。'},koyuki:{n:'神代 小雪',t:['妹妹','天才','冰属性','银白短发','冰蓝瞳','151cm','白丝'],d:'零的妹妹14岁。冰晶变异体质。14岁跳级帝都少年班。校服白小腿袜，私服白裤袜。全能型天赋怪。'},eruna:{n:'艾露娜·温德尔',t:['精灵族','学年首席','淡金长发','翡翠瞳','长耳8cm','过膝袜'],d:'精灵王国留学生。魔力视觉可看见粒子流动。零的共同研究者。'},maya:{n:'黒鉄真夜',t:['魔族学妹','异色瞳','黑短袜','战斗天才'],d:'魔族学妹14岁中等部三年。左深红右金异色瞳。校服配黑色短袜。'},sara:{n:'サラ',t:['兽人少女','猫耳','北方山脉出身'],d:'灰银发猫耳兽人少女。帝都工厂黑工。'},alice:{n:'アリス',t:['商社経営','市場通'],d:'25岁商社经营者。零的商业伙伴。'},eve:{n:'Eve',t:['AI助手','终端系统'],d:'终端AI v1.0.7。机械式应答。'},hoshinomiya:{n:'星ノ宮',t:['首都圏外縁','鉱山町'],d:'帝都郊外矿业小镇。零的故乡。'},seido:{n:'星導学園',t:['顶级魔法学院','魔力增幅装置'],d:'高等部+专门部+研究部融合。魔力密度3.2倍。'},terminal:{n:'终端',t:['CLI','底层代码','Token'],d:'零3岁觉醒的意识内CLI。观测者越多越弱。'},observer:{n:'观测者效应',t:['端末限制'],d:'人数越多终端越弱。0人=S级，200+人=近乎失效。'},mana_rank:{n:'魔力等级',t:['S~F级'],d:'七级体系。S<0.01%，F约3%。'}};
+var pp=document.getElementById('pp');
+var P={show(a,d){pp.querySelector('.pn').textContent=d.n;pp.querySelector('.pt').innerHTML=(d.t||[]).map(function(t){return'<span>'+t+'</span>'}).join('');pp.querySelector('.pd').textContent=d.d;var r=a.getBoundingClientRect(),l=r.left,t=r.bottom+6;if(l+280>innerWidth)l=innerWidth-288;if(t+160>innerHeight)t=r.top-170;if(l<4)l=4;if(t<4)t=4;pp.style.left=l+'px';pp.style.top=t+'px';pp.classList.add('on')},hide:function(){pp.classList.remove('on')}};
+document.addEventListener('click',function(e){if(!e.target.closest('.ix')&&!e.target.closest('#pp'))P.hide()});
+document.getElementById('mn').addEventListener('click',function(e){var el=e.target.closest('.ix');if(el){e.stopPropagation();var d=IX[el.dataset.ix];if(d)P.show(el,d)}});
+
+var cache={};
+var panelDefs={
+  prologue:{title:'序章 — 零の目覚め',subtitle:'「世界はコードでできている。ならば——」',files:['PROLOGUE/ep_00_zero.md','PROLOGUE/ep_01_hoshinomiya.md','PROLOGUE/ep_02_kakusei.md','PROLOGUE/ep_03_primary.md','PROLOGUE/ep_04_akane.md','PROLOGUE/ep_05_dungeon.md','PROLOGUE/ep_06_middle.md','PROLOGUE/ep_07_dream.md','PROLOGUE/ep_08_exam.md','PROLOGUE/ep_09_eve_end.md'],pgs:[0,3,6]},
+  ch01p1:{title:'Chapter 01 Part 1 — 星導学園',subtitle:'「知識は力だ。そして——力には代償が伴う。」',files:['chapter_01/part1/ep01.md','chapter_01/part1/ep02.md','chapter_01/part1/ep03.md','chapter_01/part1/ep04.md','chapter_01/part1/ep05.md','chapter_01/part1/ep06.md'],pgs:[0,3]},
+  ch01p2:{title:'Chapter 01 Part 2 — 魔法演習',subtitle:'「——君は、何を隠している？」',files:['chapter_01/part2/ep07.md','chapter_01/part2/ep08.md','chapter_01/part2/ep09.md','chapter_01/part2/ep10.md'],pgs:[0,2]},
+  ch01p3:{title:'Chapter 01 Part 3 — 星の兆し',subtitle:'「——俺は、この一ヶ月で変わる。」',files:['chapter_01/part3/ep11.md','chapter_01/part3/ep12.md','chapter_01/part3/ep13.md','chapter_01/part3/ep14.md'],pgs:[0,2]}
+};
+
+async function loadPanel(id){
+  var el=document.getElementById('p-'+id);if(!el||el.dataset.loaded)return;
+  el.innerHTML='<div class="loading">加载中...</div>';
+  var def=panelDefs[id];if(!def)return;
+  try{
+    var parts=[];var pgBreaks=def.pgs||[];
+    for(var i=0;i<def.files.length;i++){
+      var resp=await fetch(def.files[i]);if(!resp.ok)throw new Error('404');
+      parts.push(await resp.text());
+    }
+    var header='<div class="ch"><div class="cn">'+(id==='prologue'?'序章':'Chapter 01')+'</div><h2>'+def.title.split(' — ')[1]+'</h2><div class="cs">'+def.subtitle+'</div></div>\n';
+    var html='';var pg=0;
+    for(var i=0;i<parts.length;i++){
+      if(pgBreaks.indexOf(i)>=0&&i>0){html+='<!-- PG -->\n';pg++;}
+      html+=parts[i]+'\n';
+    }
+    el.innerHTML=header+html;
+    el.dataset.loaded='1';
+    PG(el);
+    bindChoices(el);
+  }catch(e){el.innerHTML='<div class="loading">加载失败: '+e.message+'<br><small>请确保 .md 文件存在且可通过 HTTP 访问</small></div>';}
+}
+
+function PG(el){
+  var c=el.innerHTML.split('<!-- PG -->');if(c.length<2)return;
+  var h='';for(var i=0;i<c.length;i++){h+='<div class="pg-page'+(i===0?' on':'')+'" data-pg="'+i+'">'+c[i]+'</div>'}
+  h+='<div class="pg-nav"><button class="pg-prev" disabled>◀ 上一页</button><span class="pg-info">1 / '+c.length+'</span><button class="pg-next">下一页 ▶</button></div>';
+  el.innerHTML=h;var pg=0;
+  function go(n){pg=Math.max(0,Math.min(c.length-1,n));el.querySelectorAll('.pg-page').forEach(function(p,i){p.classList.toggle('on',i===pg)});el.querySelector('.pg-prev').disabled=pg===0;el.querySelector('.pg-next').disabled=pg===c.length-1;el.querySelector('.pg-info').textContent=(pg+1)+' / '+c.length;el.scrollTop=0;document.getElementById('mn').scrollTop=0}
+  el.querySelector('.pg-prev').onclick=function(){go(pg-1)};el.querySelector('.pg-next').onclick=function(){go(pg+1)};
+}
+
+var S={flags:{},choices:[]};
+try{var s=localStorage.getItem('tp_state');if(s){var p=JSON.parse(s);S.flags=p.flags||{};S.choices=p.choices||[]}}catch(e){}
+function sv(){try{localStorage.setItem('tp_state',JSON.stringify({flags:S.flags,choices:S.choices}))}catch(e){}}
+function ar(k,v){S.flags[k]=(S.flags[k]||0)+v;sv();upd()}function rr(k,v){S.flags[k]=Math.max(0,(S.flags[k]||0)-v);sv();upd()}
+var CC={ch01_elna:{label:'艾露娜的提案',opts:[{l:'接受协助 / 協力を受け入れる',r:{eruna:2},e:'学术协作者'},{l:'婉拒 / まだ誰も巻き込めない',r:{akane:1},e:'独自承担'}]},ch01_slave:{label:'籠の中の少女',opts:[{l:'无法忘记她 / 頭から離れない',r:{},e:'开启个人线'},{l:'无能为力 / どうにもできない',r:{},e:'暂缓'}]},ch01_alice_deal:{label:'Aliceとの取引',opts:[{l:'开始交易 / 取引を始める',r:{},e:'商业线启动'},{l:'先自己分析 / まずは分析',r:{},e:'独立摸索'}]},ch01_exam:{label:'考试公告后',opts:[{l:'与朱音对视点头 / 朱音と頷く',r:{akane:1},e:'朱音'},{l:'观察艾露娜 / エルナ観察',r:{eruna:1},e:'艾露娜'},{l:'思考攻略法 / 攻略法考える',r:{koyuki:1},e:'小雪'}]}};
+
+var pls=document.querySelectorAll('.pn'),nis=document.querySelectorAll('.ni');
+nis.forEach(function(b){b.addEventListener('click',function(){
+  var id=this.dataset.p;
+  nis.forEach(function(x){x.classList.remove('on')});this.classList.add('on');
+  pls.forEach(function(p){p.classList.remove('on')});
+  var t=document.getElementById('p-'+id);if(t){t.classList.add('on');t.scrollTop=0;loadPanel(id);document.getElementById('mn').scrollTop=0}
+})});
+
+function bindChoices(el){
+  el.addEventListener('click',function(e){
+    var b=e.target.closest('.cb');if(!b)return;
+    var u=e.target.closest('.un');if(u){undoChoice(u.dataset.cid);return;}
+    var cid=b.dataset.c,oi=parseInt(b.dataset.o),bl=CC[cid];if(!bl)return;var opt=bl.opts[oi];
+    var pi=S.choices.findIndex(function(c){return c.id===cid});
+    if(pi>=0){var old=S.choices[pi];if(old.r)Object.entries(old.r).forEach(function(e){rr(e[0],e[1])});S.choices.splice(pi,1)}
+    S.choices.push({id:cid,label:bl.label,chosen:opt.l,r:opt.r||{},e:opt.e});if(opt.r)Object.entries(opt.r).forEach(function(e){ar(e[0],e[1])});sv();
+    b.closest('.chc').innerHTML='<div class="cd">▸ 已選択：<b>'+opt.l+'</b> —— '+opt.e+' <span class="un" data-cid="'+cid+'">↩ 取り消し</span></div>';upd();
+  });
+}
+function undoChoice(cid){
+  var idx=S.choices.findIndex(function(c){return c.id===cid});if(idx<0)return;
+  var old=S.choices[idx];if(old.r)Object.entries(old.r).forEach(function(e){rr(e[0],e[1])});S.choices.splice(idx,1);sv();
+  var bl=CC[cid];if(!bl)return;var ls='ABCDEF',btns=bl.opts.map(function(o,i){return'<button class="cb '+ls[i].toLowerCase()+'" data-c="'+cid+'" data-o="'+i+'"><span class="lt">'+ls[i]+'</span>'+o.l+'</button>'}).join('');
+  document.querySelectorAll('.chc,.cd').forEach(function(c){if((c.querySelector('[data-c="'+cid+'"]')||c.querySelector('.un[data-cid="'+cid+'"]'))&&!c.classList.contains('chc'))c.outerHTML='<div class="chc"><div class="cl">⚡ 選択肢</div>'+btns+'<div class="ch">（選択後に取り消し可能）</div></div>'});
+}
+function upd(){
+  var rs=[{k:'akane',n:'朱音',c:'a'},{k:'koyuki',n:'小雪',c:'k'},{k:'eruna',n:'艾露娜',c:'e'},{k:'maya',n:'真夜',c:'m'}].filter(function(r){return S.flags[r.k]>0});
+  var el=document.getElementById('tk'),tc=document.getElementById('tkc');
+  if(!rs.length){el.style.display='none';return}el.style.display='block';
+  var mx=Math.max.apply(null,rs.map(function(r){return r.k==='koyuki'?S.flags[r.k]*1.5:S.flags[r.k]}));
+  tc.innerHTML=rs.map(function(r){return'<div class="ri">'+r.n+': '+'❤'.repeat(Math.min(S.flags[r.k],5))+'</div><div class="rb '+r.c+'" style="width:'+Math.round(S.flags[r.k]/mx*100)+'%"></div>'}).join('')+'<div style="font-size:8px;opacity:.5;margin-top:2px">'+S.choices.length+'回選択</div>'
+}upd();
+loadPanel('prologue');
 </script>
 </body>
 </html>
