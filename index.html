@@ -40,12 +40,12 @@ p{margin-bottom:1em;text-indent:2em}p.ni{text-indent:0}
 #pp .pt span{font-size:9px;background:var(--h);border:1px solid var(--b);border-radius:3px;padding:1px 5px}
 #pp .pd{color:var(--t);font-size:10px}
 #pp .pc{position:absolute;top:4px;right:7px;cursor:pointer;font-size:12px;color:var(--t2);background:none;border:none;opacity:.5}
-.tm{background:var(--tb);border-radius:8px;margin:14px 0;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.25);font-family:'JetBrains Mono','Fira Code','Consolas',monospace;font-size:11px;line-height:1.55}
-.tm-h{background:#171722;padding:5px 10px;display:flex;align-items:center;gap:6px;border-bottom:1px solid#222230}
-.tm-d{width:8px;height:8px;border-radius:50%}.tm-d.r{background:#ff5f56}.tm-d.y{background:#ffbd2e}.tm-d.g{background:#27c93f}
-.tm-t{color:#555;font-size:9px;margin-left:5px;font-family:system-ui}
-.tm-b{padding:10px 13px;color:var(--tg);white-space:pre-wrap;word-break:break-all}
-.tm-b .pr{color:var(--tp)}.tm-b .cm{color:#fff}.tm-b .out{color:#7eb8da}.tm-b .wn{color:#ffcc00}.tm-b .er{color:#ff4444}.tm-b .inf{color:#777}
+.tm{background:#0c0c0c;border-radius:8px;margin:14px 0;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.4);font-family:'Cascadia Code','JetBrains Mono','Fira Code','Consolas',monospace;font-size:12px;line-height:1.6;border:1px solid #2a2a2a}
+.tm-h{background:#1a1a1a;padding:6px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #333}
+.tm-d{width:10px;height:10px;border-radius:50%}.tm-d.r{background:#ff5f56}.tm-d.y{background:#ffbd2e}.tm-d.g{background:#27c93f}
+.tm-t{color:#999;font-size:10px;margin-left:6px;font-family:system-ui}
+.tm-b{padding:12px 16px;color:#cccccc;white-space:pre-wrap;word-break:break-all;background:#0c0c0c}
+.tm-b .pr{color:#00ff88}.tm-b .cm{color:#ffffff}.tm-b .out{color:#7eb8da}.tm-b .wn{color:#ffcc00}.tm-b .er{color:#ff5555}.tm-b .inf{color:#888888}
 .chc{background:var(--h);border:2px solid var(--b);border-radius:10px;padding:18px 22px;margin:22px 0;text-align:center}
 .chc .cl{font-size:11px;color:var(--t2);letter-spacing:2px;margin-bottom:10px}
 .cb{display:block;width:100%;padding:10px 14px;margin:5px 0;border:1px solid var(--b);border-radius:6px;background:var(--s);cursor:pointer;font-family:inherit;font-size:13px;text-align:left;transition:background .15s,transform .15s;color:var(--t)}
@@ -102,6 +102,46 @@ var panelDefs={
   ch01p3:{title:'Chapter 01 Part 3 — 星の兆し',subtitle:'「——俺は、この一ヶ月で変わる。」',files:['chapter_01/part3/ep11.md','chapter_01/part3/ep12.md','chapter_01/part3/ep13.md','chapter_01/part3/ep14.md'],pgs:[0,2]}
 };
 
+function md2html(md){
+  var lines=md.split('\n'),out='',inTerm=false,termTitle='',termLines=[],inP=false;
+  function flushP(){if(inP){out+='</p>\n';inP=false;}}
+  function flushTerm(){
+    if(termLines.length===0)return;
+    var title=termTitle||'Terminal';
+    out+='<div class="tm"><div class="tm-h"><div class="tm-d r"></div><div class="tm-d y"></div><div class="tm-d g"></div><span class="tm-t">'+title+'</span></div><div class="tm-b">';
+    for(var i=0;i<termLines.length;i++){
+      var tl=termLines[i];
+      if(tl===''){out+='\n';continue;}
+      if(/^&gt;\s/.test(tl)){out+='<span class="pr">&gt; </span><span class="cm">'+tl.replace(/^&gt;\s/,'')+'</span>\n';}
+      else if(/^\[WARNING:/.test(tl)){out+='<span class="wn">'+tl+'</span>\n';}
+      else if(/^\[ERROR:/.test(tl)||/^\[ALERT/.test(tl)){out+='<span class="er">'+tl+'</span>\n';}
+      else if(/^\[/.test(tl)){out+='<span class="out">'+tl+'</span>\n';}
+      else out+='<span class="inf">'+tl+'</span>\n';
+    }
+    out+='</div></div>\n';
+    termLines=[];termTitle='';inTerm=false;
+  }
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i];
+    if(inTerm){
+      if(/^```/.test(l)){flushTerm();continue;}
+      if(i===0||(termLines.length===0&&l.trim()==='')){termTitle=l.trim();continue;}
+      termLines.push(l);continue;
+    }
+    if(/^```terminal/.test(l)){flushP();inTerm=true;continue;}
+    if(/^```/.test(l)){flushP();out+='<pre>';var j=i+1;while(j<lines.length&&!/^```/.test(lines[j])){out+=lines[j]+'\n';j++;}i=j;out+='</pre>\n';continue;}
+    if(/^##\s/.test(l)){flushP();out+='<div class="st">'+l.replace(/^##\s/,'')+'</div>\n';continue;}
+    if(/^---\s*$/.test(l)||/^\*\*\*\s*$/.test(l)){flushP();out+='<div class="dv">＊ ＊ ＊</div>\n';continue;}
+    if(l.trim()===''){flushP();continue;}
+    if(/^<span class="ix/.test(l)||/^<div class="(ch|chc|cb|cd|dv|st|tm|pg)/.test(l)||/^<\/div>/.test(l)||/^<button/.test(l)){flushP();out+=l+'\n';continue;}
+    var txt=l.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>');
+    if(!inP){out+='<p>';inP=true;}
+    else out+='<br>';
+    out+=txt;
+  }
+  flushP();flushTerm();return out;
+}
+
 async function loadPanel(id){
   var el=document.getElementById('p-'+id);if(!el||el.dataset.loaded)return;
   el.innerHTML='<div class="loading">加载中...</div>';
@@ -109,8 +149,8 @@ async function loadPanel(id){
   try{
     var parts=[];var pgBreaks=def.pgs||[];
     for(var i=0;i<def.files.length;i++){
-      var resp=await fetch(def.files[i]);if(!resp.ok)throw new Error('404');
-      parts.push(await resp.text());
+      var resp=await fetch(def.files[i]);if(!resp.ok)throw new Error(def.files[i]+' not found');
+      parts.push(md2html(await resp.text()));
     }
     var header='<div class="ch"><div class="cn">'+(id==='prologue'?'序章':'Chapter 01')+'</div><h2>'+def.title.split(' — ')[1]+'</h2><div class="cs">'+def.subtitle+'</div></div>\n';
     var html='';var pg=0;
@@ -120,9 +160,8 @@ async function loadPanel(id){
     }
     el.innerHTML=header+html;
     el.dataset.loaded='1';
-    PG(el);
-    bindChoices(el);
-  }catch(e){el.innerHTML='<div class="loading">加载失败: '+e.message+'<br><small>请确保 .md 文件存在且可通过 HTTP 访问</small></div>';}
+    PG(el);bindChoices(el);
+  }catch(e){el.innerHTML='<div class="loading">加载失败: '+e.message+'</div>';}
 }
 
 function PG(el){
