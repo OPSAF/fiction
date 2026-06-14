@@ -83,7 +83,7 @@ p{margin-bottom:1em;text-indent:2em}p.ni{text-indent:0}
 <div class="pn" id="p-ch01p3"><div class="loading">加载中...</div></div>
 </div></div></div>
 <div id="pp"><button class="pc" onclick="P.hide()">✕</button><div class="pn"></div><div class="pt"></div><div class="pd"></div></div>
-<div id="tk"><div class="tt">📊 観測記録</div><div id="tkc"></div></div>
+<div id="tk" style="display:none"><div class="tt" id="tktitle" style="cursor:pointer">📊 観測記録</div><div id="tkc"></div><div style="font-size:8px;opacity:.4;margin-top:4px;cursor:pointer" id="tkclear">点击标题收起 · 点击此处清除记录</div></div>
 <script>
 (function(){if(localStorage.getItem('tp_theme')==='dark')document.body.classList.add('dark')})();
 function T(){document.body.classList.toggle('dark');localStorage.setItem('tp_theme',document.body.classList.contains('dark')?'dark':'light')}
@@ -207,10 +207,18 @@ function undoChoice(cid){
 function upd(){
   var rs=[{k:'akane',n:'朱音',c:'a'},{k:'koyuki',n:'小雪',c:'k'},{k:'eruna',n:'艾露娜',c:'e'},{k:'maya',n:'真夜',c:'m'}].filter(function(r){return S.flags[r.k]>0});
   var el=document.getElementById('tk'),tc=document.getElementById('tkc');
-  if(!rs.length){el.style.display='none';return}el.style.display='block';
-  var mx=Math.max.apply(null,rs.map(function(r){return r.k==='koyuki'?S.flags[r.k]*1.5:S.flags[r.k]}));
-  tc.innerHTML=rs.map(function(r){return'<div class="ri">'+r.n+': '+'❤'.repeat(Math.min(S.flags[r.k],5))+'</div><div class="rb '+r.c+'" style="width:'+Math.round(S.flags[r.k]/mx*100)+'%"></div>'}).join('')+'<div style="font-size:8px;opacity:.5;margin-top:2px">'+S.choices.length+'回選択</div>'
+  if(!rs.length&&S.choices.length===0){el.style.display='none';return}
+  el.style.display='block';
+  var html='';
+  if(rs.length>0){
+    var mx=Math.max.apply(null,rs.map(function(r){return r.k==='koyuki'?S.flags[r.k]*1.5:S.flags[r.k]}));
+    html+=rs.map(function(r){return'<div class="ri">'+r.n+': '+'❤'.repeat(Math.min(S.flags[r.k],5))+'</div><div class="rb '+r.c+'" style="width:'+Math.round(S.flags[r.k]/mx*100)+'%"></div>'}).join('');
+  }
+  html+='<div style="font-size:8px;opacity:.5;margin-top:2px">'+S.choices.length+'回選択</div>';
+  tc.innerHTML=html;
 }upd();
+document.getElementById('tktitle').onclick=function(){var t=document.getElementById('tkc');t.style.display=t.style.display==='none'?'block':'none'};
+document.getElementById('tkclear').onclick=function(){S.flags={};S.choices=[];sv();upd();};
 loadPanel('prologue');
 </script>
 </body>
