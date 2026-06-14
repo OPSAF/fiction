@@ -1,125 +1,176 @@
-# 重构方案 v1.0
+# 重构方案 v2.0（最终版）
 
-> 2026-06-14 | 基于v0.9全部设定，开始正式重构小说正文。
-
----
-
-## 一、重构原则
-
-### 1.1 已沉淀的资产（不动）
-- `HIDE/` — 7个模块文件（1,714行）·完整设定·写作的唯一权威参考
-- `wiki/` — 4个公开文件（432行）·读者可见信息
-- `.claude/skills/write-novel.md` — 写作Skill
-- `index.html` — CSS/JS框架完整可用（分页·选项·弹窗）
-- `reference/3734.txt` — 字数校准基准（240KB GBK ≈ 9万字）
-
-### 1.2 需要重写的
-- `index.html` 中嵌入的故事正文 — 全部替换为新版
-- `PROLOGUE/ep_*.md` (10个文件) — 全部按v0.9+新风格重写
-- `chapter_01/part*/ep*.md` (14个文件) — 全部按v0.9+新风格重写
-
-### 1.3 语言规则（最终版）
-- **正文叙述**：全部中文
-- **角色对话**：日文原文 + 中文翻译紧跟
-- **终端界面**：英文CLI
-- **不再使用全文双语**
+> 2026-06-14 | 从零开始，按正确的方式重写全部24个episode。
 
 ---
 
-## 二、重构顺序（24个episode·按优先级）
+## 一、当前状态
 
-### Phase 1：序章（10 episode·~5万字）
+### 已就位（不动）
+| 文件 | 用途 |
+|------|------|
+| `index.html` | 完整阅读器——CSS/JS/md2html解析器/终端渲染/分页/选项/百科弹窗 |
+| `HIDE/00~07` | 7模块·1700+行·唯一权威设定 |
+| `wiki/*.md` | 公开信息·432行 |
+| `PROLOGUE/ep_00_zero.md` | **唯一保留的episode·格式样本** |
+| `.claude/skills/write-novel.md` | 写作Skill |
+| `reference/3734.txt` | 9万字密度参考 |
 
-| # | 文件 | 标题 | 字数 | 核心 |
-|---|------|------|------|------|
-| 00 | `PROLOGUE/ep_00_zero.md` | 零（ゼロ） | ~5k | 梦中碎片·既视感·F级·终端·表里两面 |
-| 01 | `PROLOGUE/ep_01_hoshinomiya.md` | 壱 星ノ宮 | ~5k | 帝都→星ノ宮·神代家（平民）·零被收养·小雪到来 |
-| 02 | `PROLOGUE/ep_02_kakusei.md` | 弐 三歳の起動 | ~5k | 小雪发烧→终端启动→Y/N→治愈→自觉隐藏 |
-| 03 | `PROLOGUE/ep_03_primary.md` | 参 初等部·冒険·副業 | ~5k | F级判定·扮猪吃老虎·廢坑狩猎·收藏品·跨镇倒卖 |
-| 04 | `PROLOGUE/ep_04_akane.md` | 肆 朱音 | ~5k | 10岁转学生·天宮分家·废坑偶遇·"変なやつ" |
-| 05 | `PROLOGUE/ep_05_dungeon.md` | 伍 地下迷宮·観測者効果 | ~5k | 廢坑狩猎·观测者效应实证·"没人看着就是最强" |
-| 06 | `PROLOGUE/ep_06_middle.md` | 陸 中等部·変化 | ~5k | 朱音放课后咨询·三年渐变·最大限赞美 |
-| 07 | `PROLOGUE/ep_07_dream.md` | 漆 夢·小雪の才能 | ~5k | 梦境加深·旧魔导书·小雪14岁跳级少年班 |
-| 08 | `PROLOGUE/ep_08_exam.md` | 捌 受験 | ~5k | 三阶段考试·实技单独抽题·合格 |
-| 09 | `PROLOGUE/ep_09_eve_end.md` | 玖+終 | ~5k | Eve激活·朱音护身符·小雪车站·宿舍·决心 |
+### 已清空（待重写）
+- `PROLOGUE/` — ep_01~ep_09（9个文件）
+- `chapter_01/part1/` — ep01~ep06（6个文件）
+- `chapter_01/part2/` — ep07~ep10（4个文件）
+- `chapter_01/part3/` — ep11~ep14（4个文件）
 
-### Phase 2：Ch01 Part 1（6 episode·~5万字）
-
-| # | 文件 | 标题 | 核心 |
-|---|------|------|------|
-| 01 | `chapter_01/part1/ep01.md` | 一 帝都到着 | 1920s帝都·零和小雪·家族寮·小雪互动 |
-| 02 | `chapter_01/part1/ep02.md` | 二 星見坂と朱音 | 开学日·朱音登场·蝴蝶结纠正·六年关系展示 |
-| 03 | `chapter_01/part1/ep03.md` | 三 入学式とエルナ | 艾露娜·世界观融入·上层委托伏笔 |
-| 04 | `chapter_01/part1/ep04.md` | 四 特待科と橘教授 | 橘教授"コード"发言·零内心震动 |
-| 05 | `chapter_01/part1/ep05.md` | 五 風の庭 ★選択肢① | 艾露娜讨论·"地球"线索·★選択肢① |
-| 06 | `chapter_01/part1/ep06.md` | 六 日常と小雪 | 宿舍日常·文書館查询无果·Eve分析 |
-
-### Phase 3：Ch01 Part 2（4 episode·~5万字）
-
-| # | 文件 | 标题 | 核心 |
-|---|------|------|------|
-| 07 | `chapter_01/part2/ep07.md` | 七 魔力測定 | 单独抽题·学校操作(零不知情)·合格 |
-| 08 | `chapter_01/part2/ep08.md` | 八 エルナの調査 | 地下B5·魔導基層論·Observer #4·时计塔 |
-| 09 | `chapter_01/part2/ep09.md` | 九 帝都市場とアリス ★選択肢② | Alice登场·合作开始·★選択肢② |
-| 10 | `chapter_01/part2/ep10.md` | 十 工場地帯とサラ | 工業地帯·サラ(工厂黑工)·零的决心 |
-
-### Phase 4：Ch01 Part 3（4 episode·~5万字）
-
-| # | 文件 | 标题 | 核心 |
-|---|------|------|------|
-| 11 | `chapter_01/part3/ep11.md` | 十一 小雪の日曜日 | 小雪重点回·特别菜单·相册·草莓大福 |
-| 12 | `chapter_01/part3/ep12.md` | 十二 做空と暗殺——真夜第一戦 | 期货做空·商会反扑·真夜暗杀·假死逃脱 |
-| 13 | `chapter_01/part3/ep13.md` | 十三 トラップと感化——真夜第二戦 | 陷阱·嘴炮感化·放生·好感拉满 |
-| 14 | `chapter_01/part3/ep14.md` | 十四 特別試験の予告 ★最終選択肢 | 宣布特别考试·朱音·Ch01 END |
+**共23个episode文件待写·目标约20万字**
 
 ---
 
-## 三、写作规范速查
+## 二、格式规范（以 ep_00_zero.md 为准）
 
-### 每次写episode前必读
-1. `HIDE/03_CHARACTERS.md` — 角色设定（零·朱音·小雪·艾露娜·真夜）
-2. `HIDE/01_WORLD_SETTING.md` — 世界观（1920s·五大家族·种族·历史）
-3. `HIDE/06_WRITING_STYLE.md` — 风格规范（中文叙述·日文对话·禁用语·五步法）
+### 正文 = 纯中文
+```
+从帝都星京乘蒸汽火车约一小时。
+车窗的景色从高层建筑与魔晶灯的闪耀，变为平缓的丘陵。
+```
+
+### 对话 = 日文原文 + 中文翻译紧跟
+```
+「——お兄ちゃん……だいじょうぶだから……」
+
+"——哥哥……我没事的……"
+```
+
+### 终端块 = ````terminal` 代码块
+````
+```terminal
+Terminal v1.0.7 — User: KAMISHIRO_REI
+> status
+[Observer #7 | Token: 990/1000 | Uptime: 13y]
+> _
+```
+````
+
+### 角色弹窗链接 = 保留HTML
+```
+<span class="ix person" data-ix="rei">神代零</span>
+<span class="ix term" data-ix="mana_rank">F級</span>
+<span class="ix place" data-ix="hoshinomiya">星ノ宮</span>
+```
+
+### 其他Markdown
+- `## 标题` = episode标题
+- `***` 或 `---` = 分隔线
+- `**粗体**` = 粗体
+- `` `代码` `` = 行内代码
+- 空行 = 段落分隔
+
+---
+
+## 三、写作流程（每个episode）
+
+### 写前必读（按顺序）
+1. `PROLOGUE/ep_00_zero.md` — 格式样本
+2. `HIDE/05_PLOT_OUTLINE.md` — 确认要写的episode
+3. `HIDE/03_CHARACTERS.md` — 当前角色状态和萌点
+4. `HIDE/01_WORLD_SETTING.md` — 世界观细节
+5. `HIDE/06_WRITING_STYLE.md` — 风格规范
 
 ### 写作五步法
-1. **日常**：环境·人物状态·生活细节
-2. **情感**：角色互动·内心变化·关系推进
-3. **装逼**：反差展示·信息差利用·优雅智取
-4. **智斗**：规则反利用·预判·策略
-5. **主线**：推动剧情·埋下伏笔·连接前后
+1. **日常** — 环境·人物状态·生活细节
+2. **情感** — 角色互动·内心变化·关系推进
+3. **装逼** — 反差展示·信息差利用·优雅智取（终端块在这里）
+4. **智斗** — 规则反利用·预判·策略
+5. **主线** — 推动剧情·埋下伏笔·连接前后
 
-### 字数校准
-`reference/3734.txt` = 240KB GBK ≈ 9万汉字。每个episode文件应约5,000-8,000汉字（纯文本·不含HTML标签）。
-
-### 禁用语（中国网文腔）
-❌ 恐怖如斯·嘴角上扬·冷笑·倒吸凉气·瞳孔猛缩·浑身一震·竖子·弱肉强食·此人·此子
-
-### 关键设定（绝不可违背）
-- 零=纯地球人·本世界无亲生父母
-- 零的终端无人能感知
-- 小雪按亲妹妹写·半天使血统永不主动揭露
-- 朱音=分家·对零限定傲娇·两张脸系统
-- 货币=リル(Ril)
-- 1920s帝都风貌
+### 字数检查
+每个episode文件 ≥ 3KB纯文本（参照 `reference/3734.txt` ≈ 240KB/9万字密度）
 
 ---
 
-## 四、集成到index.html
+## 四、写作顺序（23个episode）
 
-每个Phase完成后，将episode .md内容嵌入index.html的对应panel中。每2-3个episode之间加`<!-- PG -->`分页符。
+### Phase 1：序章（9个episode）
 
-**Panel结构**：
-```html
-<div class="pn on" id="p-prologue">
-  (ep_00 + ep_01 + ep_02) <!-- PG --> (ep_03 + ep_04 + ep_05) <!-- PG --> (ep_06 + ep_07 + ep_08 + ep_09)
-</div>
-<div class="pn" id="p-ch01p1">
-  (ep01 + ep02 + ep03) <!-- PG --> (ep04 + ep05 + ep06)
-</div>
-<div class="pn" id="p-ch01p2">
-  (ep07 + ep08) <!-- PG --> (ep09 + ep10)
-</div>
-<div class="pn" id="p-ch01p3">
-  (ep11 + ep12) <!-- PG --> (ep13 + ep14)
-</div>
+| # | 文件 | 标题 | 参考HIDE章节 |
+|---|------|------|-------------|
+| 01 | `PROLOGUE/ep_01_hoshinomiya.md` | 壱 星ノ宮 | 03_CHARACTERS（零·小雪·养父母）·01_WORLD_SETTING（星ノ宮·货币） |
+| 02 | `PROLOGUE/ep_02_kakusei.md` | 弐 三歳の起動 | 04_TERMINAL_SYSTEM（首次启动）·03_CHARACTERS（小雪） |
+| 03 | `PROLOGUE/ep_03_primary.md` | 参 初等部·冒険·副業 | 01_WORLD_SETTING（教育制度）·03_CHARACTERS（童年赚钱） |
+| 04 | `PROLOGUE/ep_04_akane.md` | 肆 朱音 | 03_CHARACTERS（朱音·分家·废坑相遇·两张脸系统） |
+| 05 | `PROLOGUE/ep_05_dungeon.md` | 伍 地下迷宮·観測者効果 | 04_TERMINAL_SYSTEM（观测者效应数据表） |
+| 06 | `PROLOGUE/ep_06_middle.md` | 陸 中等部·変化 | 03_CHARACTERS（朱音渐变·试探期→认可期） |
+| 07 | `PROLOGUE/ep_07_dream.md` | 漆 夢·小雪の才能 | 03_CHARACTERS（梦境·小雪天才·半天使血统伏笔） |
+| 08 | `PROLOGUE/ep_08_exam.md` | 捌 受験 | 07_TRUTH_APPENDIX（入学操作·零不知情） |
+| 09 | `PROLOGUE/ep_09_eve_end.md` | 玖+終 | 04_TERMINAL_SYSTEM（Eve激活）·03_CHARACTERS（护身符） |
+
+### Phase 2：Ch01 Part 1（6个episode·日常铺垫·青梅竹马+妹妹）
+
+| # | 文件 | 标题 | 核心 |
+|---|------|------|------|
+| 10 | `chapter_01/part1/ep01.md` | 一 帝都到着 | 1920s帝都·零和小雪·家族寮·小雪互动 |
+| 11 | `chapter_01/part1/ep02.md` | 二 星見坂と朱音 | 开学日·朱音(黑丝)·蝴蝶结纠正·六年关系 |
+| 12 | `chapter_01/part1/ep03.md` | 三 入学式とエルナ | 艾露娜(过膝袜)·世界观融入·上层委托伏笔 |
+| 13 | `chapter_01/part1/ep04.md` | 四 特待科と橘教授 | 橘教授"コード"发言 |
+| 14 | `chapter_01/part1/ep05.md` | 五 風の庭 ★選択肢① | 艾露娜讨论·"地球"线索·选择肢 |
+| 15 | `chapter_01/part1/ep06.md` | 六 日常と小雪 | 宿舍日常·文書館·Eve分析 |
+
+### Phase 3：Ch01 Part 2（4个episode·精灵+赚钱）
+
+| # | 文件 | 标题 | 核心 |
+|---|------|------|------|
+| 16 | `chapter_01/part2/ep07.md` | 七 魔力測定 | 单独抽题·学校操作·合格 |
+| 17 | `chapter_01/part2/ep08.md` | 八 エルナの調査 | 地下B5·魔導基層論·Observer #4 |
+| 18 | `chapter_01/part2/ep09.md` | 九 帝都市場とアリス ★選択肢② | Alice登场·合作·选择肢 |
+| 19 | `chapter_01/part2/ep10.md` | 十 工場地帯とサラ | 工業地帯·サラ(黑工)·零的决心 |
+
+### Phase 4：Ch01 Part 3（4个episode·暗杀+学妹）
+
+| # | 文件 | 标题 | 核心 |
+|---|------|------|------|
+| 20 | `chapter_01/part3/ep11.md` | 十一 小雪の日曜日 | 小雪重点回·白丝·草莓大福 |
+| 21 | `chapter_01/part3/ep12.md` | 十二 做空と暗殺——真夜第一戦 | 期货做空·真夜暗杀·假死逃脱 |
+| 22 | `chapter_01/part3/ep13.md` | 十三 トラップと感化——真夜第二戦 | 陷阱·嘴炮·放生·好感拉满 |
+| 23 | `chapter_01/part3/ep14.md` | 十四 特別試験の予告 ★最終選択肢 | 宣布考试·Ch01 END |
+
+---
+
+## 五、写完后的集成
+
+每个Phase完成后，更新 `index.html` 中的 `panelDefs` 对象（约第98行），确保 `files` 数组指向正确的episode文件路径。
+
+```javascript
+var panelDefs = {
+  prologue: {files: ['PROLOGUE/ep_00_zero.md', 'PROLOGUE/ep_01_hoshinomiya.md', ...], pgs: [0,3,6]},
+  ch01p1:   {files: ['chapter_01/part1/ep01.md', ...], pgs: [0,3]},
+  ch01p2:   {files: ['chapter_01/part2/ep07.md', ...], pgs: [0,2]},
+  ch01p3:   {files: ['chapter_01/part3/ep11.md', ...], pgs: [0,2]}
+};
 ```
+
+---
+
+## 六、快速参考
+
+### 终端块模板
+````
+```terminal
+Terminal v1.0.7 — User: KAMISHIRO_REI
+> command
+[output line]
+[WARNING: warning line]
+> _
+```
+````
+
+### 选择肢模板（在episode .md中直接写HTML）
+```html
+<div class="chc" id="UNIQUE_ID"><div class="cl">⚡ 選択肢</div>
+<button class="cb a" data-c="CHOICE_ID" data-o="0"><span class="lt">A</span>选项A描述</button>
+<button class="cb b" data-c="CHOICE_ID" data-o="1"><span class="lt">B</span>选项B描述</button>
+<div class="ch">（選択後に取り消し可能）</div></div>
+```
+
+### 角色弹窗数据ID速查
+`rei` `akane` `koyuki` `eruna` `maya` `sara` `alice` `shiori` `eve` `kenichiro`
+`hoshinomiya` `seido` `terminal` `observer` `mana_rank` `ril` `voidborn`
