@@ -1099,7 +1099,7 @@ Terminal v1.0.7 — User: KAMISHIRO_REI
 ├─ Unknown:高层关注度 RISING<br>
 <br>
 [Next Milestone]: 星導学園高等部 入学試験<br>
-[Countdown]: ~90 days<br>
+Countdown: ~90 days<br>
 > _<br>
 </div></div>
 
