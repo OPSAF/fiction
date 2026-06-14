@@ -143,13 +143,13 @@ function md2html(md){
 }
 
 async function loadPanel(id){
-  var el=document.getElementById('p-'+id);if(!el||el.dataset.loaded)return;
+  var el=document.getElementById('p-'+id);
   el.innerHTML='<div class="loading">加载中...</div>';
   var def=panelDefs[id];if(!def)return;
   try{
     var parts=[];var pgBreaks=def.pgs||[];
     for(var i=0;i<def.files.length;i++){
-      var resp=await fetch(def.files[i]);if(!resp.ok)throw new Error(def.files[i]+' not found');
+      var resp=await fetch(def.files[i]+'?t='+Date.now());if(!resp.ok)throw new Error(def.files[i]+' not found');
       parts.push(md2html(await resp.text()));
     }
     var header='<div class="ch"><div class="cn">'+(id==='prologue'?'序章':'Chapter 01')+'</div><h2>'+def.title.split(' — ')[1]+'</h2><div class="cs">'+def.subtitle+'</div></div>\n';
