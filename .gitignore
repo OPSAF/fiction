@@ -1,6 +1,7 @@
 # HIDE folder - contains spoilers, full outlines, detailed character data, world secrets
 HIDE/
 chat.txt
+reference/
 # OS files
 .DS_Store
 Thumbs.db
